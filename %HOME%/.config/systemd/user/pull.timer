@@ -1,0 +1,10 @@
+[Unit]
+Description=Run pull.sh periodically
+
+[Timer]
+Persistent=false
+OnCalendar=daily
+AccuracySec=1
+
+[Install]
+WantedBy=timers.target
