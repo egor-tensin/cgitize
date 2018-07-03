@@ -58,13 +58,15 @@ def check_output(*args, stdout=subprocess.PIPE):
                             env=env, encoding='utf-8')
     try:
         result.check_returncode()
-        if result.stdout is None:
-            logging.debug('%s', args)
-        else:
-            logging.debug('%s\n%s', args, result.stdout)
+        if stdout != subprocess.DEVNULL:
+            if result.stdout is None:
+                logging.debug('%s', args)
+            else:
+                logging.debug('%s\n%s', args, result.stdout)
         return result.returncode == 0, result.stdout
     except subprocess.CalledProcessError as e:
-        logging.error('%s\n%s', e, e.output)
+        if stdout != subprocess.DEVNULL:
+            logging.error('%s\n%s', e, e.output)
         return e.returncode == 0, e.output
 
 
@@ -148,7 +150,7 @@ class Repo:
             return RepoVerdict.SHOULD_MIRROR
         with chdir(self.repo_dir):
             if not run('git', 'rev-parse', '--is-inside-work-tree', discard_output=True):
-                # What is this directory?
+                logging.warning(f'Not a repository, so going to mirror: {self.repo_dir}')
                 return RepoVerdict.SHOULD_MIRROR
             success, output = check_output('git', 'config', '--get', 'remote.origin.url')
             if not success:
@@ -177,7 +179,12 @@ class Repo:
     def update(self):
         logging.info("Updating repository '%s'", self.repo_id)
         with chdir(self.repo_dir):
-            return run('git', 'remote', 'update', '--prune')
+            if not run('git', 'remote', 'update', '--prune'):
+                return False
+            if run('git', 'rev-parse', '--verify', '--quiet', 'origin/master', discard_output=True):
+                if not run('git', 'reset', '--soft', 'origin/master'):
+                    return False
+            return True
 
 
 class GithubRepo(Repo):
