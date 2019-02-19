@@ -33,14 +33,20 @@ def parse_args(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     parser = ArgumentParser()
-    parser.add_argument('--output', default=DEFAULT_OUTPUT_DIR,
+    parser.add_argument('--output', metavar='PATH',
+                        default=DEFAULT_OUTPUT_DIR,
                         help='output directory path')
-    parser.add_argument('--cgit-user', default=DEFAULT_CGIT_CLONE_USER,
+    parser.add_argument('--cgit-user', metavar='USERNAME',
+                        default=DEFAULT_CGIT_CLONE_USER,
                         help='cgit clone username')
-    parser.add_argument('--cgit-host', default=DEFAULT_CGIT_CLONE_HOST,
+    parser.add_argument('--cgit-host', metavar='HOST',
+                        default=DEFAULT_CGIT_CLONE_HOST,
                         help='cgit clone host')
-    parser.add_argument('--cgit-port', default=DEFAULT_CGIT_CLONE_PORT,
-                        help='cgit clone port number', type=int)
+    parser.add_argument('--cgit-port', metavar='PORT', type=int,
+                        default=DEFAULT_CGIT_CLONE_PORT,
+                        help='cgit clone port number')
+    parser.add_argument('--repo', metavar='REPO_ID', nargs='*', dest='repos',
+                        help='repos to pull')
     return parser.parse_args(argv)
 
 
@@ -206,8 +212,9 @@ def main(args=None):
         output = Output(args.output, cgit)
         success = True
         for repo in MY_REPOS:
-            if not output.pull(repo):
-                success = False
+            if args.repos is None or repo.repo_id in args.repos:
+                if not output.pull(repo):
+                    success = False
         if success:
             logging.info('All repositories were updated successfully')
             return 0
