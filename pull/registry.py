@@ -53,4 +53,5 @@ MY_REPOS = (
 
     Repo('fr24/key_mgmt', 'ssh://egor@tensin-raspi2/~/tmp/key_mgmt.git'),
     Repo('fr24/openfortivpn', 'ssh://egor@tensin-raspi2/~/tmp/openfortivpn.git'),
+    Repo('staging/pull-shadow', 'ssh://egor@tensin-raspi2/~/tmp/pull-shadow.git'),
 )
