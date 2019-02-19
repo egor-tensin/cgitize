@@ -1,3 +1,4 @@
 /links.bin
+/output/
 /pull.log
-/repos/
+__pycache__/

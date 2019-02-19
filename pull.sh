@@ -35,4 +35,4 @@ if [ -z "${SSH_AUTH_SOCK+x}" ]; then
     exit 1
 fi
 add_ssh_key
-"$script_dir/pull.py"
+python3 -m pull.pull
