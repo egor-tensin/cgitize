@@ -1,5 +1,5 @@
 [Unit]
-Description=Run pull.sh
+Description=Pull cgit repositories
 Wants=ssh-agent.service
 
 [Service]
