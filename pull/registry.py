@@ -51,7 +51,7 @@ MY_REPOS = (
     BitbucketRepo('staging/raspi-temp-server'),
     BitbucketRepo('staging/x64-decoder'),
 
-    Repo('fr24/key_mgmt', 'ssh://egor@tensin-raspi2/~/tmp/key_mgmt.git'),
-    Repo('fr24/openfortivpn', 'ssh://egor@tensin-raspi2/~/tmp/openfortivpn.git'),
-    Repo('staging/pull-shadow', 'ssh://egor@tensin-raspi2/~/tmp/pull-shadow.git'),
+    Repo('fr24/key_mgmt', 'ssh://egor@tensin-raspi2.home/~/tmp/key_mgmt.git'),
+    Repo('fr24/openfortivpn', 'ssh://egor@tensin-raspi2.home/~/tmp/openfortivpn.git'),
+    Repo('staging/upload-shadow', 'ssh://egor@tensin-raspi2.home/~/tmp/upload-shadow.git'),
 )
