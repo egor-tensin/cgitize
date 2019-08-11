@@ -9,7 +9,7 @@ import socket
 import sys
 import subprocess
 
-from pull.registry import MY_REPOS
+from pull.my_repos import MY_REPOS
 
 
 env = os.environ.copy()
