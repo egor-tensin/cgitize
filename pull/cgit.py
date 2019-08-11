@@ -1,88 +1,23 @@
-from argparse import ArgumentParser
-import contextlib
 from enum import Enum
 import logging
 import os
 import os.path
 import shutil
 import socket
-import sys
-import subprocess
 
-from pull.my_repos import MY_REPOS
+from pull.utils import chdir, check_output, run
 
 
-env = os.environ.copy()
-env['GIT_SSH_COMMAND'] = 'ssh -oStrictHostKeyChecking=no -oBatchMode=yes'
-
-DEFAULT_OUTPUT_DIR = 'output'
-
-DEFAULT_CGIT_CLONE_USER = 'egor'
-DEFAULT_CGIT_CLONE_HOST = 'tensin-ext1.home'
-DEFAULT_CGIT_CLONE_PORT = 8080
+_ENV = os.environ.copy()
+_ENV['GIT_SSH_COMMAND'] = 'ssh -oStrictHostKeyChecking=no -oBatchMode=yes'
 
 
-def set_up_logging():
-    logging.basicConfig(
-        level=logging.DEBUG,
-        datefmt='%Y-%m-%d %H:%M:%S',
-        format='%(asctime)s | %(levelname)s | %(message)s')
+def _run(*args, **kwargs):
+    return run(*args, env=_ENV, **kwargs)
 
 
-def parse_args(argv=None):
-    if argv is None:
-        argv = sys.argv[1:]
-    parser = ArgumentParser()
-    parser.add_argument('--output', metavar='PATH',
-                        default=DEFAULT_OUTPUT_DIR,
-                        help='output directory path')
-    parser.add_argument('--cgit-user', metavar='USERNAME',
-                        default=DEFAULT_CGIT_CLONE_USER,
-                        help='cgit clone username')
-    parser.add_argument('--cgit-host', metavar='HOST',
-                        default=DEFAULT_CGIT_CLONE_HOST,
-                        help='cgit clone host')
-    parser.add_argument('--cgit-port', metavar='PORT', type=int,
-                        default=DEFAULT_CGIT_CLONE_PORT,
-                        help='cgit clone port number')
-    parser.add_argument('--repo', metavar='REPO_ID', nargs='*', dest='repos',
-                        help='repos to pull')
-    return parser.parse_args(argv)
-
-
-def check_output(*args, stdout=subprocess.PIPE):
-    result = subprocess.run(args, stdout=stdout, stderr=subprocess.STDOUT,
-                            env=env, encoding='utf-8')
-    try:
-        result.check_returncode()
-        if stdout != subprocess.DEVNULL:
-            if result.stdout is None:
-                logging.debug('%s', args)
-            else:
-                logging.debug('%s\n%s', args, result.stdout)
-        return result.returncode == 0, result.stdout
-    except subprocess.CalledProcessError as e:
-        if stdout != subprocess.DEVNULL:
-            logging.error('%s\n%s', e, e.output)
-        return e.returncode == 0, e.output
-
-
-def run(*args, discard_output=False):
-    if discard_output:
-        success, _ = check_output(*args, stdout=subprocess.DEVNULL)
-    else:
-        success, _ = check_output(*args)
-    return success
-
-
-@contextlib.contextmanager
-def chdir(new_cwd):
-    old_cwd = os.getcwd()
-    os.chdir(new_cwd)
-    try:
-        yield
-    finally:
-        os.chdir(old_cwd)
+def _check_output(*args, **kwargs):
+    return check_output(*args, env=_ENV, **kwargs)
 
 
 class CGit:
@@ -159,10 +94,10 @@ class Output:
         if not os.path.isdir(repo_dir):
             return RepoVerdict.SHOULD_MIRROR
         with chdir(repo_dir):
-            if not run('git', 'rev-parse', '--is-inside-work-tree', discard_output=True):
+            if not _run('git', 'rev-parse', '--is-inside-work-tree', discard_output=True):
                 logging.warning('Not a repository, so going to mirror: %s', repo_dir)
                 return RepoVerdict.SHOULD_MIRROR
-            success, output = check_output('git', 'config', '--get', 'remote.origin.url')
+            success, output = _check_output('git', 'config', '--get', 'remote.origin.url')
             if not success:
                 # Every repository managed by this script should have the
                 # 'origin' remote. If it doesn't, it's trash.
@@ -184,16 +119,16 @@ class Output:
             except Exception as e:
                 logging.exception(e)
                 return False
-        return run('git', 'clone', '--mirror', repo.clone_url, repo_dir)
+        return _run('git', 'clone', '--mirror', repo.clone_url, repo_dir)
 
     def update(self, repo):
         logging.info("Updating repository '%s'", repo.repo_id)
         repo_dir = self.get_repo_dir(repo)
         with chdir(repo_dir):
-            if not run('git', 'remote', 'update', '--prune'):
+            if not _run('git', 'remote', 'update', '--prune'):
                 return False
-            if run('git', 'rev-parse', '--verify', '--quiet', 'origin/master', discard_output=True):
-                if not run('git', 'reset', '--soft', 'origin/master'):
+            if _run('git', 'rev-parse', '--verify', '--quiet', 'origin/master', discard_output=True):
+                if not _run('git', 'reset', '--soft', 'origin/master'):
                     return False
             return True
 
@@ -202,29 +137,3 @@ class RepoVerdict(Enum):
     SHOULD_MIRROR = 1
     SHOULD_UPDATE = 2
     CANT_DECIDE = 3
-
-
-def main(args=None):
-    set_up_logging()
-    try:
-        args = parse_args(args)
-        cgit = CGit(args.cgit_user, args.cgit_host, args.cgit_port)
-        output = Output(args.output, cgit)
-        success = True
-        for repo in MY_REPOS:
-            if args.repos is None or repo.repo_id in args.repos:
-                if not output.pull(repo):
-                    success = False
-        if success:
-            logging.info('All repositories were updated successfully')
-            return 0
-        else:
-            logging.warning("Some repositories couldn't be updated!")
-            return 1
-    except Exception as e:
-        logging.exception(e)
-        raise
-
-
-if __name__ == '__main__':
-    sys.exit(main())
