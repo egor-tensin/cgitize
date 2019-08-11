@@ -9,7 +9,7 @@ from pull.utils import chdir, check_output, run
 
 
 _ENV = os.environ.copy()
-_ENV['GIT_SSH_COMMAND'] = 'ssh -oStrictHostKeyChecking=no -oBatchMode=yes'
+_ENV['GIT_SSH_COMMAND'] = 'ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null'
 
 
 def _run(*args, **kwargs):
