@@ -1,12 +1,9 @@
 import os.path
 
 
-DEFAULT_OWNER = 'Egor Tensin'
-DEFAULT_GITHUB_USER = 'egor-tensin'
-DEFAULT_BITBUCKET_USER = 'egor-tensin'
-
-
 class Repo:
+    DEFAULT_OWNER = None
+
     @staticmethod
     def extract_repo_name(repo_id):
         return os.path.basename(repo_id)
@@ -17,7 +14,7 @@ class Repo:
         self.repo_name = self.extract_repo_name(repo_id)
         self.clone_url = clone_url
         if owner is None:
-            owner = DEFAULT_OWNER
+            owner = Repo.DEFAULT_OWNER
         self.owner = owner
         if desc is None:
             if homepage is not None:
@@ -31,42 +28,66 @@ class Repo:
 
 
 class GithubRepo(Repo):
+    DEFAULT_USER = None
+
     def __init__(self, repo_id, clone_url=None, owner=None, desc=None,
-                 homepage=None, github_user=DEFAULT_GITHUB_USER):
+                 homepage=None, user=DEFAULT_USER, via_ssh=True):
+        if user is None:
+            if GithubRepo.DEFAULT_USER is None:
+                raise RuntimeError('neither explicit or default GitHub username was provided')
+            user = GithubRepo.DEFAULT_USER
+        name = Repo.extract_repo_name(repo_id)
         if clone_url is None:
-            clone_url = self.build_clone_url(github_user, repo_id)
+            if via_ssh:
+                clone_url = self.build_clone_url_ssh(user, name)
+            else:
+                clone_url = self.build_clone_url_https(user, name)
         if homepage is None:
-            homepage = self.build_homepage_url(github_user, repo_id)
+            homepage = self.build_homepage_url(user, name)
         super().__init__(repo_id, clone_url, owner=owner, desc=desc,
                          homepage=homepage)
 
     @staticmethod
-    def build_clone_url(user, repo_id):
-        name = Repo.extract_repo_name(repo_id)
+    def build_clone_url_ssh(user, name):
         return f'ssh://git@github.com/{user}/{name}.git'
 
     @staticmethod
-    def build_homepage_url(user, repo_id):
-        name = Repo.extract_repo_name(repo_id)
+    def build_clone_url_https(user, name):
+        return f'https://github.com/{user}/{name}.git'
+
+    @staticmethod
+    def build_homepage_url(user, name):
         return f'https://github.com/{user}/{name}'
 
 
 class BitbucketRepo(Repo):
+    DEFAULT_USER = None
+
     def __init__(self, repo_id, clone_url=None, owner=None, desc=None,
-                 homepage=None, bitbucket_user=DEFAULT_BITBUCKET_USER):
+                 homepage=None, user=DEFAULT_USER, via_ssh=True):
+        if user is None:
+            if BitbucketRepo.DEFAULT_USER is None:
+                raise RuntimeError('neither explicit or default Bitbucket username was provided')
+            user = BitbucketRepo.DEFAULT_USER
+        name = Repo.extract_repo_name(repo_id)
         if clone_url is None:
-            clone_url = self.build_clone_url(bitbucket_user, repo_id)
+            if via_ssh:
+                clone_url = self.build_clone_url_ssh(user, name)
+            else:
+                clone_url = self.build_clone_url_https(user, name)
         if homepage is None:
-            homepage = self.build_homepage_url(bitbucket_user, repo_id)
+            homepage = self.build_homepage_url(user, name)
         super().__init__(repo_id, clone_url, owner=owner, desc=desc,
                          homepage=homepage)
 
     @staticmethod
-    def build_clone_url(user, repo_id):
-        name = Repo.extract_repo_name(repo_id)
+    def build_clone_url_ssh(user, name):
         return f'ssh://git@bitbucket.org/{user}/{name}.git'
 
     @staticmethod
-    def build_homepage_url(user, repo_id):
-        name = Repo.extract_repo_name(repo_id)
+    def build_clone_url_https(user, name):
+        return f'https://bitbucket.org/{user}/{name}.git'
+
+    @staticmethod
+    def build_homepage_url(user, name):
         return f'https://bitbucket.org/{user}/{name.lower()}'

@@ -21,14 +21,13 @@ def _check_output(*args, **kwargs):
 
 
 class CGit:
-    def __init__(self, user, host, port):
-        self.user = user
-        self.host = host
-        self.ip = socket.gethostbyname(self.host)
-        self.port = port
+    def __init__(self, clone_url):
+        self.clone_url = clone_url
 
     def get_clone_url(self, repo):
-        return f'http://{self.user}@{self.ip}:{self.port}/git/{repo.repo_id}'
+        if self.clone_url is None:
+            return None
+        return self.clone_url.format(repo_id=repo.repo_id)
 
 
 class CGitRC:
@@ -52,7 +51,11 @@ class CGitRC:
         clone_urls = []
         if repo.clone_url is not None:
             clone_urls.append(repo.clone_url)
-        clone_urls.append(self.cgit.get_clone_url(repo))
+        cgit_clone_url = self.cgit.get_clone_url(repo)
+        if cgit_clone_url is not None:
+            clone_urls.append(cgit_clone_url)
+        if not clone_urls:
+            return None
         clone_urls = ' '.join(clone_urls)
         return clone_urls
 
