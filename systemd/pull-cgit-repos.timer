@@ -1,0 +1,10 @@
+[Unit]
+Description=Pull cgit repositories periodically
+
+[Timer]
+Persistent=false
+OnCalendar=daily
+AccuracySec=1
+
+[Install]
+WantedBy=timers.target
