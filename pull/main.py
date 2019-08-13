@@ -9,7 +9,7 @@ from pull.cgit import CGit, Output
 from pull.repo import BitbucketRepo, GithubRepo, Repo
 
 
-DEFAULT_OUTPUT_DIR = 'output'
+DEFAULT_OUTPUT_DIR = '/var/tmp/cgit-repos/output'
 DEFAULT_CONFIG_PATH = '/etc/cgit-repos/cgit-repos.conf'
 DEFAULT_MY_REPOS_PATH = '/etc/cgit-repos/my_repos.py'
 
