@@ -1,3 +1,8 @@
+# Copyright (c) 2018 Egor Tensin <Egor.Tensin@gmail.com>
+# This file is part of the "cgit repos" project.
+# For details, see https://github.com/egor-tensin/cgit-repos.
+# Distributed under the MIT License.
+
 from argparse import ArgumentParser
 import configparser
 import importlib
