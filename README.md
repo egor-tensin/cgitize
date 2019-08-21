@@ -1,6 +1,8 @@
 cgit repos
 ==========
 
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/egortensin/pull-cgit-repos?label=Docker)
+
 Mirror a list of git repositories and make them available for consumption by
 cgit.
 
