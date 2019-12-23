@@ -10,10 +10,9 @@ import subprocess
 
 
 def check_output(*args, stdout=subprocess.PIPE, **kwargs):
-    result = subprocess.run(args, stdout=stdout, stderr=subprocess.STDOUT,
-                            encoding='utf-8', **kwargs)
     try:
-        result.check_returncode()
+        result = subprocess.run(args, stdout=stdout, stderr=subprocess.STDOUT,
+                                encoding='utf-8', check=True, **kwargs)
         if stdout != subprocess.DEVNULL:
             if result.stdout is None:
                 logging.debug('%s', args)

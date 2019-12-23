@@ -8,7 +8,6 @@ import logging
 import os
 import os.path
 import shutil
-import socket
 
 from pull.utils import chdir, check_output, run
 
