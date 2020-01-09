@@ -6,3 +6,8 @@ jobs:
       language: python
       python: '3.6'
       script: ./.travis/local/test.sh
+    - name: Test in Docker
+      language: minimal
+      services:
+        - docker
+      script: ./.travis/docker/test.sh

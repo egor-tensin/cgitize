@@ -8,8 +8,9 @@ readonly my_repos_path="$HOME/etc/cgit-repos/my_repos.py"
 readonly output_path="$HOME/var/cgit-repos/output"
 
 setup_local_repo() {
-    mkdir -- "$local_repo_path"
+    mkdir -p -- "$local_repo_path"
     pushd -- "$local_repo_path" > /dev/null
+
     git init
     echo '1' > 1.txt
     git add .
@@ -17,6 +18,7 @@ setup_local_repo() {
     echo '2' > 2.txt
     git add .
     git commit -m 'second commit'
+
     popd > /dev/null
 }
 
@@ -64,10 +66,8 @@ run() {
 
 verify() {
     pushd -- "$output_path" > /dev/null
-
     cd -- test_repo
     git log --oneline
-
     popd > /dev/null
 }
 
