@@ -1,7 +1,7 @@
 cgit repos
 ==========
 
-[![Travis (.com) branch](https://img.shields.io/travis/com/egor-tensin/cgit-repos/master?label=Travis)](https://travis-ci.com/egor-tensin/cgit-repos)
+[![Travis (.com) branch](https://img.shields.io/travis/com/egor-tensin/cgit-repos/master?label=Tests)](https://travis-ci.com/egor-tensin/cgit-repos)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/egortensin/pull-cgit-repos?label=Docker)](https://hub.docker.com/repository/docker/egortensin/pull-cgit-repos/builds)
 
 Mirror a list of git repositories and make them available for consumption by
