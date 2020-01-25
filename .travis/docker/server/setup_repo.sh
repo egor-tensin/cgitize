@@ -5,6 +5,11 @@ set -o errexit -o nounset -o pipefail
 readonly local_repo_path="$HOME/test_repo"
 
 setup_local_repo() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Setting up upstream repository
+    echo ----------------------------------------------------------------------
+
     mkdir -p -- "$local_repo_path"
     pushd -- "$local_repo_path" > /dev/null
     git init

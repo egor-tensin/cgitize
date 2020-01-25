@@ -8,6 +8,11 @@ readonly my_repos_path="$HOME/etc/cgit-repos/my_repos.py"
 readonly output_path="$HOME/var/cgit-repos/output"
 
 setup_local_repo() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Setting up upstream repository
+    echo ----------------------------------------------------------------------
+
     mkdir -p -- "$local_repo_path"
     pushd -- "$local_repo_path" > /dev/null
 
@@ -23,11 +28,16 @@ setup_local_repo() {
 }
 
 setup_cgit_repos_conf() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo cgit-repos.conf
+    echo ----------------------------------------------------------------------
+
     local conf_dir
     conf_dir="$( dirname -- "$cgit_repos_conf_path" )"
     mkdir -p -- "$conf_dir"
 
-    cat <<EOF > "$cgit_repos_conf_path"
+    cat <<EOF | tee "$cgit_repos_conf_path"
 [DEFAULT]
 
 my_repos = $my_repos_path
@@ -36,11 +46,16 @@ EOF
 }
 
 setup_my_repos_py() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo my_repos.py
+    echo ----------------------------------------------------------------------
+
     local conf_dir
     conf_dir="$( dirname -- "$my_repos_path" )"
     mkdir -p -- "$conf_dir"
 
-    cat <<EOF > "$my_repos_path"
+    cat <<EOF | tee "$my_repos_path"
 from pull.repo import Repo
 
 
@@ -61,10 +76,20 @@ setup() {
 }
 
 run() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Pulling repository from upstream
+    echo ----------------------------------------------------------------------
+
     python3 -m pull.main --config "$cgit_repos_conf_path"
 }
 
 verify() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Checking the pulled repository
+    echo ----------------------------------------------------------------------
+
     pushd -- "$output_path" > /dev/null
     cd -- test_repo
     git log --oneline

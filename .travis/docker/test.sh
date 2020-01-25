@@ -41,6 +41,11 @@ spawn_ssh_agent() {
 }
 
 setup_ssh_agent() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Setting up ssh-agent
+    echo ----------------------------------------------------------------------
+
     spawn_ssh_agent
 
     local key='ssh/client_key'
@@ -64,6 +69,11 @@ setup_ssh_agent() {
 }
 
 docker_build() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Building Docker images
+    echo ----------------------------------------------------------------------
+
     docker-compose build
 }
 
@@ -73,10 +83,20 @@ setup() {
 }
 
 run_server() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Running the server
+    echo ----------------------------------------------------------------------
+
     docker-compose up -d server
 }
 
 run_client() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Running the client
+    echo ----------------------------------------------------------------------
+
     if [ -z "${SSH_AUTH_SOCK:+x}" ]; then
         dump 'SSH_AUTH_SOCK is not defined' >&2
         return 1
@@ -91,6 +111,11 @@ run() {
 }
 
 verify() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Checking the pulled repository
+    echo ----------------------------------------------------------------------
+
     pushd -- "$script_dir/client/var/output/test_repo" > /dev/null
     git log --oneline
     popd > /dev/null
