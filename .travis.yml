@@ -1,5 +1,6 @@
 os: linux
 dist: bionic
+
 jobs:
   include:
     - name: Test locally
@@ -11,3 +12,16 @@ jobs:
       services:
         - docker
       script: ./.travis/docker/test.sh
+    - stage: publish
+      language: minimal
+      name: 'Docker: build & publish multi-arch images'
+      if: branch = master
+      addons:
+        apt:
+          # Newer docker for BuildKit/buildx support:
+          packages:
+            - docker-ce
+          sources:
+            - key_url: 'https://download.docker.com/linux/ubuntu/gpg'
+              sourceline: 'deb https://download.docker.com/linux/ubuntu "$(lsb_release -cs)" stable'
+      script: make login && make buildx/create && make buildx/push
