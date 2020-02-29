@@ -2,7 +2,6 @@ cgit repos
 ==========
 
 [![Travis (.com) branch](https://img.shields.io/travis/com/egor-tensin/cgit-repos/master?label=Tests)](https://travis-ci.com/egor-tensin/cgit-repos)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/egortensin/pull-cgit-repos?label=Docker)](https://hub.docker.com/repository/docker/egortensin/pull-cgit-repos/builds)
 
 Mirror your git repositories and make them cgit-ready.
 
@@ -26,7 +25,7 @@ Make sure the required keys are loaded to a ssh-agent.
 
 ### Docker
 
-The image is **egortensin/pull-cgit-repos**.
+The image is **egortensin/cgit-repos**.
 The container reads the config from */etc/cgit-repos/cgit-repos.conf* and
 writes the repositories to */var/tmp/cgit-repos/output*.
 If SSH is required, the socket should be mapped to
@@ -58,7 +57,7 @@ Development
 
 To build an image:
 
-    > docker build -t egortensin/pull-cgit-repos .
+    > make docker/build
 
 ### Linting
 
