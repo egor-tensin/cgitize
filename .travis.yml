@@ -1,5 +1,6 @@
 os: linux
 dist: bionic
+language: minimal
 
 jobs:
   include:
@@ -8,12 +9,10 @@ jobs:
       python: '3.6'
       script: ./.travis/local/test.sh
     - name: Test in Docker
-      language: minimal
       services:
         - docker
       script: ./.travis/docker/test.sh
     - stage: publish
-      language: minimal
       name: 'Docker: build & publish multi-arch images'
       if: branch = master
       addons:
