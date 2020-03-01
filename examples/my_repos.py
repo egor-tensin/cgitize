@@ -1,4 +1,4 @@
-from pull.repo import BitbucketRepo, GithubRepo, Repo
+from cgit.repos.repo import BitbucketRepo, GithubRepo, Repo
 
 
 MY_REPOS = (

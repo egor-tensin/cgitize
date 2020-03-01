@@ -10,8 +10,8 @@ import logging
 import os.path
 import sys
 
-from pull.cgit import CGit, Output
-from pull.repo import BitbucketRepo, GithubRepo, Repo
+from cgit.repos.cgit import CGit, Output
+from cgit.repos.repo import BitbucketRepo, GithubRepo, Repo
 
 
 DEFAULT_OUTPUT_DIR = '/var/tmp/cgit-repos/output'

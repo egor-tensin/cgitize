@@ -9,7 +9,7 @@ import os
 import os.path
 import shutil
 
-from pull.utils import chdir, check_output, run
+from cgit.repos.utils import chdir, check_output, run
 
 
 _ENV = os.environ.copy()

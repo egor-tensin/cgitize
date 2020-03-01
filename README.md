@@ -11,13 +11,13 @@ Usage
 Adjust the config in [examples/cgit-repos.conf] and pass it using the
 `--config` parameter:
 
-    > python3 -m pull.main --config path/to/cgit-repos.conf
+    > python3 -m cgit.repos.main --config path/to/cgit-repos.conf
 
 The repository list is stored in my_repos.py (the `my_repos` setting in the
 config).
 See [examples/my_repos.py] for an example.
 
-pull/main.py calls git, which might call ssh internally.
+cgit/repos/main.py calls git, which might call ssh internally.
 Make sure the required keys are loaded to a ssh-agent.
 
 [examples/cgit-repos.conf]: examples/cgit-repos.conf
@@ -37,7 +37,7 @@ For example:
         -v "/path/to/config:/etc/cgit-repos:ro"                \
         -v "$SSH_AUTH_SOCK:/var/run/cgit-repos/ssh-agent.sock" \
         -v "/path/to/output:/var/tmp/cgit-repos/output"        \
-        egortensin/pull-cgit-repos
+        egortensin/cgit-repos
 
 ### my_repos.py
 
@@ -63,7 +63,7 @@ To build an image:
 
 Requires [Pylint].
 
-    > pylint pull
+    > pylint cgit
 
 [Pylint]: https://www.pylint.org/
 

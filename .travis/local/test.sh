@@ -56,7 +56,7 @@ setup_my_repos_py() {
     mkdir -p -- "$conf_dir"
 
     cat <<EOF | tee "$my_repos_path"
-from pull.repo import Repo
+from cgit.repos.repo import Repo
 
 
 MY_REPOS = (
@@ -81,7 +81,7 @@ run() {
     echo Pulling repository from upstream
     echo ----------------------------------------------------------------------
 
-    python3 -m pull.main --config "$cgit_repos_conf_path"
+    python3 -m cgit.repos.main --config "$cgit_repos_conf_path"
 }
 
 verify() {

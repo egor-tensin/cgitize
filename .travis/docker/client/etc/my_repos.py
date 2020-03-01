@@ -1,4 +1,4 @@
-from pull.repo import Repo
+from cgit.repos.repo import Repo
 
 
 MY_REPOS = (
