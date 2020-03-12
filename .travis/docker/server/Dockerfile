@@ -8,11 +8,11 @@ RUN apk --no-cache add bash git openssh-server && \
 
 WORKDIR /root
 
-COPY ["ssh/server_key", "/etc/ssh/ssh_host_rsa_key"]
-COPY ["ssh/server_key.pub", "/etc/ssh/ssh_host_rsa_key.pub"]
+COPY ["ssh/server_key", "/etc/ssh/ssh_host_ed25519_key"]
+COPY ["ssh/server_key.pub", "/etc/ssh/ssh_host_ed25519_key.pub"]
 COPY ["ssh/client_key.pub", "./.ssh/authorized_keys"]
 
-RUN chmod 0600 -- /etc/ssh/ssh_host_rsa_key && \
+RUN chmod 0600 -- /etc/ssh/ssh_host_ed25519_key && \
     chmod 0700 -- ./.ssh/ && \
     chmod 0600 -- ./.ssh/authorized_keys
 
