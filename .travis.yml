@@ -3,6 +3,8 @@ dist: bionic
 language: minimal
 
 jobs:
+  fast_finish: true
+
   include:
     - name: Test locally
       language: python
