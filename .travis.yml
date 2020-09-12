@@ -1,6 +1,6 @@
+language: minimal
 os: linux
 dist: focal
-language: minimal
 
 jobs:
   fast_finish: true
@@ -11,12 +11,12 @@ jobs:
       python: '3.6'
       script: ./.travis/local/test.sh
     - name: Test in Docker
-      services:
-        - docker
+      services: [docker]
       script: ./.travis/docker/test.sh
     - stage: publish
       name: 'Docker: build & publish multi-arch images'
       if: branch = master
+      services: [docker]
       # buildx isn't installed on Focal.
       before_install: make buildx/install
       script: make login && make buildx/create && make buildx/push
