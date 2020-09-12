@@ -12,10 +12,12 @@ PROJECT := cgit-repos
 export DOCKER_CLI_EXPERIMENTAL := enabled
 # Target platforms (used by buildx):
 PLATFORMS := linux/amd64,linux/armhf
-# Docker Hub credentials:
-DOCKER_USERNAME := egortensin
 # In case buildx isn't installed (e.g. on Ubuntu):
 BUILDX_VERSION := v0.4.2
+# Docker Hub credentials:
+DOCKER_USERNAME := egortensin
+
+curl := curl --silent --show-error --location --dump-header - --connect-timeout 20
 
 .PHONY: all
 all: build
@@ -75,7 +77,7 @@ fix-binfmt:
 .PHONY: buildx/install
 buildx/install:
 	mkdir -p -- ~/.docker/cli-plugins/
-	curl --silent --show-error --location -- 'https://github.com/docker/buildx/releases/download/$(BUILDX_VERSION)/buildx-$(BUILDX_VERSION).linux-amd64' > ~/.docker/cli-plugins/docker-buildx
+	$(curl) --output ~/.docker/cli-plugins/docker-buildx -- 'https://github.com/docker/buildx/releases/download/$(BUILDX_VERSION)/buildx-$(BUILDX_VERSION).linux-amd64'
 	chmod +x -- ~/.docker/cli-plugins/docker-buildx
 
 .PHONY: buildx/create
