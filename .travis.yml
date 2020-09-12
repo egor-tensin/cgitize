@@ -1,5 +1,5 @@
 os: linux
-dist: bionic
+dist: focal
 language: minimal
 
 jobs:
@@ -17,12 +17,6 @@ jobs:
     - stage: publish
       name: 'Docker: build & publish multi-arch images'
       if: branch = master
-      addons:
-        apt:
-          # Newer docker for BuildKit/buildx support:
-          packages:
-            - docker-ce
-          sources:
-            - key_url: 'https://download.docker.com/linux/ubuntu/gpg'
-              sourceline: 'deb https://download.docker.com/linux/ubuntu "$(lsb_release -cs)" stable'
+      # buildx isn't installed on Focal.
+      before_install: make buildx/install
       script: make login && make buildx/create && make buildx/push
