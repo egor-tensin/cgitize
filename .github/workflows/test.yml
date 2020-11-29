@@ -35,7 +35,7 @@ jobs:
       - name: Run the tests
         run: ./.ci/docker/test.sh
 
-  public:
+  publish:
     needs: [local, docker]
     runs-on: ubuntu-18.04
     name: Publish
