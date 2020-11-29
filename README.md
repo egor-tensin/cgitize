@@ -1,7 +1,7 @@
 cgit repos
 ==========
 
-[![Travis (.com) branch](https://img.shields.io/travis/com/egor-tensin/cgit-repos/master?label=Tests)](https://travis-ci.com/egor-tensin/cgit-repos)
+[![Test](https://github.com/egor-tensin/cgit-repos/workflows/Test/badge.svg)](https://github.com/egor-tensin/cgit-repos/actions?query=workflow%3ATest)
 
 Mirror your git repositories and make them cgit-ready.
 
