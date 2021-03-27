@@ -116,7 +116,7 @@ verify() {
     echo Checking the pulled repository
     echo ----------------------------------------------------------------------
 
-    pushd -- "$script_dir/client/var/output/test_repo" > /dev/null
+    pushd -- "$script_dir/client/output/test_repo" > /dev/null
     git log --oneline
     popd > /dev/null
 }

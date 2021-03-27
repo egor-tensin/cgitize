@@ -13,4 +13,4 @@ services:
     volumes:
       - ./client/etc/:/etc/cgit-repos:ro
       - "$SSH_AUTH_SOCK:/var/run/cgit-repos/ssh-agent.sock"
-      - ./client/var/output:/var/tmp/cgit-repos/output
+      - ./client/output:/var/tmp/cgit-repos/output
