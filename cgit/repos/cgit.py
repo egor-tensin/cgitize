@@ -9,19 +9,19 @@ import os
 import os.path
 import shutil
 
-from cgit.repos.utils import chdir, check_output, run
+import cgit.repos.utils as utils
 
 
-_ENV = os.environ.copy()
-_ENV['GIT_SSH_COMMAND'] = 'ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null'
+GIT_ENV = os.environ.copy()
+GIT_ENV['GIT_SSH_COMMAND'] = 'ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null'
 
 
-def _run(*args, **kwargs):
-    return run(*args, env=_ENV, **kwargs)
+def run(*args, **kwargs):
+    return utils.run(*args, env=GIT_ENV, **kwargs)
 
 
-def _check_output(*args, **kwargs):
-    return check_output(*args, env=_ENV, **kwargs)
+def check_output(*args, **kwargs):
+    return utils.check_output(*args, env=GIT_ENV, **kwargs)
 
 
 class CGit:
@@ -100,11 +100,11 @@ class Output:
         repo_dir = self.get_repo_dir(repo)
         if not os.path.isdir(repo_dir):
             return RepoVerdict.SHOULD_MIRROR
-        with chdir(repo_dir):
-            if not _run('git', 'rev-parse', '--is-inside-work-tree', discard_output=True):
+        with utils.chdir(repo_dir):
+            if not run('git', 'rev-parse', '--is-inside-work-tree', discard_output=True):
                 logging.warning('Not a repository, so going to mirror: %s', repo_dir)
                 return RepoVerdict.SHOULD_MIRROR
-            success, output = _check_output('git', 'config', '--get', 'remote.origin.url')
+            success, output = check_output('git', 'config', '--get', 'remote.origin.url')
             if not success:
                 # Every repository managed by this script should have the
                 # 'origin' remote. If it doesn't, it's trash.
@@ -126,16 +126,16 @@ class Output:
             except Exception as e:
                 logging.exception(e)
                 return False
-        return _run('git', 'clone', '--mirror', repo.clone_url, repo_dir)
+        return run('git', 'clone', '--mirror', repo.clone_url, repo_dir)
 
     def update(self, repo):
         logging.info("Updating repository '%s'", repo.repo_id)
         repo_dir = self.get_repo_dir(repo)
-        with chdir(repo_dir):
-            if not _run('git', 'remote', 'update', '--prune'):
+        with utils.chdir(repo_dir):
+            if not run('git', 'remote', 'update', '--prune'):
                 return False
-            if _run('git', 'rev-parse', '--verify', '--quiet', 'origin/master', discard_output=True):
-                if not _run('git', 'reset', '--soft', 'origin/master'):
+            if run('git', 'rev-parse', '--verify', '--quiet', 'origin/master', discard_output=True):
+                if not run('git', 'reset', '--soft', 'origin/master'):
                     return False
             return True
 

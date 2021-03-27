@@ -5,6 +5,7 @@
 
 from argparse import ArgumentParser
 import configparser
+from contextlib import contextmanager
 import importlib
 import logging
 import os.path
@@ -19,11 +20,17 @@ DEFAULT_CONFIG_PATH = '/etc/cgit-repos/cgit-repos.conf'
 DEFAULT_MY_REPOS_PATH = '/etc/cgit-repos/my_repos.py'
 
 
-def set_up_logging():
+@contextmanager
+def setup_logging():
     logging.basicConfig(
         level=logging.DEBUG,
         datefmt='%Y-%m-%d %H:%M:%S',
         format='%(asctime)s | %(levelname)s | %(message)s')
+    try:
+        yield
+    except Exception as e:
+        logging.exception(e)
+        raise
 
 
 def parse_args(argv=None):
@@ -86,8 +93,7 @@ class Config:
 
 
 def main(args=None):
-    set_up_logging()
-    try:
+    with setup_logging():
         args = parse_args(args)
         config = Config.read(args.config)
         config.set_defaults()
@@ -105,9 +111,6 @@ def main(args=None):
         else:
             logging.warning("Some repositories couldn't be updated!")
             return 1
-    except Exception as e:
-        logging.exception(e)
-        raise
 
 
 if __name__ == '__main__':
