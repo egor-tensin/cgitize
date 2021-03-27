@@ -40,7 +40,7 @@ setup_cgit_repos_conf() {
     cat <<EOF | tee "$cgit_repos_conf_path"
 [DEFAULT]
 
-my_repos = $my_repos_path
+my_repos = $( basename -- "$my_repos_path" )
 output = $output_path
 EOF
 }

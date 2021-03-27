@@ -13,6 +13,7 @@ import sys
 
 from cgit.repos.cgit import CGit, Output
 from cgit.repos.repo import BitbucketRepo, GithubRepo, Repo
+import cgit.repos.utils as utils
 
 
 DEFAULT_OUTPUT_DIR = '/var/tmp/cgit-repos/output'
@@ -49,12 +50,19 @@ def parse_args(argv=None):
 class Config:
     @staticmethod
     def read(path):
-        config = configparser.ConfigParser()
-        config.read(path)
-        return Config(config)
+        return Config(path)
 
-    def __init__(self, impl):
-        self.impl = impl
+    def __init__(self, path):
+        self.path = os.path.abspath(path)
+        self.impl = configparser.ConfigParser()
+        self.impl.read(path)
+
+    def _resolve_relative(self, path):
+        if os.path.isabs(path):
+            return path
+        with utils.chdir(os.path.dirname(self.path)):
+            path = os.path.abspath(path)
+            return path
 
     @property
     def output(self):
@@ -83,7 +91,8 @@ class Config:
 
     @property
     def my_repos(self):
-        return self.impl.get('DEFAULT', 'my_repos', fallback=DEFAULT_MY_REPOS_PATH)
+        path = self.impl.get('DEFAULT', 'my_repos', fallback=DEFAULT_MY_REPOS_PATH)
+        return self._resolve_relative(path)
 
     def import_my_repos(self):
         sys.path.append(os.path.dirname(self.my_repos))
