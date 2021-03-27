@@ -1,4 +1,4 @@
-from cgit.repos.repo import BitbucketRepo, GithubRepo, Repo
+from cgitize.repo import BitbucketRepo, GithubRepo, Repo
 
 
 MY_REPOS = (

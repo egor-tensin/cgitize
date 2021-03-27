@@ -7,7 +7,7 @@ SHELL := bash
 .DEFAULT_GOAL := all
 .SUFFIXES:
 
-PROJECT := cgit-repos
+PROJECT := cgitize
 # Enable buildx support:
 export DOCKER_CLI_EXPERIMENTAL := enabled
 # Target platforms (used by buildx):

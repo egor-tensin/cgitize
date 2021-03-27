@@ -11,9 +11,9 @@ import logging
 import os.path
 import sys
 
-from cgit.repos.cgit import CGit, Output
-from cgit.repos.repo import BitbucketRepo, GithubRepo, Repo
-import cgit.repos.utils as utils
+from cgitize.cgit import CGit, Output
+from cgitize.repo import BitbucketRepo, GithubRepo, Repo
+import cgitize.utils as utils
 
 
 DEFAULT_OUTPUT_DIR = '/var/tmp/cgit-repos/output'

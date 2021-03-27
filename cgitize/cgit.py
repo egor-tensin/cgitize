@@ -9,7 +9,7 @@ import os
 import os.path
 import shutil
 
-import cgit.repos.utils as utils
+import cgitize.utils as utils
 
 
 GIT_ENV = os.environ.copy()

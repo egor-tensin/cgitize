@@ -7,7 +7,7 @@ ARG ssh_sock_path="$ssh_sock_dir/ssh-agent.sock"
 
 ENV SSH_AUTH_SOCK "$ssh_sock_path"
 
-COPY ["cgit/", "/usr/src/cgit/"]
+COPY ["cgitize/", "/usr/src/cgitize/"]
 WORKDIR /usr/src
 
-CMD ["python3", "-m", "cgit.repos.main"]
+CMD ["python3", "-m", "cgitize.main"]

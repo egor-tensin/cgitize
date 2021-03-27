@@ -1,4 +1,4 @@
-from cgit.repos.repo import Repo
+from cgitize.repo import Repo
 
 
 MY_REPOS = (

@@ -55,4 +55,4 @@ jobs:
         with:
           platforms: linux/amd64,linux/armhf
           push: true
-          tags: '${{ secrets.DOCKERHUB_USERNAME }}/cgit-repos:latest'
+          tags: '${{ secrets.DOCKERHUB_USERNAME }}/cgitize:latest'
