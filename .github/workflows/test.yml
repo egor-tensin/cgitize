@@ -23,7 +23,7 @@ jobs:
         run: |
           git config --global user.name 'John Doe'
           git config --global user.email 'John.Doe@example.com'
-      - name: Run the tests
+      - name: Test
         run: ./.ci/local/test.sh
 
   docker:
@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Run the tests
+      - name: Test
         run: ./.ci/docker/test.sh
 
   publish:
