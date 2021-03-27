@@ -1,6 +1,6 @@
 # Copyright (c) 2018 Egor Tensin <Egor.Tensin@gmail.com>
-# This file is part of the "cgit repos" project.
-# For details, see https://github.com/egor-tensin/cgit-repos.
+# This file is part of the "cgitize" project.
+# For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
 from argparse import ArgumentParser
@@ -16,9 +16,9 @@ from cgitize.repo import BitbucketRepo, GithubRepo, Repo
 import cgitize.utils as utils
 
 
-DEFAULT_OUTPUT_DIR = '/var/tmp/cgit-repos/output'
-DEFAULT_CONFIG_PATH = '/etc/cgit-repos/cgit-repos.conf'
-DEFAULT_MY_REPOS_PATH = '/etc/cgit-repos/my_repos.py'
+DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize/output'
+DEFAULT_CONFIG_PATH = '/etc/cgitize/cgitize.conf'
+DEFAULT_MY_REPOS_PATH = '/etc/cgitize/my_repos.py'
 
 
 @contextmanager

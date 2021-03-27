@@ -1,6 +1,6 @@
 # Copyright (c) 2018 Egor Tensin <Egor.Tensin@gmail.com>
-# This file is part of the "cgit repos" project.
-# For details, see https://github.com/egor-tensin/cgit-repos.
+# This file is part of the "cgitize" project.
+# For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
 from enum import Enum

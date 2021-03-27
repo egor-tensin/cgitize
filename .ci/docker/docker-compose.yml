@@ -11,6 +11,6 @@ services:
       dockerfile: Dockerfile
     image: client
     volumes:
-      - ./client/etc/:/etc/cgit-repos:ro
-      - "$SSH_AUTH_SOCK:/var/run/cgit-repos/ssh-agent.sock"
-      - ./client/output:/var/tmp/cgit-repos/output
+      - ./client/etc/:/etc/cgitize:ro
+      - "$SSH_AUTH_SOCK:/var/run/cgitize/ssh-agent.sock"
+      - ./client/output:/var/tmp/cgitize/output

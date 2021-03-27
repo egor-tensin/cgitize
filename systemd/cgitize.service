@@ -1,0 +1,13 @@
+# Adjust as you see fit.
+
+[Unit]
+Description=Pull cgit repositories
+Wants=ssh-agent.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/workspace/personal/cgitize
+ExecStartPre=/usr/bin/truncate --size=0K -- %h/var/cgitize/cgitize.log
+ExecStart=/usr/bin/python3 -m cgitize.main --config %h/etc/cgitize/cgitize.conf
+StandardOutput=file:%h/var/cgitize/cgitize.log
+StandardError=inherit

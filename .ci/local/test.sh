@@ -3,9 +3,9 @@
 set -o errexit -o nounset -o pipefail
 
 readonly local_repo_path="$HOME/test_repo"
-readonly cgit_repos_conf_path="$HOME/etc/cgit-repos/cgit-repos.conf"
-readonly my_repos_path="$HOME/etc/cgit-repos/my_repos.py"
-readonly output_path="$HOME/var/cgit-repos/output"
+readonly cgitize_conf_path="$HOME/etc/cgitize/cgitize.conf"
+readonly my_repos_path="$HOME/etc/cgitize/my_repos.py"
+readonly output_path="$HOME/var/cgitize/output"
 
 setup_local_repo() {
     echo
@@ -27,17 +27,17 @@ setup_local_repo() {
     popd > /dev/null
 }
 
-setup_cgit_repos_conf() {
+setup_cgitize_conf() {
     echo
     echo ----------------------------------------------------------------------
-    echo cgit-repos.conf
+    echo cgitize.conf
     echo ----------------------------------------------------------------------
 
     local conf_dir
-    conf_dir="$( dirname -- "$cgit_repos_conf_path" )"
+    conf_dir="$( dirname -- "$cgitize_conf_path" )"
     mkdir -p -- "$conf_dir"
 
-    cat <<EOF | tee "$cgit_repos_conf_path"
+    cat <<EOF | tee "$cgitize_conf_path"
 [DEFAULT]
 
 my_repos = $( basename -- "$my_repos_path" )
@@ -65,14 +65,14 @@ MY_REPOS = (
 EOF
 }
 
-setup_cgit_repos() {
-    setup_cgit_repos_conf
+setup_cgitize() {
+    setup_cgitize_conf
     setup_my_repos_py
 }
 
 setup() {
     setup_local_repo
-    setup_cgit_repos
+    setup_cgitize
 }
 
 run() {
@@ -81,7 +81,7 @@ run() {
     echo Pulling repository from upstream
     echo ----------------------------------------------------------------------
 
-    python3 -m cgitize.main --config "$cgit_repos_conf_path"
+    python3 -m cgitize.main --config "$cgitize_conf_path"
 }
 
 verify() {
