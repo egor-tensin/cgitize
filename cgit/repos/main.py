@@ -66,7 +66,8 @@ class Config:
 
     @property
     def output(self):
-        return self.impl.get('DEFAULT', 'output', fallback=DEFAULT_OUTPUT_DIR)
+        path = self.impl.get('DEFAULT', 'output', fallback=DEFAULT_OUTPUT_DIR)
+        return self._resolve_relative(path)
 
     @property
     def clone_url(self):
