@@ -8,6 +8,7 @@ import os.path
 
 class Repo:
     DEFAULT_OWNER = None
+    DEFAULT_VIA_SSH = True
 
     @staticmethod
     def extract_repo_name(repo_id):
@@ -36,13 +37,15 @@ class GithubRepo(Repo):
     DEFAULT_USER = None
 
     def __init__(self, repo_id, clone_url=None, owner=None, desc=None,
-                 homepage=None, user=DEFAULT_USER, via_ssh=True):
+                 homepage=None, user=DEFAULT_USER, via_ssh=None):
         if user is None:
             if GithubRepo.DEFAULT_USER is None:
                 raise RuntimeError('neither explicit or default GitHub username was provided')
             user = GithubRepo.DEFAULT_USER
         name = Repo.extract_repo_name(repo_id)
         if clone_url is None:
+            if via_ssh is None:
+                via_ssh = Repo.DEFAULT_VIA_SSH
             if via_ssh:
                 clone_url = self.build_clone_url_ssh(user, name)
             else:
@@ -69,13 +72,15 @@ class BitbucketRepo(Repo):
     DEFAULT_USER = None
 
     def __init__(self, repo_id, clone_url=None, owner=None, desc=None,
-                 homepage=None, user=DEFAULT_USER, via_ssh=True):
+                 homepage=None, user=DEFAULT_USER, via_ssh=None):
         if user is None:
             if BitbucketRepo.DEFAULT_USER is None:
                 raise RuntimeError('neither explicit or default Bitbucket username was provided')
             user = BitbucketRepo.DEFAULT_USER
         name = Repo.extract_repo_name(repo_id)
         if clone_url is None:
+            if via_ssh is None:
+                via_ssh = Repo.DEFAULT_VIA_SSH
             if via_ssh:
                 clone_url = self.build_clone_url_ssh(user, name)
             else:

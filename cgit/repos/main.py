@@ -78,6 +78,10 @@ class Config:
         return self.impl.get('DEFAULT', 'owner', fallback=None)
 
     @property
+    def via_ssh(self):
+        return self.impl.getboolean('DEFAULT', 'ssh', fallback=Repo.DEFAULT_VIA_SSH)
+
+    @property
     def github_username(self):
         return self.impl.get('GITHUB', 'username', fallback=None)
 
@@ -87,6 +91,7 @@ class Config:
 
     def set_defaults(self):
         Repo.DEFAULT_OWNER = self.default_owner
+        Repo.DEFAULT_VIA_SSH = self.via_ssh
         GithubRepo.DEFAULT_USER = self.github_username
         BitbucketRepo.DEFAULT_USER = self.bitbucket_username
 
