@@ -12,7 +12,7 @@ import os.path
 import sys
 
 from cgitize.cgit import CGit, Output
-from cgitize.repo import BitbucketRepo, GithubRepo, Repo
+from cgitize.repo import Bitbucket, GitHub, Repo
 import cgitize.utils as utils
 
 
@@ -100,10 +100,10 @@ class Config:
     def set_defaults(self):
         Repo.DEFAULT_OWNER = self.default_owner
         Repo.DEFAULT_VIA_SSH = self.via_ssh
-        GithubRepo.DEFAULT_USER = self.github_username
-        GithubRepo.ACCESS_TOKEN = self.github_access_token
-        BitbucketRepo.DEFAULT_USER = self.bitbucket_username
-        BitbucketRepo.APP_PASSWORD = self.bitbucket_app_password
+        GitHub.DEFAULT_USER = self.github_username
+        GitHub.ACCESS_TOKEN = self.github_access_token
+        Bitbucket.DEFAULT_USER = self.bitbucket_username
+        Bitbucket.APP_PASSWORD = self.bitbucket_app_password
 
     @property
     def my_repos(self):

@@ -74,7 +74,7 @@ class HostedRepo(Repo, abc.ABC):
         pass
 
 
-class GithubRepo(HostedRepo):
+class GitHub(HostedRepo):
     DEFAULT_USER = None
     ACCESS_TOKEN = None
 
@@ -82,23 +82,23 @@ class GithubRepo(HostedRepo):
         return 'GitHub'
 
     def get_default_user(self):
-        return GithubRepo.DEFAULT_USER
+        return GitHub.DEFAULT_USER
 
     def build_clone_url_ssh(self, user, name):
         return f'ssh://git@github.com/{user}/{name}.git'
 
     def build_clone_url_https(self, user, name):
-        if GithubRepo.ACCESS_TOKEN is None:
+        if GitHub.ACCESS_TOKEN is None:
             auth = ''
         else:
-            auth = f'{GithubRepo.ACCESS_TOKEN}@'
+            auth = f'{GitHub.ACCESS_TOKEN}@'
         return f'https://{auth}github.com/{user}/{name}.git'
 
     def build_homepage_url(self, user, name):
         return f'https://github.com/{user}/{name}'
 
 
-class BitbucketRepo(HostedRepo):
+class Bitbucket(HostedRepo):
     DEFAULT_USER = None
     APP_PASSWORD = None
 
@@ -106,13 +106,13 @@ class BitbucketRepo(HostedRepo):
         return 'Bitbucket'
 
     def get_default_user(self):
-        return BitbucketRepo.DEFAULT_USER
+        return Bitbucket.DEFAULT_USER
 
     def build_clone_url_ssh(self, user, name):
         return f'ssh://git@bitbucket.org/{user}/{name}.git'
 
     def build_clone_url_https(self, user, name):
-        if BitbucketRepo.APP_PASSWORD is None:
+        if Bitbucket.APP_PASSWORD is None:
             auth = ''
         else:
             auth = f'{user}:{Bitbucket.APP_PASSWORD}@'

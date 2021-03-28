@@ -1,12 +1,12 @@
-from cgitize.repo import BitbucketRepo, GithubRepo, Repo
+from cgitize.repo import Bitbucket, GitHub, Repo
 
 
 MY_REPOS = (
-    GithubRepo('xyz'),
-    GithubRepo('foo/bar', user='test', via_ssh=False),
+    GitHub('xyz'),
+    GitHub('foo/bar', user='test', via_ssh=False),
 
-    BitbucketRepo('xyz'),
-    BitbucketRepo('foo/bar', desc='Foo (Bar)'),
+    Bitbucket('xyz'),
+    Bitbucket('foo/bar', desc='Foo (Bar)'),
 
     Repo('tmp/tmp', clone_url='https://example.com/tmp.git', owner='John Doe'),
 )
