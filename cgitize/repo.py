@@ -76,6 +76,7 @@ class HostedRepo(Repo, abc.ABC):
 
 class GithubRepo(HostedRepo):
     DEFAULT_USER = None
+    ACCESS_TOKEN = None
 
     def provider_name(self):
         return 'GitHub'
@@ -87,7 +88,11 @@ class GithubRepo(HostedRepo):
         return f'ssh://git@github.com/{user}/{name}.git'
 
     def build_clone_url_https(self, user, name):
-        return f'https://github.com/{user}/{name}.git'
+        if GithubRepo.ACCESS_TOKEN is None:
+            auth = ''
+        else:
+            auth = f'{GithubRepo.ACCESS_TOKEN}@'
+        return f'https://{auth}github.com/{user}/{name}.git'
 
     def build_homepage_url(self, user, name):
         return f'https://github.com/{user}/{name}'
@@ -95,6 +100,7 @@ class GithubRepo(HostedRepo):
 
 class BitbucketRepo(HostedRepo):
     DEFAULT_USER = None
+    APP_PASSWORD = None
 
     def provider_name(self):
         return 'Bitbucket'
@@ -106,7 +112,11 @@ class BitbucketRepo(HostedRepo):
         return f'ssh://git@bitbucket.org/{user}/{name}.git'
 
     def build_clone_url_https(self, user, name):
-        return f'https://bitbucket.org/{user}/{name}.git'
+        if BitbucketRepo.APP_PASSWORD is None:
+            auth = ''
+        else:
+            auth = f'{user}:{Bitbucket.APP_PASSWORD}@'
+        return f'https://{auth}bitbucket.org/{user}/{name}.git'
 
     def build_homepage_url(self, user, name):
         return f'https://bitbucket.org/{user}/{name.lower()}'

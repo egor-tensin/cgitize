@@ -86,14 +86,24 @@ class Config:
         return self.impl.get('GITHUB', 'username', fallback=None)
 
     @property
+    def github_access_token(self):
+        return self.impl.get('GITHUB', 'access_token', fallback=None)
+
+    @property
     def bitbucket_username(self):
         return self.impl.get('BITBUCKET', 'username', fallback=None)
+
+    @property
+    def bitbucket_app_password(self):
+        return self.impl.get('BITBUCKET', 'app_password', fallback=None)
 
     def set_defaults(self):
         Repo.DEFAULT_OWNER = self.default_owner
         Repo.DEFAULT_VIA_SSH = self.via_ssh
         GithubRepo.DEFAULT_USER = self.github_username
+        GithubRepo.ACCESS_TOKEN = self.github_access_token
         BitbucketRepo.DEFAULT_USER = self.bitbucket_username
+        BitbucketRepo.APP_PASSWORD = self.bitbucket_app_password
 
     @property
     def my_repos(self):
