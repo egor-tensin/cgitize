@@ -5,7 +5,6 @@
 
 from argparse import ArgumentParser
 import configparser
-from contextlib import contextmanager
 import importlib
 import logging
 import os.path
@@ -18,19 +17,6 @@ import cgitize.utils as utils
 DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize/output'
 DEFAULT_CONFIG_PATH = '/etc/cgitize/cgitize.conf'
 DEFAULT_MY_REPOS_PATH = '/etc/cgitize/my_repos.py'
-
-
-@contextmanager
-def setup_logging():
-    logging.basicConfig(
-        level=logging.DEBUG,
-        datefmt='%Y-%m-%d %H:%M:%S',
-        format='%(asctime)s | %(levelname)s | %(message)s')
-    try:
-        yield
-    except Exception as e:
-        logging.exception(e)
-        raise
 
 
 def parse_args(argv=None):
@@ -109,7 +95,7 @@ class Config:
 
 
 def main(args=None):
-    with setup_logging():
+    with utils.setup_logging():
         args = parse_args(args)
         config = Config.read(args.config)
         my_repos = config.import_my_repos()

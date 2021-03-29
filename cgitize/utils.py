@@ -3,10 +3,27 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
-import contextlib
+from contextlib import contextmanager
 import logging
 import os
 import subprocess
+import sys
+
+
+@contextmanager
+def setup_logging():
+    logging.basicConfig(
+        level=logging.DEBUG,
+        datefmt='%Y-%m-%d %H:%M:%S',
+        format='%(asctime)s | %(levelname)s | %(message)s',
+        # Log to stdout, because that's where subprocess's output goes (so that
+        # the don't get interleaved).
+        stream=sys.stdout)
+    try:
+        yield
+    except Exception as e:
+        logging.exception(e)
+        raise
 
 
 def run(*args, capture_output=False, **kwargs):
@@ -44,7 +61,7 @@ def try_run_capture(*args, **kwargs):
         return e.returncode == 0, e.output
 
 
-@contextlib.contextmanager
+@contextmanager
 def chdir(new_cwd):
     old_cwd = os.getcwd()
     os.chdir(new_cwd)
