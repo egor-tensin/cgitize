@@ -2,10 +2,15 @@
 
 set -o errexit -o nounset -o pipefail
 
-local_repo_path=
-readonly cgitize_conf_path="$HOME/etc/cgitize/cgitize.conf"
-readonly my_repos_path="$HOME/etc/cgitize/my_repos.py"
-readonly output_path="$HOME/var/cgitize/output"
+script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
+script_dir="$( cd -- "$script_dir" && pwd )"
+readonly script_dir
+
+upstream_repo_dir=
+readonly etc_dir="$script_dir/etc"
+readonly cgitize_conf_path="$etc_dir/cgitize.conf"
+readonly my_repos_path="$etc_dir/my_repos.py"
+readonly output_dir="$script_dir/output"
 
 cleanup() {
     echo
@@ -13,17 +18,22 @@ cleanup() {
     echo Cleaning up
     echo ----------------------------------------------------------------------
 
-    rm -rf -- "$local_repo_path"
+    echo "Removing upstream repository directory: $upstream_repo_dir"
+    rm -rf -- "$upstream_repo_dir"
+    echo "Removing etc directory: $etc_dir"
+    rm -rf -- "$etc_dir"
+    echo "Removing output directory: $output_dir"
+    rm -rf -- "$output_dir"
 }
 
-setup_local_repo() {
+setup_upstream_repo() {
     echo
     echo ----------------------------------------------------------------------
     echo Setting up upstream repository
     echo ----------------------------------------------------------------------
 
-    local_repo_path="$( mktemp -d )"
-    pushd -- "$local_repo_path" > /dev/null
+    upstream_repo_dir="$( mktemp -d )"
+    pushd -- "$upstream_repo_dir" > /dev/null
 
     git init
     echo '1' > 1.txt
@@ -32,6 +42,21 @@ setup_local_repo() {
     echo '2' > 2.txt
     git add .
     git commit -m 'second commit'
+
+    popd > /dev/null
+}
+
+add_commits() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Adding new commits
+    echo ----------------------------------------------------------------------
+
+    pushd -- "$upstream_repo_dir" > /dev/null
+
+    echo '3' > 3.txt
+    git add .
+    git commit -m 'third commit'
 
     popd > /dev/null
 }
@@ -50,7 +75,7 @@ setup_cgitize_conf() {
 [DEFAULT]
 
 my_repos = $( basename -- "$my_repos_path" )
-output = $output_path
+output = $output_dir
 EOF
 }
 
@@ -69,7 +94,7 @@ from cgitize.repo import Repo
 
 
 MY_REPOS = (
-    Repo('test_repo', clone_url='$local_repo_path'),
+    Repo('test_repo', clone_url='$upstream_repo_dir'),
 )
 EOF
 }
@@ -79,37 +104,142 @@ setup_cgitize() {
     setup_my_repos_py
 }
 
-setup() {
-    setup_local_repo
+setup_bare() {
+    setup_upstream_repo
     setup_cgitize
 }
 
-run() {
+setup_workdir() {
+    setup_bare
+
     echo
     echo ----------------------------------------------------------------------
-    echo Pulling repository from upstream
+    echo Setting up local repository clone
+    echo ----------------------------------------------------------------------
+
+    mkdir -p -- "$output_dir"
+    git clone --quiet -- "$upstream_repo_dir" "$output_dir/test_repo"
+}
+
+cgitize() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Running cgitize
     echo ----------------------------------------------------------------------
 
     python3 -m cgitize.main --config "$cgitize_conf_path"
 }
 
-verify() {
+check_contains() (
+    # No pipefail so that grep doesn't fuck everything up:
+    # https://mywiki.wooledge.org/BashPitfalls#pipefail
+
+    set -o errexit -o nounset
+
+    if [ "$#" -lt 1 ]; then
+        echo "usage: ${FUNCNAME[0]} TEST_STRING [PATTERN...]" >&2
+        return 1
+    fi
+    local test_string="$1"
+    shift
+    local pattern
+    for pattern; do
+        if ! echo "$test_string" | grep --fixed-strings --silent -- "$pattern"; then
+            echo "${FUNCNAME[0]}: couldn't find the following pattern: $pattern" >&2
+            return 1
+        fi
+    done
+)
+
+verify_commits() {
+    # This is fucking stupid, but otherwise stuff like `if verify_commits;`
+    # doesn't work: https://stackoverflow.com/q/4072984/514684
+    # TODO: figure this out?
+    pushd -- "$output_dir" > /dev/null &&
+        cd -- test_repo &&
+        local output &&
+        output="$( git log --oneline )" &&
+        echo "$output" &&
+        check_contains "$output" "$@" &&
+        popd > /dev/null
+}
+
+verify_initial_commits() {
     echo
     echo ----------------------------------------------------------------------
-    echo Checking the pulled repository
+    echo Checking the initial commits
     echo ----------------------------------------------------------------------
 
-    pushd -- "$output_path" > /dev/null
-    cd -- test_repo
-    git log --oneline
-    popd > /dev/null
+    verify_commits 'first commit' 'second commit'
+}
+
+verify_added_commits() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Checking the added commits
+    echo ----------------------------------------------------------------------
+
+    verify_commits 'first commit' 'second commit' 'third commit'
+}
+
+test_bare() {
+    echo
+    echo ======================================================================
+    echo "${FUNCNAME[0]}"
+    echo ======================================================================
+
+    setup_bare
+    cgitize
+    verify_initial_commits
+    add_commits
+    cgitize
+    verify_added_commits
+    cleanup
+}
+
+test_workdir() {
+    echo
+    echo ======================================================================
+    echo "${FUNCNAME[0]}"
+    echo ======================================================================
+
+    setup_workdir
+    cgitize
+    verify_initial_commits
+    add_commits
+    cgitize
+    verify_added_commits
+    cleanup
+}
+
+test_failure() {
+    echo
+    echo ======================================================================
+    echo "${FUNCNAME[0]}"
+    echo ======================================================================
+
+    setup_bare
+    cgitize
+    verify_initial_commits
+    add_commits
+    rm -rf -- "$upstream_repo_dir"
+    if cgitize; then
+        echo "cgitize should have failed to pull the upstream repository." >&2
+        return 1
+    fi
+    verify_initial_commits
+    if verify_added_commits; then
+        echo "The added commits should not have been pulled." >&2
+        return 1
+    fi
+    cleanup
 }
 
 main() {
     trap cleanup EXIT
-    setup
-    run
-    verify
+    test_bare
+    test_workdir
+    test_failure
 }
 
 main
