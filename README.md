@@ -33,7 +33,7 @@ If SSH is required, the socket should be mapped to
 
 For example:
 
-    > docker run -it --rm                                      \
+    > docker run -it --rm                                   \
         -v "/path/to/config:/etc/cgitize:ro"                \
         -v "$SSH_AUTH_SOCK:/var/run/cgitize/ssh-agent.sock" \
         -v "/path/to/output:/var/tmp/cgitize/output"        \
