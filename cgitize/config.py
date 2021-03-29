@@ -8,7 +8,7 @@ import importlib
 import os.path
 import sys
 
-import cgitize.utils as utils
+from cgitize.utils import chdir
 
 
 class Config:
@@ -28,7 +28,7 @@ class Config:
     def _resolve_relative(self, path):
         if os.path.isabs(path):
             return path
-        with utils.chdir(os.path.dirname(self.path)):
+        with chdir(os.path.dirname(self.path)):
             path = os.path.abspath(path)
             return path
 

@@ -9,7 +9,7 @@ import sys
 
 from cgitize.config import Config
 from cgitize.cgit import CGit, Output
-import cgitize.utils as utils
+from cgitize.utils import setup_logging
 
 
 def parse_args(argv=None):
@@ -26,7 +26,7 @@ def parse_args(argv=None):
 
 
 def main(args=None):
-    with utils.setup_logging():
+    with setup_logging():
         args = parse_args(args)
         config = Config.read(args.config)
         my_repos = config.import_my_repos()

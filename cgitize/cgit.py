@@ -12,7 +12,7 @@ import shutil
 import stat
 
 from cgitize.git import Git
-import cgitize.utils as utils
+from cgitize.utils import chdir
 
 
 @contextmanager
@@ -123,7 +123,7 @@ class Output:
         repo_dir = self.get_repo_dir(repo)
         if not os.path.isdir(repo_dir):
             return RepoVerdict.SHOULD_MIRROR
-        with utils.chdir(repo_dir):
+        with chdir(repo_dir):
             if not Git.check('rev-parse', '--is-inside-work-tree'):
                 logging.warning('Not a repository, so going to mirror: %s', repo_dir)
                 return RepoVerdict.SHOULD_MIRROR
@@ -155,7 +155,7 @@ class Output:
     def update(self, repo):
         logging.info("Updating repository '%s'", repo.repo_id)
         repo_dir = self.get_repo_dir(repo)
-        with utils.chdir(repo_dir):
+        with chdir(repo_dir):
             with setup_git_auth(repo):
                 if not Git.check('remote', 'update', '--prune'):
                     return False
