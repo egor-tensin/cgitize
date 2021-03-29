@@ -79,7 +79,7 @@ class Config:
 
     @property
     def via_ssh(self):
-        return self.impl.getboolean('DEFAULT', 'ssh', fallback=Repo.DEFAULT_VIA_SSH)
+        return self.impl.getboolean('DEFAULT', 'ssh', fallback=True)
 
     @property
     def github_username(self):
@@ -97,14 +97,6 @@ class Config:
     def bitbucket_app_password(self):
         return self.impl.get('BITBUCKET', 'app_password', fallback=None)
 
-    def set_defaults(self):
-        Repo.DEFAULT_OWNER = self.default_owner
-        Repo.DEFAULT_VIA_SSH = self.via_ssh
-        GitHub.DEFAULT_USER = self.github_username
-        GitHub.ACCESS_TOKEN = self.github_access_token
-        Bitbucket.DEFAULT_USER = self.bitbucket_username
-        Bitbucket.APP_PASSWORD = self.bitbucket_app_password
-
     @property
     def my_repos(self):
         path = self.impl.get('DEFAULT', 'my_repos', fallback=DEFAULT_MY_REPOS_PATH)
@@ -121,13 +113,14 @@ def main(args=None):
     with setup_logging():
         args = parse_args(args)
         config = Config.read(args.config)
-        config.set_defaults()
         my_repos = config.import_my_repos()
         cgit = CGit(config.clone_url)
         output = Output(config.output, cgit)
         success = True
         for repo in my_repos:
             if args.repos is None or repo.repo_id in args.repos:
+                repo.fill_defaults(config)
+                repo.validate()
                 if not output.pull(repo):
                     success = False
         if success:
