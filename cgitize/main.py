@@ -4,19 +4,12 @@
 # Distributed under the MIT License.
 
 from argparse import ArgumentParser
-import configparser
-import importlib
 import logging
-import os.path
 import sys
 
+from cgitize.config import Config
 from cgitize.cgit import CGit, Output
 import cgitize.utils as utils
-
-
-DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize/output'
-DEFAULT_CONFIG_PATH = '/etc/cgitize/cgitize.conf'
-DEFAULT_MY_REPOS_PATH = '/etc/cgitize/my_repos.py'
 
 
 def parse_args(argv=None):
@@ -24,74 +17,12 @@ def parse_args(argv=None):
         argv = sys.argv[1:]
     parser = ArgumentParser()
     parser.add_argument('--config', metavar='PATH',
-                        default=DEFAULT_CONFIG_PATH,
+                        default=Config.DEFAULT_PATH,
                         help='config file path')
     parser.add_argument('--repo', metavar='REPO_ID',
                         nargs='*', dest='repos',
                         help='repos to pull')
     return parser.parse_args(argv)
-
-
-class Config:
-    @staticmethod
-    def read(path):
-        return Config(path)
-
-    def __init__(self, path):
-        self.path = os.path.abspath(path)
-        self.impl = configparser.ConfigParser()
-        self.impl.read(path)
-
-    def _resolve_relative(self, path):
-        if os.path.isabs(path):
-            return path
-        with utils.chdir(os.path.dirname(self.path)):
-            path = os.path.abspath(path)
-            return path
-
-    @property
-    def output(self):
-        path = self.impl.get('DEFAULT', 'output', fallback=DEFAULT_OUTPUT_DIR)
-        return self._resolve_relative(path)
-
-    @property
-    def clone_url(self):
-        return self.impl.get('DEFAULT', 'clone_url', fallback=None)
-
-    @property
-    def default_owner(self):
-        return self.impl.get('DEFAULT', 'owner', fallback=None)
-
-    @property
-    def via_ssh(self):
-        return self.impl.getboolean('DEFAULT', 'ssh', fallback=True)
-
-    @property
-    def github_username(self):
-        return self.impl.get('GITHUB', 'username', fallback=None)
-
-    @property
-    def github_access_token(self):
-        return self.impl.get('GITHUB', 'access_token', fallback=None)
-
-    @property
-    def bitbucket_username(self):
-        return self.impl.get('BITBUCKET', 'username', fallback=None)
-
-    @property
-    def bitbucket_app_password(self):
-        return self.impl.get('BITBUCKET', 'app_password', fallback=None)
-
-    @property
-    def my_repos(self):
-        path = self.impl.get('DEFAULT', 'my_repos', fallback=DEFAULT_MY_REPOS_PATH)
-        return self._resolve_relative(path)
-
-    def import_my_repos(self):
-        sys.path.append(os.path.dirname(self.my_repos))
-        module_name = os.path.splitext(os.path.basename(self.my_repos))[0]
-        module = importlib.import_module(module_name)
-        return module.MY_REPOS
 
 
 def main(args=None):
