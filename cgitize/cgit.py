@@ -3,11 +3,13 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
+from contextlib import contextmanager
 from enum import Enum
 import logging
 import os
 import os.path
 import shutil
+import stat
 
 import cgitize.utils as utils
 
@@ -16,12 +18,34 @@ GIT_ENV = os.environ.copy()
 GIT_ENV['GIT_SSH_COMMAND'] = 'ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null'
 
 
-def run(*args, **kwargs):
-    return utils.run(*args, env=GIT_ENV, **kwargs)
+def git(*args, **kwargs):
+    return utils.run('git', *args, env=GIT_ENV, **kwargs)
 
 
-def check_output(*args, **kwargs):
-    return utils.check_output(*args, env=GIT_ENV, **kwargs)
+def git_stdout(*args, **kwargs):
+    return utils.check_output('git', *args, env=GIT_ENV, **kwargs)
+
+
+@contextmanager
+def setup_git_auth(repo):
+    if not repo.url_auth:
+        yield
+        return
+    config_path = os.path.expanduser('~/.gitconfig')
+    exists = os.path.exists(config_path)
+    if exists:
+        old_permissions = stat.S_IMODE(os.stat(config_path).st_mode)
+        new_permissions = stat.S_IRUSR | stat.S_IWUSR # 0x600
+        os.chmod(config_path, new_permissions)
+    git('config', '--global', f'url.{repo.clone_url_with_auth}.insteadOf', repo.clone_url)
+    try:
+        yield
+    finally:
+        if exists:
+            git('config', '--global', '--remove-section', f'url.{repo.clone_url_with_auth}.insteadOf')
+            os.chmod(config_path, old_permissions)
+        else:
+            os.unlink(config_path)
 
 
 class CGit:
@@ -101,10 +125,10 @@ class Output:
         if not os.path.isdir(repo_dir):
             return RepoVerdict.SHOULD_MIRROR
         with utils.chdir(repo_dir):
-            if not run('git', 'rev-parse', '--is-inside-work-tree', discard_output=True):
+            if not git('rev-parse', '--is-inside-work-tree', discard_output=True):
                 logging.warning('Not a repository, so going to mirror: %s', repo_dir)
                 return RepoVerdict.SHOULD_MIRROR
-            success, output = check_output('git', 'config', '--get', 'remote.origin.url')
+            success, output = git_stdout('config', '--get', 'remote.origin.url')
             if not success:
                 # Every repository managed by this script should have the
                 # 'origin' remote. If it doesn't, it's trash.
@@ -126,16 +150,18 @@ class Output:
             except Exception as e:
                 logging.exception(e)
                 return False
-        return run('git', 'clone', '--mirror', repo.clone_url, repo_dir)
+        with setup_git_auth(repo):
+            return git('clone', '--mirror', repo.clone_url, repo_dir)
 
     def update(self, repo):
         logging.info("Updating repository '%s'", repo.repo_id)
         repo_dir = self.get_repo_dir(repo)
         with utils.chdir(repo_dir):
-            if not run('git', 'remote', 'update', '--prune'):
-                return False
-            if run('git', 'rev-parse', '--verify', '--quiet', 'origin/master', discard_output=True):
-                if not run('git', 'reset', '--soft', 'origin/master'):
+            with setup_git_auth(repo):
+                if not git('remote', 'update', '--prune'):
+                    return False
+            if git('rev-parse', '--verify', '--quiet', 'origin/master', discard_output=True):
+                if not git('reset', '--soft', 'origin/master'):
                     return False
             return True
 

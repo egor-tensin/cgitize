@@ -5,6 +5,7 @@
 
 import abc
 import os.path
+from urllib.parse import urlsplit, urlunsplit
 
 
 class Repo:
@@ -59,6 +60,10 @@ class Repo:
     def homepage(self):
         return self._homepage
 
+    @property
+    def url_auth(self):
+        return False
+
 
 class HostedRepo(Repo, abc.ABC):
     def __init__(self, repo_id, owner=None, desc=None, homepage=None,
@@ -102,6 +107,18 @@ class HostedRepo(Repo, abc.ABC):
             return self.clone_url_ssh
         return self.clone_url_https
 
+    @property
+    def clone_url_with_auth(self):
+        if self._via_ssh:
+            return self.clone_url_ssh
+        auth = self.url_auth
+        clone_url = self.clone_url_https
+        if not auth:
+            return clone_url
+        clone_url = urlsplit(clone_url)
+        clone_url = clone_url._replace(netloc=f'{auth}@{clone_url.netloc}')
+        return urlunsplit(clone_url)
+
 
 class GitHub(HostedRepo):
     def __init__(self, *args, **kwargs):
@@ -123,16 +140,18 @@ class GitHub(HostedRepo):
         return f'https://github.com/{self.user}/{self.repo_name}'
 
     @property
+    def url_auth(self):
+        if self._access_token is None:
+            return ''
+        return f'{self._access_token}'
+
+    @property
     def clone_url_ssh(self):
         return f'ssh://git@github.com/{self.user}/{self.repo_name}.git'
 
     @property
     def clone_url_https(self):
-        if self._access_token is None:
-            auth = ''
-        else:
-            auth = f'{self._access_token}@'
-        return f'https://{auth}github.com/{self.user}/{self.repo_name}.git'
+        return f'https://github.com/{self.user}/{self.repo_name}.git'
 
 
 class Bitbucket(HostedRepo):
@@ -155,13 +174,15 @@ class Bitbucket(HostedRepo):
         return f'https://bitbucket.org/{self.user}/{self.repo_name.lower()}'
 
     @property
+    def url_auth(self):
+        if self._app_password is None:
+            return ''
+        return f'{self.user}:{self._app_password}'
+
+    @property
     def clone_url_ssh(self):
         return f'ssh://git@bitbucket.org/{self.user}/{self.repo_name}.git'
 
     @property
     def clone_url_https(self):
-        if self._app_password is None:
-            auth = ''
-        else:
-            auth = f'{self.user}:{self._app_password}@'
-        return f'https://{auth}bitbucket.org/{self.user}/{self.repo_name}.git'
+        return f'https://bitbucket.org/{self.user}/{self.repo_name}.git'

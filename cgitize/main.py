@@ -12,7 +12,6 @@ import os.path
 import sys
 
 from cgitize.cgit import CGit, Output
-from cgitize.repo import Bitbucket, GitHub, Repo
 import cgitize.utils as utils
 
 
