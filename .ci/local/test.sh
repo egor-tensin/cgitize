@@ -130,26 +130,25 @@ cgitize() {
     python3 -m cgitize.main --config "$cgitize_conf_path"
 }
 
-check_contains() (
-    # No pipefail so that grep doesn't fuck everything up:
-    # https://mywiki.wooledge.org/BashPitfalls#pipefail
-
-    set -o errexit -o nounset
-
+check_contains() {
     if [ "$#" -lt 1 ]; then
         echo "usage: ${FUNCNAME[0]} TEST_STRING [PATTERN...]" >&2
         return 1
     fi
+
     local test_string="$1"
     shift
+
     local pattern
     for pattern; do
-        if ! echo "$test_string" | grep --fixed-strings --silent -- "$pattern"; then
+        # Be careful to _not_ use grep -q, since this fucks stuff up:
+        # https://mywiki.wooledge.org/BashPitfalls#pipefail.
+        if ! echo "$test_string" | grep --fixed-strings -- "$pattern" > /dev/null; then
             echo "${FUNCNAME[0]}: couldn't find the following pattern: $pattern" >&2
             return 1
         fi
     done
-)
+}
 
 verify_commits() {
     # This is fucking stupid, but otherwise stuff like `if verify_commits;`
