@@ -6,6 +6,7 @@
 from contextlib import contextmanager
 import logging
 import os
+import stat
 import subprocess
 import sys
 
@@ -69,3 +70,24 @@ def chdir(new_cwd):
         yield
     finally:
         os.chdir(old_cwd)
+
+
+@contextmanager
+def protected_file(path):
+    # 0600:
+    new_permissions = stat.S_IRUSR | stat.S_IWUSR
+    if os.path.exists(path):
+        old_permissions = stat.S_IMODE(os.stat(path).st_mode)
+        os.chmod(path, new_permissions)
+        try:
+            yield
+        finally:
+            os.chmod(path, old_permissions)
+    else:
+        with open(path, mode='w'):
+            pass
+        os.chmod(path, new_permissions)
+        try:
+            yield
+        finally:
+            os.unlink(path)

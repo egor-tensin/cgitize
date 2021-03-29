@@ -3,47 +3,12 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
-from contextlib import contextmanager
 import logging
 import os
-import os.path
 import shutil
-import stat
 
 from cgitize.git import Git
 from cgitize.utils import chdir
-
-
-@contextmanager
-def setup_git_auth(repo):
-    if not repo.url_auth:
-        yield
-        return
-    config_path = os.path.expanduser('~/.gitconfig')
-    exists = os.path.exists(config_path)
-    if exists:
-        old_permissions = stat.S_IMODE(os.stat(config_path).st_mode)
-        new_permissions = stat.S_IRUSR | stat.S_IWUSR # 0x600
-        os.chmod(config_path, new_permissions)
-        with open(config_path, encoding='utf-8', mode='r') as fd:
-            old_contents = fd.read()
-    else:
-        old_contents = ''
-    new_contents = f'''{old_contents}
-[url "{repo.clone_url_with_auth}"]
-    insteadOf = {repo.clone_url}
-'''
-    with open(config_path, encoding='utf-8', mode='w') as fd:
-        fd.write(new_contents)
-    try:
-        yield
-    finally:
-        if exists:
-            with open(config_path, encoding='utf-8', mode='w') as fd:
-                fd.write(old_contents)
-            os.chmod(config_path, old_permissions)
-        else:
-            os.unlink(config_path)
 
 
 class CGitServer:
@@ -150,14 +115,14 @@ class CGitRepositories:
             except Exception as e:
                 logging.exception(e)
                 return False
-        with setup_git_auth(repo):
+        with Git.setup_auth(repo):
             return Git.check('clone', '--mirror', '--quiet', repo.clone_url, repo_dir)
 
     def _update_existing(self, repo):
         logging.info("Updating repository '%s'", repo.repo_id)
         repo_dir = self.get_repo_dir(repo)
         with chdir(repo_dir):
-            with setup_git_auth(repo):
+            with Git.setup_auth(repo):
                 if not Git.check('remote', 'update', '--prune'):
                     return False
             # In case the local repository is not a bare repository, but a
