@@ -159,6 +159,8 @@ class Output:
             with setup_git_auth(repo):
                 if not Git.check('remote', 'update', '--prune'):
                     return False
+            # In case the repository mirror is not a bare repository, but a
+            # proper workdir:
             if Git.check('rev-parse', '--verify', '--quiet', 'origin/master'):
                 return Git.check('reset', '--soft', 'origin/master')
             return True
