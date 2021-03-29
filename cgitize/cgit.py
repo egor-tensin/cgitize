@@ -37,12 +37,22 @@ def setup_git_auth(repo):
         old_permissions = stat.S_IMODE(os.stat(config_path).st_mode)
         new_permissions = stat.S_IRUSR | stat.S_IWUSR # 0x600
         os.chmod(config_path, new_permissions)
-    git('config', '--global', f'url.{repo.clone_url_with_auth}.insteadOf', repo.clone_url)
+        with open(config_path, encoding='utf-8', mode='r') as fd:
+            old_contents = fd.read()
+    else:
+        old_contents = ''
+    new_contents = f'''{old_contents}
+[url "{repo.clone_url_with_auth}"]
+    insteadOf = {repo.clone_url}
+'''
+    with open(config_path, encoding='utf-8', mode='w') as fd:
+        fd.write(new_contents)
     try:
         yield
     finally:
         if exists:
-            git('config', '--global', '--remove-section', f'url.{repo.clone_url_with_auth}.insteadOf')
+            with open(config_path, encoding='utf-8', mode='w') as fd:
+                fd.write(old_contents)
             os.chmod(config_path, old_permissions)
         else:
             os.unlink(config_path)
