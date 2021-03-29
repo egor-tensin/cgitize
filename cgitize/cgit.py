@@ -11,19 +11,8 @@ import os.path
 import shutil
 import stat
 
+from cgitize.git import Git
 import cgitize.utils as utils
-
-
-GIT_ENV = os.environ.copy()
-GIT_ENV['GIT_SSH_COMMAND'] = 'ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null'
-
-
-def git(*args, **kwargs):
-    return utils.run('git', *args, env=GIT_ENV, **kwargs)
-
-
-def git_stdout(*args, **kwargs):
-    return utils.check_output('git', *args, env=GIT_ENV, **kwargs)
 
 
 @contextmanager
@@ -135,10 +124,10 @@ class Output:
         if not os.path.isdir(repo_dir):
             return RepoVerdict.SHOULD_MIRROR
         with utils.chdir(repo_dir):
-            if not git('rev-parse', '--is-inside-work-tree', discard_output=True):
+            if not Git.check('rev-parse', '--is-inside-work-tree'):
                 logging.warning('Not a repository, so going to mirror: %s', repo_dir)
                 return RepoVerdict.SHOULD_MIRROR
-            success, output = git_stdout('config', '--get', 'remote.origin.url')
+            success, output = Git.capture('config', '--get', 'remote.origin.url')
             if not success:
                 # Every repository managed by this script should have the
                 # 'origin' remote. If it doesn't, it's trash.
@@ -161,18 +150,17 @@ class Output:
                 logging.exception(e)
                 return False
         with setup_git_auth(repo):
-            return git('clone', '--mirror', repo.clone_url, repo_dir)
+            return Git.check('clone', '--mirror', '--quiet', repo.clone_url, repo_dir)
 
     def update(self, repo):
         logging.info("Updating repository '%s'", repo.repo_id)
         repo_dir = self.get_repo_dir(repo)
         with utils.chdir(repo_dir):
             with setup_git_auth(repo):
-                if not git('remote', 'update', '--prune'):
+                if not Git.check('remote', 'update', '--prune'):
                     return False
-            if git('rev-parse', '--verify', '--quiet', 'origin/master', discard_output=True):
-                if not git('reset', '--soft', 'origin/master'):
-                    return False
+            if Git.check('rev-parse', '--verify', '--quiet', 'origin/master'):
+                return Git.check('reset', '--soft', 'origin/master')
             return True
 
 

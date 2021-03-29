@@ -9,28 +9,39 @@ import os
 import subprocess
 
 
-def check_output(*args, stdout=subprocess.PIPE, **kwargs):
+def run(*args, capture_output=False, **kwargs):
+    stdout = None
+    stderr = None
+    if capture_output:
+        stdout = subprocess.PIPE
+        stderr = subprocess.STDOUT
+
+    logging.debug('%s', args)
+    result = subprocess.run(args, check=True, stdout=stdout, stderr=stderr,
+                            encoding='utf-8', **kwargs)
+
+    if result.stdout is not None:
+        logging.debug('\n%s', result.stdout)
+    return result.stdout
+
+
+def try_run(*args, **kwargs):
     try:
-        result = subprocess.run(args, stdout=stdout, stderr=subprocess.STDOUT,
-                                encoding='utf-8', check=True, **kwargs)
-        if stdout != subprocess.DEVNULL:
-            if result.stdout is None:
-                logging.debug('%s', args)
-            else:
-                logging.debug('%s\n%s', args, result.stdout)
-        return result.returncode == 0, result.stdout
+        run(*args, **kwargs)
+        return True
     except subprocess.CalledProcessError as e:
-        if stdout != subprocess.DEVNULL:
-            logging.error('%s\n%s', e, e.output)
+        return e.returncode == 0
+
+
+def run_capture(*args, **kwargs):
+    return run(*args, capture_output=True, **kwargs)
+
+
+def try_run_capture(*args, **kwargs):
+    try:
+        return True, run(*args, capture_output=True, **kwargs)
+    except subprocess.CalledProcessError as e:
         return e.returncode == 0, e.output
-
-
-def run(*args, discard_output=False, **kwargs):
-    if discard_output:
-        success, _ = check_output(*args, stdout=subprocess.DEVNULL, **kwargs)
-    else:
-        success, _ = check_output(*args, **kwargs)
-    return success
 
 
 @contextlib.contextmanager
