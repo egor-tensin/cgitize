@@ -221,7 +221,13 @@ test_failure() {
     cgitize
     verify_initial_commits
     add_commits
+
+    echo
+    echo ----------------------------------------------------------------------
+    echo Removing upstream repository
+    echo ----------------------------------------------------------------------
     rm -rf -- "$upstream_repo_dir"
+
     if cgitize; then
         echo "cgitize should have failed to pull the upstream repository." >&2
         return 1
