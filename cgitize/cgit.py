@@ -4,7 +4,6 @@
 # Distributed under the MIT License.
 
 from contextlib import contextmanager
-from enum import Enum
 import logging
 import os
 import os.path
@@ -47,7 +46,7 @@ def setup_git_auth(repo):
             os.unlink(config_path)
 
 
-class CGit:
+class CGitServer:
     def __init__(self, clone_url):
         self.clone_url = clone_url
 
@@ -57,9 +56,9 @@ class CGit:
         return self.clone_url.format(repo_id=repo.repo_id)
 
 
-class CGitRC:
-    def __init__(self, cgit):
-        self.cgit = cgit
+class CGitRCWriter:
+    def __init__(self, cgit_server):
+        self.cgit_server = cgit_server
 
     def write(self, path, repo):
         with open(path, 'w') as fd:
@@ -78,7 +77,7 @@ class CGitRC:
         clone_urls = []
         if repo.clone_url is not None:
             clone_urls.append(repo.clone_url)
-        cgit_clone_url = self.cgit.get_clone_url(repo)
+        cgit_clone_url = self.cgit_server.get_clone_url(repo)
         if cgit_clone_url is not None:
             clone_urls.append(cgit_clone_url)
         if not clone_urls:
@@ -87,10 +86,10 @@ class CGitRC:
         return clone_urls
 
 
-class Output:
-    def __init__(self, output_dir, cgit):
-        self.output_dir = self._make_dir(output_dir)
-        self.cgitrc = CGitRC(cgit)
+class CGitRepositories:
+    def __init__(self, dir, cgit_server):
+        self.dir = self._make_dir(dir)
+        self.cgitrc = CGitRCWriter(cgit_server)
 
     @staticmethod
     def _make_dir(rel_path):
@@ -99,49 +98,51 @@ class Output:
         return abs_path
 
     def get_repo_dir(self, repo):
-        return os.path.join(self.output_dir, repo.repo_id)
+        return os.path.join(self.dir, repo.repo_id)
 
     def get_cgitrc_path(self, repo):
         return os.path.join(self.get_repo_dir(repo), 'cgitrc')
 
-    def pull(self, repo):
-        success = False
-        verdict = self.judge(repo)
-        if verdict is RepoVerdict.SHOULD_MIRROR:
-            success = self.mirror(repo)
-        elif verdict is RepoVerdict.SHOULD_UPDATE:
-            success = self.update(repo)
-        elif verdict is RepoVerdict.CANT_DECIDE:
-            success = False
-        else:
-            raise NotImplementedError(f'Unknown repository verdict: {verdict}')
+    def update(self, repo):
+        success = self._mirror_or_update(repo)
         if success:
             self.cgitrc.write(self.get_cgitrc_path(repo), repo)
         return success
 
-    def judge(self, repo):
+    def _mirror_or_update(self, repo):
         repo_dir = self.get_repo_dir(repo)
+
         if not os.path.isdir(repo_dir):
-            return RepoVerdict.SHOULD_MIRROR
+            # The local directory doesn't exist, mirror the new repository.
+            return self._mirror(repo)
+
         with chdir(repo_dir):
             if not Git.check('rev-parse', '--is-inside-work-tree'):
-                logging.warning('Not a repository, so going to mirror: %s', repo_dir)
-                return RepoVerdict.SHOULD_MIRROR
+                # Overwrite the existing directory if it's not a Git repository.
+                logging.warning('Local directory is not a repository, going to overwrite it: %s', repo_dir)
+                return self._mirror(repo)
+
             success, output = Git.capture('config', '--get', 'remote.origin.url')
             if not success:
                 # Every repository managed by this script should have the
-                # 'origin' remote. If it doesn't, it's trash.
-                return RepoVerdict.SHOULD_MIRROR
-            if f'{repo.clone_url}\n' != output:
-                logging.warning("Existing repository '%s' URL doesn't match the specified clone" \
-                                " URL: %s", repo.repo_id, repo.clone_url)
-                return RepoVerdict.CANT_DECIDE
-            # Looks like a legit clone of the specified remote.
-            return RepoVerdict.SHOULD_UPDATE
+                # 'origin' remote. If it doesn't, it's trash. Overwrite the
+                # existing directory, mirroring the repository in it.
+                logging.warning("Local repository doesn't have remote 'origin', going to overwrite it: %s", repo_dir)
+                return self._mirror(repo)
 
-    def mirror(self, repo):
-        logging.info("Mirroring repository '%s' from: %s", repo.repo_id,
-                     repo.clone_url)
+            if f'{repo.clone_url}\n' != output:
+                # Jeez, there's a proper local repository in the target
+                # directory already with a different upstream; something's
+                # wrong, fix it manually.
+                logging.warning("Existing repository '%s' doesn't match the specified clone URL: %s", repo.repo_id, repo.clone_url)
+                return False
+
+            # The local directory contains the local version of the upstream,
+            # update it.
+            return self._update_existing(repo)
+
+    def _mirror(self, repo):
+        logging.info("Mirroring repository '%s' from: %s", repo.repo_id, repo.clone_url)
         repo_dir = self.get_repo_dir(repo)
         if os.path.isdir(repo_dir):
             try:
@@ -152,21 +153,15 @@ class Output:
         with setup_git_auth(repo):
             return Git.check('clone', '--mirror', '--quiet', repo.clone_url, repo_dir)
 
-    def update(self, repo):
+    def _update_existing(self, repo):
         logging.info("Updating repository '%s'", repo.repo_id)
         repo_dir = self.get_repo_dir(repo)
         with chdir(repo_dir):
             with setup_git_auth(repo):
                 if not Git.check('remote', 'update', '--prune'):
                     return False
-            # In case the repository mirror is not a bare repository, but a
-            # proper workdir:
+            # In case the local repository is not a bare repository, but a
+            # full-fledged working copy:
             if Git.check('rev-parse', '--verify', '--quiet', 'origin/master'):
                 return Git.check('reset', '--soft', 'origin/master')
             return True
-
-
-class RepoVerdict(Enum):
-    SHOULD_MIRROR = 1
-    SHOULD_UPDATE = 2
-    CANT_DECIDE = 3

@@ -8,7 +8,7 @@ import logging
 import sys
 
 from cgitize.config import Config
-from cgitize.cgit import CGit, Output
+from cgitize.cgit import CGitRepositories, CGitServer
 from cgitize.utils import setup_logging
 
 
@@ -30,14 +30,14 @@ def main(args=None):
         args = parse_args(args)
         config = Config.read(args.config)
         my_repos = config.import_my_repos()
-        cgit = CGit(config.clone_url)
-        output = Output(config.output, cgit)
+        cgit_server = CGitServer(config.clone_url)
+        output = CGitRepositories(config.output, cgit_server)
         success = True
         for repo in my_repos:
             if args.repos is None or repo.repo_id in args.repos:
                 repo.fill_defaults(config)
                 repo.validate()
-                if not output.pull(repo):
+                if not output.update(repo):
                     success = False
         if success:
             logging.info('All repositories were updated successfully')
