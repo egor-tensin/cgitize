@@ -12,9 +12,10 @@ import sys
 
 
 @contextmanager
-def setup_logging():
+def setup_logging(verbose=False):
+    level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=level,
         datefmt='%Y-%m-%d %H:%M:%S',
         format='%(asctime)s | %(levelname)s | %(message)s',
         # Log to stdout, because that's where subprocess's output goes (so that

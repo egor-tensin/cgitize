@@ -16,18 +16,20 @@ def parse_args(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     parser = ArgumentParser()
-    parser.add_argument('--config', metavar='PATH',
+    parser.add_argument('--config', '-c', metavar='PATH',
                         default=Config.DEFAULT_PATH,
                         help='config file path')
     parser.add_argument('--repo', metavar='REPO_ID',
                         nargs='*', dest='repos',
                         help='repos to pull')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                        help='verbose log output')
     return parser.parse_args(argv)
 
 
 def main(args=None):
-    with setup_logging():
-        args = parse_args(args)
+    args = parse_args()
+    with setup_logging(args.verbose):
         config = Config.read(args.config)
         my_repos = config.import_my_repos()
         cgit_server = CGitServer(config.clone_url)

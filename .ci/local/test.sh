@@ -127,7 +127,7 @@ cgitize() {
     echo Running cgitize
     echo ----------------------------------------------------------------------
 
-    python3 -m cgitize.main --config "$cgitize_conf_path"
+    python3 -m cgitize.main --config "$cgitize_conf_path" --verbose
 }
 
 check_contains() {
