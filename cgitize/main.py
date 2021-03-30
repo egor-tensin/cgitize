@@ -22,6 +22,8 @@ def parse_args(argv=None):
     parser.add_argument('--repo', metavar='REPO_ID',
                         nargs='*', dest='repos',
                         help='repos to pull')
+    parser.add_argument('--force', '-f', action='store_true',
+                        help='overwrite existing repositories')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='verbose log output')
     return parser.parse_args(argv)
@@ -33,7 +35,7 @@ def main(args=None):
         config = Config.read(args.config)
         my_repos = config.import_my_repos()
         cgit_server = CGitServer(config.clone_url)
-        output = CGitRepositories(config.output, cgit_server)
+        output = CGitRepositories(config.output, cgit_server, force=args.force)
         success = True
         for repo in my_repos:
             if args.repos is None or repo.repo_id in args.repos:

@@ -52,9 +52,10 @@ class CGitRCWriter:
 
 
 class CGitRepositories:
-    def __init__(self, dir, cgit_server):
+    def __init__(self, dir, cgit_server, force=False):
         self.dir = self._make_dir(dir)
         self.cgitrc = CGitRCWriter(cgit_server)
+        self.force = force
 
     @staticmethod
     def _make_dir(rel_path):
@@ -100,6 +101,10 @@ class CGitRepositories:
                 # directory already with a different upstream; something's
                 # wrong, fix it manually.
                 logging.warning("Existing repository '%s' doesn't match the specified clone URL: %s", repo.repo_id, repo.clone_url)
+                if self.force:
+                    # Unless --force was specified, in which case we overwrite
+                    # the repository.
+                    return self._fix_upstream_url(repo) and self._update_existing(repo)
                 return False
 
             # The local directory contains the local version of the upstream,
@@ -117,6 +122,11 @@ class CGitRepositories:
                 return False
         with Git.setup_auth(repo):
             return Git.check('clone', '--mirror', '--quiet', repo.clone_url, repo_dir)
+
+    def _fix_upstream_url(self, repo):
+        repo_dir = self.get_repo_dir(repo)
+        with chdir(repo_dir):
+            return Git.check('remote', 'set-url', 'origin', repo.clone_url)
 
     def _update_existing(self, repo):
         logging.info("Updating repository '%s'", repo.repo_id)
