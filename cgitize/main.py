@@ -7,8 +7,8 @@ from argparse import ArgumentParser
 import logging
 import sys
 
-from cgitize.config import Config
 from cgitize.cgit import CGitRepositories, CGitServer
+from cgitize.config import Config
 from cgitize.utils import setup_logging
 
 
