@@ -25,8 +25,12 @@ class CGitRCWriter:
     def __init__(self, cgit_server):
         self.cgit_server = cgit_server
 
-    def write(self, path, repo):
-        with open(path, 'w') as fd:
+    @staticmethod
+    def get_path(repo_dir):
+        return os.path.join(repo_dir, 'cgitrc')
+
+    def write(self, repo_dir, repo):
+        with open(self.get_path(repo_dir), 'w') as fd:
             self._write_field(fd, 'clone-url', self._build_clone_url(repo))
             self._write_field(fd, 'owner', repo.owner)
             self._write_field(fd, 'desc', repo.desc)
@@ -51,6 +55,34 @@ class CGitRCWriter:
         return clone_urls
 
 
+class AgeFile:
+    @staticmethod
+    def write(repo_dir):
+        timestamp = AgeFile.get_age(repo_dir)
+        if timestamp:
+            os.makedirs(AgeFile.get_dir(repo_dir), exist_ok=True)
+            with open(AgeFile.get_path(repo_dir), mode='w') as fd:
+                fd.write(f'{timestamp}')
+
+    @staticmethod
+    def get_age(repo_dir):
+        # https://git.zx2c4.com/cgit/tree/contrib/hooks/post-receive.agefile
+        with chdir(repo_dir):
+            success, output = Git.capture('for-each-ref', '--sort=-authordate', '--count=1', '--format=%(authordate:iso8601)')
+            if not success:
+                logging.error("Couldn't get the timestamp of the newest commit in repository: %s", repo_dir)
+                return None
+            return output
+
+    @staticmethod
+    def get_dir(repo_dir):
+        return os.path.join(repo_dir, 'info', 'web')
+
+    @staticmethod
+    def get_path(repo_dir):
+        return os.path.join(AgeFile.get_dir(repo_dir), 'last-modified')
+
+
 class CGitRepositories:
     def __init__(self, dir, cgit_server, force=False):
         self.dir = self._make_dir(dir)
@@ -66,13 +98,11 @@ class CGitRepositories:
     def get_repo_dir(self, repo):
         return os.path.join(self.dir, repo.repo_id)
 
-    def get_cgitrc_path(self, repo):
-        return os.path.join(self.get_repo_dir(repo), 'cgitrc')
-
     def update(self, repo):
         success = self._mirror_or_update(repo)
         if success:
-            self.cgitrc.write(self.get_cgitrc_path(repo), repo)
+            self.cgitrc.write(self.get_repo_dir(repo), repo)
+            AgeFile.write(self.get_repo_dir(repo))
         return success
 
     def _mirror_or_update(self, repo):
