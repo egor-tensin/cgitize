@@ -1,7 +1,7 @@
 cgitize
 =======
 
-[![Test](https://github.com/egor-tensin/cgitize/workflows/Test/badge.svg)](https://github.com/egor-tensin/cgitize/actions?query=workflow%3ATest)
+[![Test](https://github.com/egor-tensin/cgitize/actions/workflows/test.yml/badge.svg)](https://github.com/egor-tensin/cgitize/actions/workflows/test.yml)
 
 Mirror your git repositories and make them cgit-ready.
 
