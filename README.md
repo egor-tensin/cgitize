@@ -7,20 +7,28 @@ Mirror your git repositories and make them cgit-ready.
 
 Example output can be found at https://egort.name/git/.
 
+Installation
+------------
+
+    pip install cgitize
+
 Usage
 -----
 
-Adjust the sample config in [examples/cgitize.conf] and pass its path as the
-`--config` parameter value:
+cgitize uses two config files.
 
-    > python3 -m cgitize.main --config path/to/cgitize.conf
+* cgitize.conf contains all the settings; see example at
+[examples/cgitize.conf].
+* my_repos.py contains the list of repositories to mirror; see example at
+[examples/my_repos.py].
 
-The repository list is stored in my_repos.py (the `my_repos` setting in the
-config).
-See [examples/my_repos.py] for an example.
+Pass the path to cgitize.conf using the `--config` parameter:
 
-cgitize/main.py calls git, which might call ssh internally.
-Make sure the required keys are loaded to a ssh-agent.
+    cgitize --config path/to/cgitize.conf
+
+cgitize uses the `git` executable, which might use `ssh` internally.
+Make sure the required keys are loaded to a ssh-agent (or use authentication
+tokens).
 
 [examples/cgitize.conf]: examples/cgitize.conf
 [examples/my_repos.py]: examples/my_repos.py
@@ -33,7 +41,7 @@ repositories to /var/tmp/cgitize/output.
 If SSH is required, the socket should be mapped to
 /var/run/cgitize/ssh-agent.sock.
 
-    > docker run -it --rm                                   \
+    docker run -it --rm                                   \
         -v "/path/to/config:/etc/cgitize:ro"                \
         -v "$SSH_AUTH_SOCK:/var/run/cgitize/ssh-agent.sock" \
         -v "/path/to/output:/var/tmp/cgitize/output"        \
@@ -51,16 +59,27 @@ Mirror maintenance
 
 Update the URL of an existing repository mirror:
 
-    > git remote set-url origin ssh://git@examples.com/username/name.git
+    git remote set-url origin ssh://git@examples.com/username/name.git
 
 Development
 -----------
+
+### Packaging
+
+The [packaging tutorial] (as it was in April 2021) on python.org was used to
+make a PyPI package.
+Basically, it looks to me like the Python ecosystem is currently moving from
+the older setup.py to the newer setup.cfg/pyproject.toml.
+It's still a bit clunky: you have to install the `build` package, placeholder
+setup.py is required for `pip install -e` to work, etc.
+
+[packaging tutorial]: https://packaging.python.org/tutorials/packaging-projects
 
 ### Linting
 
 Requires [Pylint].
 
-    > pylint cgitize
+    pylint cgitize
 
 [Pylint]: https://www.pylint.org/
 
