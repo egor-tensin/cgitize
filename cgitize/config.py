@@ -5,6 +5,7 @@
 
 import configparser
 import importlib
+import logging
 import os.path
 import sys
 
@@ -72,6 +73,9 @@ class Config:
 
     def import_my_repos(self):
         sys.path.append(os.path.dirname(self.my_repos))
+        if not os.path.exists(self.my_repos):
+            logging.error("Couldn't find my_repos.py at: %s", self.my_repos)
+            return None
         module_name = os.path.splitext(os.path.basename(self.my_repos))[0]
         module = importlib.import_module(module_name)
         return module.MY_REPOS

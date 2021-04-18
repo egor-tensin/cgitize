@@ -34,6 +34,8 @@ def main(args=None):
     with setup_logging(args.verbose):
         config = Config.read(args.config)
         my_repos = config.import_my_repos()
+        if my_repos is None:
+            return 1
         cgit_server = CGitServer(config.clone_url)
         output = CGitRepositories(config.output, cgit_server, force=args.force)
         success = True
