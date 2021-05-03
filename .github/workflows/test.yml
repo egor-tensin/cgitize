@@ -70,19 +70,19 @@ jobs:
           python-version: 3.6
       - name: Verify package can be installed
         run: python3 -m pip install .
-      - name: Install tools
+      - name: Install package builder
         run: python3 -m pip install --upgrade build
       - name: Build package
         run: python3 -m build
-      - name: Upload dist
+      - name: Publish as artifact
         uses: actions/upload-artifact@v2
         with:
           name: dist
           path: dist
           if-no-files-found: error
-      - name: Publish package
+      - name: Publish to PyPI
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          password: '${{ secrets.PYPI_API_TOKEN }}'
