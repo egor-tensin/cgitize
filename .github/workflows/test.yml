@@ -66,8 +66,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2
-        with:
-          python-version: 3.6
       - name: Verify package can be installed
         run: python3 -m pip install .
       - name: Install package builder
