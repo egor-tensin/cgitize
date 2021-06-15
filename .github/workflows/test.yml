@@ -7,7 +7,7 @@ on:
 
 jobs:
   test_local:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9, 3.x]
@@ -27,7 +27,7 @@ jobs:
         run: ./.ci/local/test.sh
 
   test_docker:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: 'Test: Docker'
     steps:
       - name: Checkout
@@ -37,7 +37,7 @@ jobs:
 
   publish_docker:
     needs: [test_local, test_docker]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: 'Publish: Docker Hub'
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags'))
     steps:
@@ -59,7 +59,7 @@ jobs:
 
   publish_pypi:
     needs: [test_local, test_docker]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: 'Publish: PyPI'
     steps:
       - name: Checkout
