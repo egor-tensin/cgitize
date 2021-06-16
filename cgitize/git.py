@@ -62,7 +62,7 @@ class Config:
             return name
 
         def format(self):
-            result = '[self.format_name(self.name)]\n'
+            result = f'[self.format_name(self.name)]\n'
             result += ''.join((var.format() for var in self.variables))
             return result
 
