@@ -41,6 +41,19 @@ jobs:
     name: 'Publish: Docker Hub'
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags'))
     steps:
+      # https://github.com/docker/metadata-action#semver
+      - id: meta
+        name: Docker Hub metadata
+        uses: docker/metadata-action@v3
+        with:
+          images: '${{ secrets.DOCKERHUB_USERNAME }}/cgitize'
+          flavor: |
+            latest=auto
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -55,7 +68,8 @@ jobs:
         with:
           platforms: linux/amd64,linux/armhf
           push: true
-          tags: '${{ secrets.DOCKERHUB_USERNAME }}/cgitize:latest'
+          tags: '${{ steps.meta.outputs.tags }}'
+          labels: '${{ steps.meta.outputs.labels }}'
 
   publish_pypi:
     needs: [test_local, test_docker]
