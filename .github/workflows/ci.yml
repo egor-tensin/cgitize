@@ -23,8 +23,12 @@ jobs:
         run: |
           git config --global user.name 'John Doe'
           git config --global user.email 'John.Doe@example.com'
-      - name: Test
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Integration tests
         run: ./.ci/local/test.sh
+      - name: Unit tests
+        run: python -m unittest --buffer
 
   test_docker:
     runs-on: ubuntu-latest
@@ -32,7 +36,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Test
+      - name: Integration tests
         run: ./.ci/docker/test.sh
 
   publish_docker:
