@@ -46,12 +46,12 @@ class MainSection(Section):
         return self._get_config_value('clone_url', required=False)
 
     @property
-    def default_owner(self):
-        return self._get_config_value('owner', required=False)
+    def clone_via_ssh(self):
+        return self._get_config_value('clone_via_ssh', default=True)
 
     @property
-    def via_ssh(self):
-        return self._get_config_value('ssh', default=True)
+    def default_owner(self):
+        return self._get_config_value('owner', required=False)
 
 
 class GitHubSection(Section):

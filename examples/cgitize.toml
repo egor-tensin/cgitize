@@ -8,7 +8,7 @@ output_dir = "/tmp/cgitize"
 clone_url = "https://yourhost.com/git/{name}"
 
 # Clones via SSH by default.
-ssh = true
+clone_via_ssh = true
 
 # Unless this is specified, cgit is going to derive the owner from the
 # repository's directory ownership.

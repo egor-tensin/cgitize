@@ -29,8 +29,8 @@ class Repo:
 
         https_url = src.clone_url
         ssh_url = src.ssh_url
-        clone_url = ssh_url if config.main.via_ssh else https_url
-        url_auth = None if config.main.via_ssh else config.github.url_auth
+        clone_url = ssh_url if config.main.clone_via_ssh else https_url
+        url_auth = None if config.main.clone_via_ssh else config.github.url_auth
 
         return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
                     url_auth=url_auth)
@@ -52,8 +52,8 @@ class Repo:
         if len(ssh_urls) != 1: raise RuntimeError(f"no ssh:// clone URL for repository '{name}'?!")
         ssh_url = ssh_urls[0]['href']
 
-        clone_url = ssh_url if config.main.via_ssh else https_url
-        url_auth = None if config.main.via_ssh else config.bitbucket.url_auth
+        clone_url = ssh_url if config.main.clone_via_ssh else https_url
+        url_auth = None if config.main.clone_via_ssh else config.bitbucket.url_auth
 
         return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
                     url_auth=url_auth)
