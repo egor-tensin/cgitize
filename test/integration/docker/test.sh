@@ -8,6 +8,9 @@ readonly script_dir
 script_name="$( basename -- "${BASH_SOURCE[0]}" )"
 readonly script_name
 
+readonly ssh_dir="$script_dir/ssh"
+readonly client_key_password='password'
+
 dump() {
     local prefix="${FUNCNAME[0]}"
     [ "${#FUNCNAME[@]}" -gt 1 ] && prefix="${FUNCNAME[1]}"
@@ -16,6 +19,32 @@ dump() {
     for msg; do
         echo "$script_name: $prefix: $msg"
     done
+}
+
+cleanup() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Cleaning up
+    echo ----------------------------------------------------------------------
+
+    remove_ssh_keys
+    kill_ssh_agent
+}
+
+generate_ssh_keys() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Generating SSH keys
+    echo ----------------------------------------------------------------------
+
+    mkdir -p -- "$ssh_dir"
+
+    ssh-keygen -t rsa -b 4096 -f "$ssh_dir/client_key" -N "$client_key_password"
+    ssh-keygen -t rsa -b 4096 -f "$ssh_dir/server_key" -N ''
+}
+
+remove_ssh_keys() {
+    rm -rf -- "$ssh_dir"
 }
 
 kill_ssh_agent() {
@@ -37,7 +66,6 @@ spawn_ssh_agent() {
         dump "could not start ssh-agent" >&2
         return 1
     fi
-    trap kill_ssh_agent EXIT
 }
 
 setup_ssh_agent() {
@@ -48,9 +76,8 @@ setup_ssh_agent() {
 
     spawn_ssh_agent
 
-    local key='ssh/client_key'
+    local key="$ssh_dir/client_key"
     chmod 0600 -- "$key"
-    local password='password'
 
     local askpass_path
     askpass_path="$( mktemp --tmpdir="$script_dir" )"
@@ -62,7 +89,7 @@ setup_ssh_agent() {
     chmod 0700 -- "$askpass_path"
 
     local echo_password
-    echo_password="$( printf -- 'echo %q' "$password" )"
+    echo_password="$( printf -- 'echo %q' "$client_key_password" )"
     echo "$echo_password" > "$askpass_path"
 
     SSH_ASKPASS="$askpass_path" SSH_ASKPASS_REQUIRE=force DISPLAY= ssh-add "$key" > /dev/null 2>&1 < /dev/null
@@ -78,6 +105,7 @@ docker_build() {
 }
 
 setup() {
+    generate_ssh_keys
     setup_ssh_agent
     docker_build
 }
@@ -122,6 +150,7 @@ verify() {
 }
 
 main() {
+    trap cleanup EXIT
     pushd -- "$script_dir" > /dev/null
     setup
     run
