@@ -34,7 +34,7 @@ def main(args=None):
     with setup_logging(args.verbose):
         config = Config.read(args.config)
         cgit_server = CGitServer(config.main.clone_url)
-        output = CGitRepositories(config.main.output, cgit_server, force=args.force)
+        output = CGitRepositories(config.main.output_dir, cgit_server, force=args.force)
         success = True
         for repo in config.parse_repositories():
             if args.repos is None or repo.repo_id in args.repos:

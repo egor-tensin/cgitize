@@ -38,8 +38,8 @@ class MainSection(Section):
     DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize/output'
 
     @property
-    def output(self):
-        return self._get_config_path('output', default=MainSection.DEFAULT_OUTPUT_DIR)
+    def output_dir(self):
+        return self._get_config_path('output_dir', default=MainSection.DEFAULT_OUTPUT_DIR)
 
     @property
     def clone_url(self):

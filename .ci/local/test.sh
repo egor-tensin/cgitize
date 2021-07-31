@@ -71,7 +71,7 @@ setup_cgitize_toml() {
     mkdir -p -- "$conf_dir"
 
     cat <<EOF | tee "$cgitize_toml_path"
-output = "$output_dir"
+output_dir = "$output_dir"
 
 [repositories.test_repo]
 name = "test_repo"

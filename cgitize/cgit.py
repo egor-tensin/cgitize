@@ -84,8 +84,8 @@ class AgeFile:
 
 
 class CGitRepositories:
-    def __init__(self, dir, cgit_server, force=False):
-        self.dir = self._make_dir(dir)
+    def __init__(self, output_dir, cgit_server, force=False):
+        self.dir = self._make_dir(output_dir)
         self.cgitrc = CGitRCWriter(cgit_server)
         self.force = force
 
