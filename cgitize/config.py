@@ -72,9 +72,6 @@ class GitHubSection(Section):
     def url_auth(self):
         return self.access_token
 
-    def enum_repositories(self):
-        return self.repositories.enum_repositories()
-
 
 class BitbucketSection(Section):
     def __init__(self, *args, **kwargs):
@@ -96,9 +93,6 @@ class BitbucketSection(Section):
         if username is None or password is None:
             return None
         return f'{username}:{password}'
-
-    def enum_repositories(self):
-        return self.repositories.enum_repositories()
 
 
 class RepositoriesSection(Section):
