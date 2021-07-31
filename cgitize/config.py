@@ -6,7 +6,7 @@
 import configparser
 import importlib
 import logging
-import os.path
+import os
 import sys
 
 from cgitize.repo import Repo, GitHub as GitHubRepo, Bitbucket as BitbucketRepo
@@ -56,7 +56,13 @@ class GitHub(Section):
 
     @property
     def access_token(self):
-        return self._get_config_value('access_token', required=False)
+        access_token = self._get_config_value('access_token', required=False)
+        if access_token is not None:
+            return access_token
+        env_var = 'CGITIZE_GITHUB_ACCESS_TOKEN'
+        if env_var in os.environ:
+            return os.environ[env_var]
+        return None
 
     def enum_repositories(self):
         return self.repositories.enum_repositories()
@@ -69,7 +75,13 @@ class Bitbucket(Section):
 
     @property
     def app_password(self):
-        return self._get_config_value('app_password', required=False)
+        app_password = self._get_config_value('app_password', required=False)
+        if app_password is not None:
+            return app_password
+        env_var = 'CGITIZE_BITBUCKET_APP_PASSWORD'
+        if env_var in os.environ:
+            return os.environ[env_var]
+        return None
 
     def enum_repositories(self):
         return self.repositories.enum_repositories()

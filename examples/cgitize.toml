@@ -16,7 +16,8 @@ owner = "Your Name"
 
 [github]
 # If some of the repositories hosted on GitHub are private, you can use
-# "personal access tokens" to access them.
+# "personal access tokens" to access them. Also can be provided using the
+# CGITIZE_GITHUB_ACCESS_TOKEN environment variable.
 #access_token = "XXX"
 
 # Some random repositories hosted on GitHub:
@@ -27,7 +28,8 @@ id = "bobfang1992/pytomlpp"
 
 [bitbucket]
 # If some of the repositories hosted on Bitbucket are private, you can use "app
-# passwords" to access them.
+# passwords" to access them. Also can be provided using the
+# CGITIZE_BITBUCKET_APP_PASSWORD environment variable.
 #app_password = "XXX"
 
 # Some random repositories hosted on Bitbucket:
