@@ -3,9 +3,6 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
-import abc
-import os.path
-
 from cgitize.utils import url_remove_auth, url_replace_auth
 
 

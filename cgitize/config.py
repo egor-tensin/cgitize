@@ -3,18 +3,13 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
-import configparser
-import importlib
-import logging
 import os
-import sys
+
+import tomli
 
 from cgitize.bitbucket import Bitbucket
 from cgitize.github import GitHub
 from cgitize.repo import Repo
-from cgitize.utils import chdir
-
-import tomli
 
 
 class Section:
