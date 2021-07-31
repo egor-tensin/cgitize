@@ -65,7 +65,7 @@ setup_ssh_agent() {
     echo_password="$( printf -- 'echo %q' "$password" )"
     echo "$echo_password" > "$askpass_path"
 
-    SSH_ASKPASS="$askpass_path" DISPLAY= ssh-add "$key" > /dev/null 2>&1 < /dev/null
+    SSH_ASKPASS="$askpass_path" SSH_ASKPASS_REQUIRE=force DISPLAY= ssh-add "$key" > /dev/null 2>&1 < /dev/null
 }
 
 docker_build() {
