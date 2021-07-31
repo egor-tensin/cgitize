@@ -15,28 +15,23 @@ Installation
 Usage
 -----
 
-cgitize uses two config files.
+Pass the path to the config to `cgitize` (/etc/cgitize/cgitize.toml by
+default):
 
-* cgitize.conf contains all the settings; see example at
-[examples/cgitize.conf].
-* my_repos.py contains the list of repositories to mirror; see example at
-[examples/my_repos.py].
+    cgitize --config path/to/cgitize.toml
 
-Pass the path to cgitize.conf using the `--config` parameter:
-
-    cgitize --config path/to/cgitize.conf
+See an example config file at [examples/cgitize.toml].
 
 cgitize uses the `git` executable, which might use `ssh` internally.
-Make sure the required keys are loaded to a ssh-agent (or use authentication
-tokens).
+Make sure the required keys are loaded to a ssh-agent (or use access
+tokens/application passwords).
 
-[examples/cgitize.conf]: examples/cgitize.conf
-[examples/my_repos.py]: examples/my_repos.py
+[examples/cgitize.toml]: examples/cgitize.toml
 
 ### Docker
 
 The image is **egortensin/cgitize**.
-The container reads the config from /etc/cgitize/cgitize.conf and writes the
+The container reads the config from /etc/cgitize/cgitize.toml and writes the
 repositories to /var/tmp/cgitize/output.
 If SSH is required, the socket should be mapped to
 /var/run/cgitize/ssh-agent.sock.

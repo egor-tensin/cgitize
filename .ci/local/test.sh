@@ -8,8 +8,7 @@ readonly script_dir
 
 upstream_repo_dir=
 readonly etc_dir="$script_dir/etc"
-readonly cgitize_conf_path="$etc_dir/cgitize.conf"
-readonly my_repos_path="$etc_dir/my_repos.py"
+readonly cgitize_toml_path="$etc_dir/cgitize.toml"
 readonly output_dir="$script_dir/output"
 
 cleanup() {
@@ -61,47 +60,27 @@ add_commits() {
     popd > /dev/null
 }
 
-setup_cgitize_conf() {
+setup_cgitize_toml() {
     echo
     echo ----------------------------------------------------------------------
-    echo cgitize.conf
+    echo cgitize.toml
     echo ----------------------------------------------------------------------
 
     local conf_dir
-    conf_dir="$( dirname -- "$cgitize_conf_path" )"
+    conf_dir="$( dirname -- "$cgitize_toml_path" )"
     mkdir -p -- "$conf_dir"
 
-    cat <<EOF | tee "$cgitize_conf_path"
-[DEFAULT]
+    cat <<EOF | tee "$cgitize_toml_path"
+output = "$output_dir"
 
-my_repos = $( basename -- "$my_repos_path" )
-output = $output_dir
-EOF
-}
-
-setup_my_repos_py() {
-    echo
-    echo ----------------------------------------------------------------------
-    echo my_repos.py
-    echo ----------------------------------------------------------------------
-
-    local conf_dir
-    conf_dir="$( dirname -- "$my_repos_path" )"
-    mkdir -p -- "$conf_dir"
-
-    cat <<EOF | tee "$my_repos_path"
-from cgitize.repo import Repo
-
-
-MY_REPOS = (
-    Repo('test_repo', clone_url='$upstream_repo_dir'),
-)
+[repositories.test_repo]
+id = "test_repo"
+clone_url = "$upstream_repo_dir"
 EOF
 }
 
 setup_cgitize() {
-    setup_cgitize_conf
-    setup_my_repos_py
+    setup_cgitize_toml
 }
 
 setup_bare() {
@@ -127,7 +106,7 @@ cgitize() {
     echo Running cgitize
     echo ----------------------------------------------------------------------
 
-    python3 -m cgitize.main --config "$cgitize_conf_path" --verbose
+    python3 -m cgitize.main --config "$cgitize_toml_path" --verbose
 }
 
 check_contains() {

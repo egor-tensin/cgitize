@@ -1,0 +1,4 @@
+[repositories.test_repo]
+
+id = "test_repo"
+clone_url = "root@server:~/test_repo"

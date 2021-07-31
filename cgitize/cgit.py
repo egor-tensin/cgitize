@@ -18,7 +18,7 @@ class CGitServer:
     def get_clone_url(self, repo):
         if self.clone_url is None:
             return None
-        return self.clone_url.format(repo_id=repo.repo_id)
+        return self.clone_url.format(name=repo.name)
 
 
 class CGitRCWriter:
@@ -96,7 +96,7 @@ class CGitRepositories:
         return abs_path
 
     def get_repo_dir(self, repo):
-        return os.path.join(self.dir, repo.repo_id)
+        return os.path.join(self.dir, repo.name)
 
     def update(self, repo):
         success = self._mirror_or_update(repo)
@@ -130,7 +130,7 @@ class CGitRepositories:
                 # Jeez, there's a proper local repository in the target
                 # directory already with a different upstream; something's
                 # wrong, fix it manually.
-                logging.warning("Existing repository '%s' doesn't match the specified clone URL: %s", repo.repo_id, repo.clone_url)
+                logging.warning("Existing repository '%s' doesn't match the specified clone URL: %s", repo.name, repo.clone_url)
                 if self.force:
                     # Unless --force was specified, in which case we overwrite
                     # the repository.
@@ -142,7 +142,7 @@ class CGitRepositories:
             return self._update_existing(repo)
 
     def _mirror(self, repo):
-        logging.info("Mirroring repository '%s' from: %s", repo.repo_id, repo.clone_url)
+        logging.info("Mirroring repository '%s' from: %s", repo.name, repo.clone_url)
         repo_dir = self.get_repo_dir(repo)
         if os.path.isdir(repo_dir):
             try:
@@ -159,7 +159,7 @@ class CGitRepositories:
             return Git.check('remote', 'set-url', 'origin', repo.clone_url)
 
     def _update_existing(self, repo):
-        logging.info("Updating repository '%s'", repo.repo_id)
+        logging.info("Updating repository '%s'", repo.name)
         repo_dir = self.get_repo_dir(repo)
         with chdir(repo_dir):
             with Git.setup_auth(repo):

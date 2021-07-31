@@ -33,13 +33,10 @@ def main(args=None):
     args = parse_args()
     with setup_logging(args.verbose):
         config = Config.read(args.config)
-        my_repos = config.import_my_repos()
-        if my_repos is None:
-            return 1
-        cgit_server = CGitServer(config.clone_url)
-        output = CGitRepositories(config.output, cgit_server, force=args.force)
+        cgit_server = CGitServer(config.main.clone_url)
+        output = CGitRepositories(config.main.output, cgit_server, force=args.force)
         success = True
-        for repo in my_repos:
+        for repo in config.enum_repositories():
             if args.repos is None or repo.repo_id in args.repos:
                 repo.fill_defaults(config)
                 repo.validate()

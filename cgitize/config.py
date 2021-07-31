@@ -9,13 +9,84 @@ import logging
 import os.path
 import sys
 
+from cgitize.repo import Repo, GitHub as GitHubRepo, Bitbucket as BitbucketRepo
 from cgitize.utils import chdir
+
+import tomli
+
+
+class Section:
+    def __init__(self, impl):
+        self.impl = impl
+
+    def _get_config_value(self, key, required=True, default=None):
+        if required and default is None:
+            if not key in self.impl:
+                raise RuntimeError(f'configuration value is missing: {key}')
+        return self.impl.get(key, default)
+
+    def _get_config_path(self, *args, **kwargs):
+        return os.path.abspath(self._get_config_value(*args, **kwargs))
+
+
+class Main(Section):
+    DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize/output'
+
+    @property
+    def output(self):
+        return self._get_config_path('output', default=Main.DEFAULT_OUTPUT_DIR)
+
+    @property
+    def clone_url(self):
+        return self._get_config_value('clone_url', required=False)
+
+    @property
+    def default_owner(self):
+        return self._get_config_value('owner', required=False)
+
+    @property
+    def via_ssh(self):
+        return self._get_config_value('ssh', default=True)
+
+
+class GitHub(Section):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.repositories = Repositories(self.impl.get('repositories', {}), GitHubRepo)
+
+    @property
+    def access_token(self):
+        return self._get_config_value('access_token', required=False)
+
+    def enum_repositories(self):
+        return self.repositories.enum_repositories()
+
+
+class Bitbucket(Section):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.repositories = Repositories(self.impl.get('repositories', {}), BitbucketRepo)
+
+    @property
+    def app_password(self):
+        return self._get_config_value('app_password', required=False)
+
+    def enum_repositories(self):
+        return self.repositories.enum_repositories()
+
+
+class Repositories(Section):
+    def __init__(self, impl, repo_cls=Repo):
+        super().__init__(impl)
+        self.repo_cls = repo_cls
+
+    def enum_repositories(self):
+        for k, v in self.impl.items():
+            yield self.repo_cls.from_config(v)
 
 
 class Config:
-    DEFAULT_PATH = '/etc/cgitize/cgitize.conf'
-    DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize/output'
-    DEFAULT_MY_REPOS_PATH = '/etc/cgitize/my_repos.py'
+    DEFAULT_PATH = '/etc/cgitize/cgitize.toml'
 
     @staticmethod
     def read(path):
@@ -23,59 +94,14 @@ class Config:
 
     def __init__(self, path):
         self.path = os.path.abspath(path)
-        self.impl = configparser.ConfigParser()
-        self.impl.read(path)
+        with open(self.path, 'rb') as f:
+            self.impl = tomli.load(f)
+        self.main = Main(self.impl)
+        self.repositories = Repositories(self.impl.get('repositories', {}))
+        self.github = GitHub(self.impl.get('github', {}))
+        self.bitbucket = Bitbucket(self.impl.get('bitbucket', {}))
 
-    def _resolve_relative(self, path):
-        if os.path.isabs(path):
-            return path
-        with chdir(os.path.dirname(self.path)):
-            path = os.path.abspath(path)
-            return path
-
-    @property
-    def output(self):
-        path = self.impl.get('DEFAULT', 'output', fallback=Config.DEFAULT_OUTPUT_DIR)
-        return self._resolve_relative(path)
-
-    @property
-    def clone_url(self):
-        return self.impl.get('DEFAULT', 'clone_url', fallback=None)
-
-    @property
-    def default_owner(self):
-        return self.impl.get('DEFAULT', 'owner', fallback=None)
-
-    @property
-    def via_ssh(self):
-        return self.impl.getboolean('DEFAULT', 'ssh', fallback=True)
-
-    @property
-    def github_username(self):
-        return self.impl.get('GITHUB', 'username', fallback=None)
-
-    @property
-    def github_access_token(self):
-        return self.impl.get('GITHUB', 'access_token', fallback=None)
-
-    @property
-    def bitbucket_username(self):
-        return self.impl.get('BITBUCKET', 'username', fallback=None)
-
-    @property
-    def bitbucket_app_password(self):
-        return self.impl.get('BITBUCKET', 'app_password', fallback=None)
-
-    @property
-    def my_repos(self):
-        path = self.impl.get('DEFAULT', 'my_repos', fallback=Config.DEFAULT_MY_REPOS_PATH)
-        return self._resolve_relative(path)
-
-    def import_my_repos(self):
-        sys.path.append(os.path.dirname(self.my_repos))
-        if not os.path.exists(self.my_repos):
-            logging.error("Couldn't find my_repos.py at: %s", self.my_repos)
-            return None
-        module_name = os.path.splitext(os.path.basename(self.my_repos))[0]
-        module = importlib.import_module(module_name)
-        return module.MY_REPOS
+    def enum_repositories(self):
+        yield from self.repositories.enum_repositories()
+        yield from self.github.enum_repositories()
+        yield from self.bitbucket.enum_repositories()

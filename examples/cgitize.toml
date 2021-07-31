@@ -1,0 +1,46 @@
+# All settings are optional.
+
+# /var/tmp/cgitize/output by default.
+output = "/tmp/cgitize"
+
+# URL to clone from the output directory. {name} is replaced by the repository
+# ID.
+clone_url = "https://yourhost.com/git/{name}"
+
+# Clones via SSH by default.
+ssh = true
+
+# Unless this is specified, cgit is going to derive the owner from the
+# repository's directory ownership.
+owner = "Your Name"
+
+[github]
+# If some of the repositories hosted on GitHub are private, you can use
+# "personal access tokens" to access them.
+#access_token = "XXX"
+
+# Some random repositories hosted on GitHub:
+[github.repositories.lens]
+id = "ekmett/lens"
+[github.repositories.pytomlpp]
+id = "bobfang1992/pytomlpp"
+
+[bitbucket]
+# If some of the repositories hosted on Bitbucket are private, you can use "app
+# passwords" to access them.
+#app_password = "XXX"
+
+# Some random repositories hosted on Bitbucket:
+[bitbucket.repositories.cef]
+id = "chromiumembedded/cef"
+[bitbucket.repositories.upc-runtime]
+id = "berkeleylab/upc-runtime"
+
+[repositories]
+
+# Some random repositories hosted on the web:
+[repositories.wintun]
+id = "wintun"
+clone_url = "https://git.zx2c4.com/wintun"
+owner = "Jason A. Donenfeld"
+desc = "Layer 3 TUN Driver for Windows"

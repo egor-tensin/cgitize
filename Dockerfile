@@ -1,11 +1,16 @@
 FROM alpine:3.13
 
-RUN apk add --no-cache bash git openssh-client python3 tini
+RUN build_deps='gcc libffi-dev make musl-dev python3-dev py3-pip' && \
+    runtime_deps='bash git openssh-client python3 tini' && \
+    apk add --no-cache $build_deps $runtime_deps
 
 ARG ssh_sock_dir=/var/run/cgitize
 ARG ssh_sock_path="$ssh_sock_dir/ssh-agent.sock"
 
 ENV SSH_AUTH_SOCK "$ssh_sock_path"
+
+COPY ["requirements.txt", "/tmp/"]
+RUN pip3 install -r /tmp/requirements.txt
 
 COPY ["docker/entrypoint.sh", "/"]
 COPY ["cgitize/", "/usr/src/cgitize/"]

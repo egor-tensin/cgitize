@@ -8,6 +8,6 @@ Wants=ssh-agent.service
 Type=simple
 WorkingDirectory=%h/workspace/personal/cgitize
 ExecStartPre=/usr/bin/truncate --size=0K -- %h/var/cgitize/cgitize.log
-ExecStart=/usr/bin/python3 -m cgitize.main --config %h/etc/cgitize/cgitize.conf
+ExecStart=/usr/bin/python3 -m cgitize.main --config %h/etc/cgitize/cgitize.toml
 StandardOutput=file:%h/var/cgitize/cgitize.log
 StandardError=inherit
