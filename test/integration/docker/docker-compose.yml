@@ -7,7 +7,7 @@ services:
     image: server
   client:
     build:
-      context: ../..
+      context: ../../..
       dockerfile: Dockerfile
     image: client
     volumes:

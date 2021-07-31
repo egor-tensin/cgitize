@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Integration tests
-        run: ./.ci/local/test.sh
+        run: ./test/integration/local/test.sh
       - name: Unit tests
         run: python -m unittest --buffer
 
@@ -37,7 +37,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Integration tests
-        run: ./.ci/docker/test.sh
+        run: ./test/integration/docker/test.sh
 
   publish_docker:
     needs: [test_local, test_docker]
