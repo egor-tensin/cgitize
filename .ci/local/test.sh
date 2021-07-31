@@ -74,7 +74,7 @@ setup_cgitize_toml() {
 output = "$output_dir"
 
 [repositories.test_repo]
-id = "test_repo"
+name = "test_repo"
 clone_url = "$upstream_repo_dir"
 EOF
 }

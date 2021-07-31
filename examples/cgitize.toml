@@ -31,6 +31,10 @@ id = "bobfang1992/pytomlpp"
 # passwords" to access them. Also can be provided using the
 # CGITIZE_BITBUCKET_APP_PASSWORD environment variable.
 #app_password = "XXX"
+# Contrary to GitHub, Bitbucket doesn't associate app passwords with a
+# username, so you also need that (CGITIZE_BITBUCKET_USERNAME is the
+# environment variable).
+#username = "your-username"
 
 # Some random repositories hosted on Bitbucket:
 [bitbucket.repositories.cef]
@@ -42,7 +46,7 @@ id = "berkeleylab/upc-runtime"
 
 # Some random repositories hosted on the web:
 [repositories.wintun]
-id = "wintun"
+name = "wintun"
 clone_url = "https://git.zx2c4.com/wintun"
 owner = "Jason A. Donenfeld"
 desc = "Layer 3 TUN Driver for Windows"

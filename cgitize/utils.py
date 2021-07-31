@@ -9,6 +9,7 @@ import os
 import stat
 import subprocess
 import sys
+from urllib.parse import urlsplit, urlunsplit
 
 
 @contextmanager
@@ -92,3 +93,22 @@ def protected_file(path):
             yield
         finally:
             os.unlink(path)
+
+
+def url_replace_auth(url, username, password=None):
+    parts = urlsplit(url)
+    netloc = username
+    if password is not None:
+        netloc += f':{password}'
+    netloc += f'@{parts.hostname}'
+    if parts.port is not None:
+        netloc += f':{parts.port}'
+    parts = parts._replace(netloc=netloc)
+    return urlunsplit(parts)
+
+
+def url_remove_auth(url):
+    parts = urlsplit(url)
+    netloc = parts.hostname
+    parts = parts._replace(netloc=netloc)
+    return urlunsplit(parts)

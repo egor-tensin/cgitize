@@ -9,7 +9,9 @@ import logging
 import os
 import sys
 
-from cgitize.repo import Repo, GitHub as GitHubRepo, Bitbucket as BitbucketRepo
+from cgitize.bitbucket import Bitbucket
+from cgitize.github import GitHub
+from cgitize.repo import Repo
 from cgitize.utils import chdir
 
 import tomli
@@ -28,13 +30,21 @@ class Section:
     def _get_config_path(self, *args, **kwargs):
         return os.path.abspath(self._get_config_value(*args, **kwargs))
 
+    def _get_config_or_env(self, key, env_name):
+        val = self._get_config_value(key, required=False)
+        if val is not None:
+            return val
+        if env_name in os.environ:
+            return os.environ[env_name]
+        return None
 
-class Main(Section):
+
+class MainSection(Section):
     DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize/output'
 
     @property
     def output(self):
-        return self._get_config_path('output', default=Main.DEFAULT_OUTPUT_DIR)
+        return self._get_config_path('output', default=MainSection.DEFAULT_OUTPUT_DIR)
 
     @property
     def clone_url(self):
@@ -49,52 +59,51 @@ class Main(Section):
         return self._get_config_value('ssh', default=True)
 
 
-class GitHub(Section):
+class GitHubSection(Section):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.repositories = Repositories(self.impl.get('repositories', {}), GitHubRepo)
+        self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
 
     @property
     def access_token(self):
-        access_token = self._get_config_value('access_token', required=False)
-        if access_token is not None:
-            return access_token
-        env_var = 'CGITIZE_GITHUB_ACCESS_TOKEN'
-        if env_var in os.environ:
-            return os.environ[env_var]
-        return None
+        return self._get_config_or_env('access_token', 'CGITIZE_GITHUB_ACCESS_TOKEN')
+
+    @property
+    def url_auth(self):
+        return self.access_token
 
     def enum_repositories(self):
         return self.repositories.enum_repositories()
 
 
-class Bitbucket(Section):
+class BitbucketSection(Section):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.repositories = Repositories(self.impl.get('repositories', {}), BitbucketRepo)
+        self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
 
     @property
     def app_password(self):
-        app_password = self._get_config_value('app_password', required=False)
-        if app_password is not None:
-            return app_password
-        env_var = 'CGITIZE_BITBUCKET_APP_PASSWORD'
-        if env_var in os.environ:
-            return os.environ[env_var]
-        return None
+        return self._get_config_or_env('app_password', 'CGITIZE_BITBUCKET_APP_PASSWORD')
+
+    @property
+    def username(self):
+        return self._get_config_or_env('username', 'CGITIZE_BITBUCKET_USERNAME')
+
+    @property
+    def url_auth(self):
+        username = self.username
+        password = self.app_password
+        if username is None or password is None:
+            return None
+        return f'{username}:{password}'
 
     def enum_repositories(self):
         return self.repositories.enum_repositories()
 
 
-class Repositories(Section):
-    def __init__(self, impl, repo_cls=Repo):
-        super().__init__(impl)
-        self.repo_cls = repo_cls
-
+class RepositoriesSection(Section):
     def enum_repositories(self):
-        for k, v in self.impl.items():
-            yield self.repo_cls.from_config(v)
+        return self.impl.values()
 
 
 class Config:
@@ -108,12 +117,26 @@ class Config:
         self.path = os.path.abspath(path)
         with open(self.path, 'rb') as f:
             self.impl = tomli.load(f)
-        self.main = Main(self.impl)
-        self.repositories = Repositories(self.impl.get('repositories', {}))
-        self.github = GitHub(self.impl.get('github', {}))
-        self.bitbucket = Bitbucket(self.impl.get('bitbucket', {}))
+        self.main = MainSection(self.impl)
+        self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
+        self.github = GitHubSection(self.impl.get('github', {}))
+        self.bitbucket = BitbucketSection(self.impl.get('bitbucket', {}))
 
-    def enum_repositories(self):
-        yield from self.repositories.enum_repositories()
-        yield from self.github.enum_repositories()
-        yield from self.bitbucket.enum_repositories()
+    def _parse_explicit_repositories(self):
+        for r in self.repositories.enum_repositories():
+            yield Repo.from_config(r, self)
+
+    def _parse_github_repositories(self):
+        github = GitHub(self.github.access_token)
+        for r in self.github.repositories.enum_repositories():
+            yield Repo.from_github(github.get_repo(r), self)
+
+    def _parse_bitbucket_repositories(self):
+        bitbucket = Bitbucket(self.bitbucket.username, self.bitbucket.app_password)
+        for r in self.bitbucket.repositories.enum_repositories():
+            yield Repo.from_bitbucket(bitbucket.get_repo(r), self)
+
+    def parse_repositories(self):
+        yield from self._parse_explicit_repositories()
+        yield from self._parse_github_repositories()
+        yield from self._parse_bitbucket_repositories()

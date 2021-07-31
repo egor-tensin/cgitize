@@ -36,10 +36,8 @@ def main(args=None):
         cgit_server = CGitServer(config.main.clone_url)
         output = CGitRepositories(config.main.output, cgit_server, force=args.force)
         success = True
-        for repo in config.enum_repositories():
+        for repo in config.parse_repositories():
             if args.repos is None or repo.repo_id in args.repos:
-                repo.fill_defaults(config)
-                repo.validate()
                 if not output.update(repo):
                     success = False
         if success:
