@@ -22,13 +22,15 @@ class BitbucketTests(unittest.TestCase):
         self.assertEqual(r['name'], 'cgitize-test-repository')
         self.assertEqual(r['description'], 'Test cgitize repository')
 
-        https_links = [link for link in r['links']['clone'] if link['name'] == 'https']
-        self.assertEqual(len(https_links), 1)
-        self.assertEqual(https_links[0]['href'], 'https://bitbucket.org/egor-tensin/cgitize-test-repository.git')
-
-        ssh_links = [link for link in r['links']['clone'] if link['name'] == 'ssh']
-        self.assertEqual(len(ssh_links), 1)
-        self.assertEqual(ssh_links[0]['href'], 'git@bitbucket.org:egor-tensin/cgitize-test-repository.git')
-
         self.assertEqual(r['owner']['display_name'], 'Egor Tensin')
         self.assertEqual(r['owner']['nickname'], 'egor-tensin')
+
+        self.assertEqual(r['links']['html']['href'], 'https://bitbucket.org/egor-tensin/cgitize-test-repository')
+
+        clone_urls = [link for link in r['links']['clone'] if link['name'] == 'https']
+        self.assertEqual(len(clone_urls), 1)
+        self.assertEqual(clone_urls[0]['href'], 'https://bitbucket.org/egor-tensin/cgitize-test-repository.git')
+
+        ssh_urls = [link for link in r['links']['clone'] if link['name'] == 'ssh']
+        self.assertEqual(len(ssh_urls), 1)
+        self.assertEqual(ssh_urls[0]['href'], 'git@bitbucket.org:egor-tensin/cgitize-test-repository.git')
