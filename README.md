@@ -54,7 +54,7 @@ Mirror maintenance
 
 Update the URL of an existing repository mirror:
 
-    git remote set-url origin ssh://git@examples.com/username/name.git
+    git remote set-url origin git@examples.com/username/name.git
 
 Development
 -----------
