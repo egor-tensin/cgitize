@@ -35,7 +35,7 @@ class Section:
 
 
 class MainSection(Section):
-    DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize/output'
+    DEFAULT_OUTPUT_DIR = '/var/tmp/cgitize'
 
     @property
     def output_dir(self):

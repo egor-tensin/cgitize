@@ -32,14 +32,14 @@ tokens/application passwords).
 
 The image is **egortensin/cgitize**.
 The container reads the config from /etc/cgitize/cgitize.toml and writes the
-repositories to /var/tmp/cgitize/output.
+repositories to /var/tmp/cgitize.
 If SSH is required, the socket should be mapped to
 /var/run/cgitize/ssh-agent.sock.
 
     docker run -it --rm                                     \
         -v "/path/to/config:/etc/cgitize:ro"                \
         -v "$SSH_AUTH_SOCK:/var/run/cgitize/ssh-agent.sock" \
-        -v "/path/to/output:/var/tmp/cgitize/output"        \
+        -v "/path/to/output:/var/tmp/cgitize"               \
         egortensin/cgitize
 
 The container executes cgitize inside a cron job.
