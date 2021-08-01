@@ -40,7 +40,7 @@ If SSH is required, the socket should be mapped to
         -v "/path/to/config:/etc/cgitize:ro"                \
         -v "$SSH_AUTH_SOCK:/var/run/cgitize/ssh-agent.sock" \
         -v "/path/to/output:/var/tmp/cgitize"               \
-        egortensin/cgitize
+        egortensin/cgitize:v2
 
 The container executes cgitize inside a cron job.
 The `SCHEDULE` environment variable controls the period between cgitize runs.
