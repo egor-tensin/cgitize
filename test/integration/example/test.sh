@@ -35,7 +35,7 @@ cgitize() {
     echo Running cgitize
     echo ----------------------------------------------------------------------
 
-    python3 -m cgitize.main --config "$cgitize_toml_path"
+    python3 -m cgitize.main --config "$cgitize_toml_path" "$@"
 }
 
 setup_ssh() {
@@ -96,6 +96,22 @@ verify_repos() {
     done
 }
 
+verify_no_repos() {
+    local repo
+    for repo; do
+        echo
+        echo ----------------------------------------------------------------------
+        echo "Verifying repository doesn't exist: $repo"
+        echo ----------------------------------------------------------------------
+
+        local repo_dir="$output_dir/$repo"
+        if [ -e "$repo_dir" ]; then
+            echo "Exists, but it shouldn't."
+            return 1
+        fi
+    done
+}
+
 test_ssh() {
     echo
     echo ======================================================================
@@ -124,6 +140,19 @@ test_https() {
     cleanup
 }
 
+test_one_repo() {
+    echo
+    echo ======================================================================
+    echo "${FUNCNAME[0]}"
+    echo ======================================================================
+
+    setup_https
+    cgitize --repo cef
+    verify_repos cef
+    verify_no_repos lens wintun
+    cleanup
+}
+
 main() {
     trap cleanup EXIT
     if [ -z "${CI+y}" ]; then
@@ -132,6 +161,7 @@ main() {
         test_ssh
     fi
     test_https
+    test_one_repo
 }
 
 main

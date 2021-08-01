@@ -37,7 +37,7 @@ def main(args=None):
         output = CGitRepositories(config.main.output_dir, cgit_server, force=args.force)
         success = True
         for repo in config.parse_repositories():
-            if args.repos is None or repo.repo_id in args.repos:
+            if args.repos is None or repo.name in args.repos:
                 if not output.update(repo):
                     success = False
         if success:
