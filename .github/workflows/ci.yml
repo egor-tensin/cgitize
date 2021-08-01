@@ -5,12 +5,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  # API request rate limit is exceeded otherwise:
-  CGITIZE_GITHUB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITHUB_ACCESS_TOKEN }}'
-  CGITIZE_BITBUCKET_USERNAME: '${{ secrets.CGITIZE_BITBUCKET_USERNAME }}'
-  CGITIZE_BITBUCKET_APP_PASSWORD: '${{ secrets.CGITIZE_BITBUCKET_APP_PASSWORD }}'
-
 jobs:
   test_local:
     runs-on: ubuntu-latest
@@ -33,10 +27,26 @@ jobs:
         run: pip install -r requirements.txt
       - name: Integration test (local)
         run: ./test/integration/local/test.sh
-      - name: Integration test (example config)
-        run: ./test/integration/example/test.sh
       - name: Unit tests
         run: python -m unittest --buffer
+
+  test_example_config:
+    runs-on: ubuntu-latest
+    name: 'Test: example config'
+    env:
+      # API request rate limit is easily exceeded otherwise:
+      CGITIZE_GITHUB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITHUB_ACCESS_TOKEN }}'
+      CGITIZE_BITBUCKET_USERNAME: '${{ secrets.CGITIZE_BITBUCKET_USERNAME }}'
+      CGITIZE_BITBUCKET_APP_PASSWORD: '${{ secrets.CGITIZE_BITBUCKET_APP_PASSWORD }}'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Integration test (example config)
+        run: ./test/integration/example/test.sh
 
   test_docker:
     runs-on: ubuntu-latest
@@ -48,7 +58,7 @@ jobs:
         run: ./test/integration/docker/test.sh
 
   publish_docker:
-    needs: [test_local, test_docker]
+    needs: [test_local, test_example_config, test_docker]
     runs-on: ubuntu-latest
     name: 'Publish: Docker Hub'
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags'))
@@ -84,7 +94,7 @@ jobs:
           labels: '${{ steps.meta.outputs.labels }}'
 
   publish_pypi:
-    needs: [test_local, test_docker]
+    needs: [test_local, test_example_config, test_docker]
     runs-on: ubuntu-latest
     name: 'Publish: PyPI'
     steps:
