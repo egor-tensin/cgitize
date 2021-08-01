@@ -96,7 +96,7 @@ class CGitRepositories:
         return abs_path
 
     def get_repo_dir(self, repo):
-        return os.path.join(self.dir, repo.name)
+        return os.path.join(self.dir, repo.dir)
 
     def update(self, repo):
         success = self._mirror_or_update(repo)

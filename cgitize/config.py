@@ -57,6 +57,7 @@ class MainSection(Section):
 class GitHubSection(Section):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.users = UsersSection(self.impl.get('users', {}))
         self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
 
     @property
@@ -71,6 +72,7 @@ class GitHubSection(Section):
 class BitbucketSection(Section):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.users = UsersSection(self.impl.get('users', {}))
         self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
 
     @property
@@ -89,10 +91,44 @@ class BitbucketSection(Section):
             return None
         return f'{username}:{password}'
 
+    def enum_repositories(self):
+        return map(HostedRepo, self.repositories.enum_repositories())
+
+
+class UsersSection(Section):
+    def enum_users(self):
+        return self.impl.values()
+
 
 class RepositoriesSection(Section):
     def enum_repositories(self):
         return self.impl.values()
+
+
+class User:
+    def __init__(self, impl):
+        if 'name' not in impl:
+            raise ValueError("every user must have 'name'")
+        self._impl = impl
+
+    @property
+    def name(self):
+        return self._impl['name']
+
+    @property
+    def dir(self):
+        return self._impl.get('dir')
+
+
+class HostedRepo:
+    def __init__(self, impl):
+        if 'id' not in impl:
+            raise ValueError("every hosted repository must have 'id'")
+        self._impl = impl
+
+    @property
+    def id(self):
+        return self._impl['id']
 
 
 class Config:
@@ -118,12 +154,20 @@ class Config:
     def _parse_github_repositories(self):
         github = GitHub(self.github.access_token)
         for r in self.github.repositories.enum_repositories():
+            r = HostedRepo(r)
             yield Repo.from_github(github.get_repo(r), self)
+        for u in self.github.users.enum_users():
+            u = User(u)
+            yield from (Repo.from_github(r, self, u.dir) for r in github.get_user_repos(u))
 
     def _parse_bitbucket_repositories(self):
         bitbucket = Bitbucket(self.bitbucket.username, self.bitbucket.app_password)
         for r in self.bitbucket.repositories.enum_repositories():
+            r = HostedRepo(r)
             yield Repo.from_bitbucket(bitbucket.get_repo(r), self)
+        for u in self.bitbucket.users.enum_users():
+            u = User(u)
+            yield from (Repo.from_bitbucket(r, self, u.dir) for r in bitbucket.get_user_repos(u))
 
     def parse_repositories(self):
         yield from self._parse_explicit_repositories()

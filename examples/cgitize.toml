@@ -20,6 +20,12 @@ owner = "Your Name"
 # CGITIZE_GITHUB_ACCESS_TOKEN environment variable.
 #access_token = "XXX"
 
+[github.users.me]
+name = "egor-tensin"
+# To avoid directory name clashes with other repositories, you can specify a
+# subdirectory to put that user's repositories to.
+dir = "github-dir"
+
 # Some random repositories hosted on GitHub:
 [github.repositories.lens]
 id = "ekmett/lens"
@@ -35,6 +41,12 @@ id = "bobfang1992/pytomlpp"
 # username, so you also need that (CGITIZE_BITBUCKET_USERNAME is the
 # environment variable).
 #username = "your-username"
+
+[bitbucket.users.me]
+name = "egor-tensin"
+# To avoid directory name clashes with other repositories, you can specify a
+# subdirectory to put that user's repositories to.
+dir = "bitbucket-dir"
 
 # Some random repositories hosted on Bitbucket:
 [bitbucket.repositories.cef]

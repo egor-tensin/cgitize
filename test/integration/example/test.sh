@@ -120,9 +120,16 @@ test_ssh() {
 
     setup_ssh
     cgitize
-    verify_repos lens cef wintun
+    verify_repos \
+        lens     \
+        cef      \
+        wintun   \
+        github-dir/cgitize-test-repository \
+        bitbucket-dir/cgitize-test-repository
     verify_origin lens 'git@github.com:ekmett/lens.git'
     verify_origin cef 'git@bitbucket.org:chromiumembedded/cef.git'
+    verify_origin github-dir/cgitize-test-repository 'git@github.com:egor-tensin/cgitize-test-repository.git'
+    verify_origin bitbucket-dir/cgitize-test-repository 'git@bitbucket.org:egor-tensin/cgitize-test-repository.git'
     cleanup
 }
 
@@ -134,9 +141,16 @@ test_https() {
 
     setup_https
     cgitize
-    verify_repos lens cef wintun
+    verify_repos \
+        lens     \
+        cef      \
+        wintun   \
+        github-dir/cgitize-test-repository \
+        bitbucket-dir/cgitize-test-repository
     verify_origin lens 'https://github.com/ekmett/lens.git'
     verify_origin cef 'https://bitbucket.org/chromiumembedded/cef.git'
+    verify_origin github-dir/cgitize-test-repository 'https://github.com/egor-tensin/cgitize-test-repository.git'
+    verify_origin bitbucket-dir/cgitize-test-repository 'https://bitbucket.org/egor-tensin/cgitize-test-repository.git'
     cleanup
 }
 

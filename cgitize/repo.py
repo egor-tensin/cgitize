@@ -3,6 +3,8 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
+import os.path
+
 from cgitize.utils import url_remove_auth, url_replace_auth
 
 
@@ -10,18 +12,18 @@ class Repo:
     @staticmethod
     def from_config(src, config):
         if 'name' not in src:
-            raise ValueError('every repository must have a name')
+            raise ValueError("every repository must have 'name'")
         name = src['name']
         desc = src.get('desc')
         homepage = src.get('homepage')
         owner = src.get('owner', config.main.default_owner)
         if 'clone_url' not in src:
-            raise ValueError('every repository must have a clone URL')
+            raise ValueError("every repository must have 'clone_url'")
         clone_url = src['clone_url']
         return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage)
 
     @staticmethod
-    def from_github(src, config):
+    def from_github(src, config, subdir=None):
         name = src.name
         desc = src.description
         homepage = src.html_url
@@ -33,10 +35,10 @@ class Repo:
         url_auth = None if config.main.clone_via_ssh else config.github.url_auth
 
         return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
-                    url_auth=url_auth)
+                    url_auth=url_auth, subdir=subdir)
 
     @staticmethod
-    def from_bitbucket(src, config):
+    def from_bitbucket(src, config, subdir=None):
         name = src['name']
         desc = src['description']
         homepage = src['links']['html']['href']
@@ -56,16 +58,17 @@ class Repo:
         url_auth = None if config.main.clone_via_ssh else config.bitbucket.url_auth
 
         return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
-                    url_auth=url_auth)
+                    url_auth=url_auth, subdir=subdir)
 
     def __init__(self, name, clone_url, owner=None, desc=None, homepage=None,
-                 url_auth=None):
+                 url_auth=None, subdir=None):
         self._name = name
         self._desc = desc
         self._homepage = homepage
         self._owner = owner
         self._clone_url = clone_url
         self._url_auth = url_auth
+        self._dir = subdir
 
     @property
     def name(self):
@@ -102,3 +105,9 @@ class Repo:
         if not self.url_auth:
             return self.clone_url
         return url_replace_auth(self.clone_url, self.url_auth)
+
+    @property
+    def dir(self):
+        if self._dir is None:
+            return self.name
+        return os.path.join(self._dir, self.name)

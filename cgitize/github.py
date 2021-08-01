@@ -13,11 +13,15 @@ class GitHub:
         self._impl = Github(access_token)
 
     def get_repo(self, repo):
-        if 'id' not in repo:
-            raise ValueError('every GitHub repository must have an ID')
-        repo_id = repo['id']
         try:
-            return self._impl.get_repo(repo_id)
+            return self._impl.get_repo(repo.id)
         except GithubException:
-            logging.error("Couldn't fetch repository: %s", repo_id)
+            logging.error("Couldn't fetch repository: %s", repo.id)
+            raise
+
+    def get_user_repos(self, user):
+        try:
+            return self._impl.get_user(user.name).get_repos()
+        except GithubException:
+            logging.error("Couldn't fetch user repositories: %s", user.name)
             raise

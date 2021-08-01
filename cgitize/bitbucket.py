@@ -14,11 +14,22 @@ class Bitbucket:
         self._impl = Cloud(username=username, password=password, cloud=True)
 
     def get_repo(self, repo):
-        if 'id' not in repo:
-            raise ValueError('every Bitbucket repository must have an ID')
-        repo_id = repo['id']
         try:
-            return self._impl.repositories.get(repo_id)
+            return self._impl.repositories.get(repo.id)
         except HTTPError:
-            logging.error("Couldn't fetch repository: %s", repo_id)
+            logging.error("Couldn't fetch repository: %s", repo.id)
+            raise
+
+    def get_user_repos(self, user):
+        try:
+            page = 1
+            while True:
+                params = {'page': page}
+                response = self._impl.repositories.get(user.name, params=params)
+                yield from iter(response['values'])
+                if 'next' not in response:
+                    break
+                page += 1
+        except HTTPError:
+            logging.error("Couldn't fetch user repositories: %s", user.name)
             raise
