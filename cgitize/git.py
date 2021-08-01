@@ -6,7 +6,7 @@
 from contextlib import contextmanager
 import os
 
-import cgitize.utils as utils
+from cgitize import utils
 
 
 GIT_ENV = os.environ.copy()
