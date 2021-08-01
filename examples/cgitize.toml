@@ -31,6 +31,8 @@ dir = "github-dir"
 id = "ekmett/lens"
 [github.repositories.pytomlpp]
 id = "bobfang1992/pytomlpp"
+# You can put repositories in a subdirectory:
+dir = "python"
 
 [bitbucket]
 # If some of the repositories hosted on Bitbucket are private, you can use "app
@@ -51,6 +53,8 @@ dir = "bitbucket-dir"
 # Some random repositories hosted on Bitbucket:
 [bitbucket.repositories.cef]
 id = "chromiumembedded/cef"
+# You can put repositories in a subdirectory:
+dir = "chromiumembedded"
 [bitbucket.repositories.upc-runtime]
 id = "berkeleylab/upc-runtime"
 
@@ -62,3 +66,5 @@ name = "wintun"
 clone_url = "https://git.zx2c4.com/wintun"
 owner = "Jason A. Donenfeld"
 desc = "Layer 3 TUN Driver for Windows"
+# You can put repositories in a subdirectory:
+dir = "wireguard"

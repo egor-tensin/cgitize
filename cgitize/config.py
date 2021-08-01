@@ -130,6 +130,10 @@ class HostedRepo:
     def id(self):
         return self._impl['id']
 
+    @property
+    def dir(self):
+        return self._impl.get('dir')
+
 
 class Config:
     DEFAULT_PATH = '/etc/cgitize/cgitize.toml'
@@ -155,7 +159,7 @@ class Config:
         github = GitHub(self.github.access_token)
         for r in self.github.repositories.enum_repositories():
             r = HostedRepo(r)
-            yield Repo.from_github(github.get_repo(r), self)
+            yield Repo.from_github(github.get_repo(r), self, r.dir)
         for u in self.github.users.enum_users():
             u = User(u)
             yield from (Repo.from_github(r, self, u.dir) for r in github.get_user_repos(u))
@@ -164,7 +168,7 @@ class Config:
         bitbucket = Bitbucket(self.bitbucket.username, self.bitbucket.app_password)
         for r in self.bitbucket.repositories.enum_repositories():
             r = HostedRepo(r)
-            yield Repo.from_bitbucket(bitbucket.get_repo(r), self)
+            yield Repo.from_bitbucket(bitbucket.get_repo(r), self, r.dir)
         for u in self.bitbucket.users.enum_users():
             u = User(u)
             yield from (Repo.from_bitbucket(r, self, u.dir) for r in bitbucket.get_user_repos(u))

@@ -20,7 +20,9 @@ class Repo:
         if 'clone_url' not in src:
             raise ValueError("every repository must have 'clone_url'")
         clone_url = src['clone_url']
-        return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage)
+        subdir = src.get('dir')
+        return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
+                    subdir=subdir)
 
     @staticmethod
     def from_github(src, config, subdir=None):
