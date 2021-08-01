@@ -78,7 +78,7 @@ class Repo:
 
     @property
     def desc(self):
-        if self._desc is not None:
+        if self._desc is not None and self._desc:
             return self._desc
         if self.homepage:
             return self.homepage
