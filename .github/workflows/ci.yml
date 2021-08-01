@@ -97,6 +97,9 @@ jobs:
     needs: [test_local, test_example_config, test_docker]
     runs-on: ubuntu-latest
     name: 'Publish: PyPI'
+    env:
+      # Same rate limit thing:
+      CGITIZE_GITHUB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITHUB_ACCESS_TOKEN }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -104,6 +107,8 @@ jobs:
         uses: actions/setup-python@v2
       - name: Verify package can be installed
         run: python3 -m pip install .
+      - name: Integration test (example config)
+        run: cgitize --config examples/cgitize.toml
       - name: Install package builder
         run: python3 -m pip install --upgrade build
       - name: Build package

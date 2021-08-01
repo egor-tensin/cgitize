@@ -26,7 +26,7 @@ cleanup() {
     echo "Removing output directory: $output_dir"
     rm -rf -- "$output_dir"
     echo "Reverting clone_via_ssh settings: $cgitize_toml_path"
-    clone_via_ssh_true
+    clone_via_ssh_false
 }
 
 cgitize() {
