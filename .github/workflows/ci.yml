@@ -94,7 +94,7 @@ jobs:
           labels: '${{ steps.meta.outputs.labels }}'
 
   publish_pypi:
-    needs: [test_local, test_example_config, test_docker]
+    needs: [test_local, test_example_config, test_docker, publish_docker]
     runs-on: ubuntu-latest
     name: 'Publish: PyPI'
     env:
