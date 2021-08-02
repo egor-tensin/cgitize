@@ -15,8 +15,8 @@ clone_via_ssh = false
 owner = "Your Name"
 
 [github]
-# If some of the repositories hosted on GitHub are private, you can use
-# "personal access tokens" to access them. Also can be provided using the
+# If some of the repositories hosted on GitHub are private (or if you hit the
+# request rate limit), use "access tokens". Also can be provided using the
 # CGITIZE_GITHUB_ACCESS_TOKEN environment variable.
 #access_token = "XXX"
 
@@ -37,8 +37,8 @@ id = "bobfang1992/pytomlpp"
 dir = "python"
 
 [bitbucket]
-# If some of the repositories hosted on Bitbucket are private, you can use "app
-# passwords" to access them. Also can be provided using the
+# If some of the repositories hosted on Bitbucket are private (or if you hit
+# the request rate limit), use "app passwords". Also can be provided using the
 # CGITIZE_BITBUCKET_APP_PASSWORD environment variable.
 #app_password = "XXX"
 # Contrary to GitHub, Bitbucket doesn't associate app passwords with a
