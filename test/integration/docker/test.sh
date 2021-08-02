@@ -10,6 +10,7 @@ readonly script_name
 
 readonly ssh_dir="$script_dir/ssh"
 readonly client_key_password='password'
+readonly output_dir="$script_dir/client/output"
 
 dump() {
     local prefix="${FUNCNAME[0]}"
@@ -29,6 +30,7 @@ cleanup() {
 
     remove_ssh_keys
     kill_ssh_agent
+    rm -rf -- "$output_dir"
 }
 
 generate_ssh_keys() {

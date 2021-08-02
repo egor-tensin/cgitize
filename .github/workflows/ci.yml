@@ -57,7 +57,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Integration test (Docker)
-        run: ./test/integration/docker/test.sh
+        run: sudo ./test/integration/docker/test.sh
 
   publish_docker:
     needs: [test_local, test_example_config, test_docker]
