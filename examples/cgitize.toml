@@ -4,7 +4,7 @@
 output_dir = "/tmp/cgitize"
 
 # URL to clone from the output directory. {name} is replaced by the repository
-# ID.
+# name.
 clone_url = "https://yourhost.com/git/{name}"
 
 # Clones via SSH by default.
