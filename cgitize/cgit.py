@@ -18,7 +18,7 @@ class CGitServer:
     def get_clone_url(self, repo):
         if self.clone_url is None:
             return None
-        return self.clone_url.format(name=repo.name)
+        return self.clone_url.format(repo=repo.dir)
 
 
 class CGitRCWriter:

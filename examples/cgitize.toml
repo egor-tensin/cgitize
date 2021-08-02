@@ -3,9 +3,9 @@
 # /var/tmp/cgitize by default.
 output_dir = "/tmp/cgitize"
 
-# URL to clone from the output directory. {name} is replaced by the repository
-# name.
-clone_url = "https://yourhost.com/git/{name}"
+# URL to clone from the output directory. {repo} is replaced by the
+# repository's directory path.
+clone_url = "https://yourhost.com/git/{repo}"
 
 # Clones via SSH by default.
 clone_via_ssh = false
