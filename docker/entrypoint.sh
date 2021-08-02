@@ -10,7 +10,10 @@ set -o errexit -o nounset -o pipefail
 schedule="${SCHEDULE:-once}"
 
 case "$schedule" in
-    once)    exec "$@" ;;
+    once)
+        . /tmp/venv/bin/activate
+        exec "$@"
+        ;;
     15min)   schedule='*/15 * * * *' ;;
     hourly)  schedule='0 * * * *'    ;;
     daily)   schedule='0 0 * * *'    ;;
@@ -20,7 +23,7 @@ case "$schedule" in
 esac
 
 script="#!/bin/bash
-cd /usr/src &&$( printf -- ' %q' "$@" )"
+cd /usr/src && . /tmp/venv/bin/activate &&$( printf -- ' %q' "$@" )"
 
 echo "$script" > /task.sh
 chmod +x /task.sh
