@@ -7,6 +7,8 @@ import logging
 
 from github import Github, GithubException
 
+from cgitize.repo import Repo
+
 
 class GitHub:
     def __init__(self, access_token):
@@ -25,3 +27,7 @@ class GitHub:
         except GithubException:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise
+
+    @staticmethod
+    def convert_repo(repo, *args, **kwargs):
+        return Repo.from_github(repo, *args, **kwargs)

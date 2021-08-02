@@ -8,6 +8,8 @@ import logging
 from atlassian.bitbucket.cloud import Cloud
 from requests.exceptions import HTTPError
 
+from cgitize.repo import Repo
+
 
 class Bitbucket:
     def __init__(self, username=None, password=None):
@@ -33,3 +35,7 @@ class Bitbucket:
         except HTTPError:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise
+
+    @staticmethod
+    def convert_repo(repo, *args, **kwargs):
+        return Repo.from_bitbucket(repo, *args, **kwargs)

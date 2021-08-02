@@ -25,6 +25,8 @@ name = "egor-tensin"
 # To avoid directory name clashes with other repositories, you can specify a
 # subdirectory to put that user's repositories to.
 dir = "github-dir"
+# Repositories to skip:
+#skip = ["repo1", "repo2"]
 
 # Some random repositories hosted on GitHub:
 [github.repositories.lens]
@@ -49,6 +51,8 @@ name = "egor-tensin"
 # To avoid directory name clashes with other repositories, you can specify a
 # subdirectory to put that user's repositories to.
 dir = "bitbucket-dir"
+# Repositories to skip:
+#skip = ["repo1", "repo2"]
 
 # Some random repositories hosted on Bitbucket:
 [bitbucket.repositories.cef]

@@ -119,6 +119,10 @@ class User:
     def dir(self):
         return self._impl.get('dir')
 
+    @property
+    def skip(self):
+        return self._impl.get('skip', [])
+
 
 class HostedRepo:
     def __init__(self, impl):
@@ -155,23 +159,25 @@ class Config:
         for r in self.repositories.enum_repositories():
             yield Repo.from_config(r, self)
 
+    def _parse_hosted_repositories(self, cfg, api):
+        for r in cfg.repositories.enum_repositories():
+            r = HostedRepo(r)
+            yield api.convert_repo(api.get_repo(r), self, r.dir)
+        for u in cfg.users.enum_users():
+            u = User(u)
+            for r in api.get_user_repos(u):
+                r = api.convert_repo(r, self, u.dir)
+                if r.name in u.skip:
+                    continue
+                yield r
+
     def _parse_github_repositories(self):
         github = GitHub(self.github.access_token)
-        for r in self.github.repositories.enum_repositories():
-            r = HostedRepo(r)
-            yield Repo.from_github(github.get_repo(r), self, r.dir)
-        for u in self.github.users.enum_users():
-            u = User(u)
-            yield from (Repo.from_github(r, self, u.dir) for r in github.get_user_repos(u))
+        return self._parse_hosted_repositories(self.github, github)
 
     def _parse_bitbucket_repositories(self):
         bitbucket = Bitbucket(self.bitbucket.username, self.bitbucket.app_password)
-        for r in self.bitbucket.repositories.enum_repositories():
-            r = HostedRepo(r)
-            yield Repo.from_bitbucket(bitbucket.get_repo(r), self, r.dir)
-        for u in self.bitbucket.users.enum_users():
-            u = User(u)
-            yield from (Repo.from_bitbucket(r, self, u.dir) for r in bitbucket.get_user_repos(u))
+        return self._parse_hosted_repositories(self.bitbucket, bitbucket)
 
     def parse_repositories(self):
         yield from self._parse_explicit_repositories()
