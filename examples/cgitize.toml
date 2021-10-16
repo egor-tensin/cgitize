@@ -80,9 +80,9 @@ dir = "gitlab-dir"
 [gitlab.repositories.inkscape]
 id = "inkscape/inkscape"
 [gitlab.repositories.gitter]
-id = "gitter/webapp"
+id = "gitterHQ/webapp"
 # You can put repositories in a subdirectory:
-dir = "gitter"
+dir = "gitterHQ"
 
 [repositories]
 
