@@ -4,6 +4,11 @@ cgitize
 [![CI](https://github.com/egor-tensin/cgitize/actions/workflows/ci.yml/badge.svg)](https://github.com/egor-tensin/cgitize/actions/workflows/ci.yml)
 
 Mirror your git repositories and make them cgit-ready.
+Supports cloning all of your repositories from major hosting providers:
+
+* GitHub,
+* Bitbucket,
+* Gitlab.
 
 Example output can be found at https://egort.name/git/.
 
@@ -33,8 +38,7 @@ tokens/application passwords).
 The image is **egortensin/cgitize**.
 The container reads the config from /etc/cgitize/cgitize.toml and writes the
 repositories to /var/tmp/cgitize.
-If SSH is required, the socket should be mapped to
-/var/run/cgitize/ssh-agent.sock.
+If SSH is required, map the socket to /var/run/cgitize/ssh-agent.sock.
 
     docker run -it --rm                                     \
         -v "/path/to/config:/etc/cgitize:ro"                \
