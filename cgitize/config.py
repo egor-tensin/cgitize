@@ -9,6 +9,7 @@ import tomli
 
 from cgitize.bitbucket import Bitbucket
 from cgitize.github import GitHub
+from cgitize.gitlab import Gitlab
 from cgitize.repo import Repo
 
 
@@ -95,6 +96,21 @@ class BitbucketSection(Section):
         return map(HostedRepo, self.repositories.enum_repositories())
 
 
+class GitlabSection(Section):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.users = UsersSection(self.impl.get('users', {}))
+        self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
+
+    @property
+    def access_token(self):
+        return self._get_config_or_env('access_token', 'CGITIZE_GITLAB_ACCESS_TOKEN')
+
+    @property
+    def url_auth(self):
+        return self.access_token
+
+
 class UsersSection(Section):
     def enum_users(self):
         return self.impl.values()
@@ -154,6 +170,7 @@ class Config:
         self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
         self.github = GitHubSection(self.impl.get('github', {}))
         self.bitbucket = BitbucketSection(self.impl.get('bitbucket', {}))
+        self.gitlab = GitlabSection(self.impl.get('gitlab', {}))
 
     def _parse_explicit_repositories(self):
         for r in self.repositories.enum_repositories():
@@ -179,7 +196,12 @@ class Config:
         bitbucket = Bitbucket(self.bitbucket.username, self.bitbucket.app_password)
         return self._parse_hosted_repositories(self.bitbucket, bitbucket)
 
+    def _parse_gitlab_repositories(self):
+        gitlab = Gitlab(self.gitlab.access_token)
+        return self._parse_hosted_repositories(self.gitlab, gitlab)
+
     def parse_repositories(self):
         yield from self._parse_explicit_repositories()
         yield from self._parse_github_repositories()
         yield from self._parse_bitbucket_repositories()
+        yield from self._parse_gitlab_repositories()

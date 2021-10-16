@@ -63,6 +63,21 @@ class Repo:
         return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
                     url_auth=url_auth, subdir=subdir)
 
+    @staticmethod
+    def from_gitlab(src, config, subdir=None):
+        name = src.name
+        desc = src.description
+        homepage = src.web_url
+        owner = src.namespace['name']
+
+        https_url = src.http_url_to_repo
+        ssh_url = src.ssh_url_to_repo
+        clone_url = ssh_url if config.main.clone_via_ssh else https_url
+        url_auth = None if config.main.clone_via_ssh else config.gitlab.url_auth
+
+        return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
+                    url_auth=url_auth, subdir=subdir)
+
     def __init__(self, name, clone_url, owner=None, desc=None, homepage=None,
                  url_auth=None, subdir=None):
         self._name = name
