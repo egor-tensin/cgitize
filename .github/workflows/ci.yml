@@ -100,7 +100,7 @@ jobs:
           if [ '${{ github.ref }}' = 'refs/heads/master' ]; then
               echo '::set-output name=platforms::linux/amd64'
           else
-              echo '::set-output name=platforms::linux/amd64,linux-armhf'
+              echo '::set-output name=platforms::linux/amd64,linux/armhf'
           fi
       - name: Build and publish
         uses: docker/build-push-action@v2
