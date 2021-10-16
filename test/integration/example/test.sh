@@ -177,11 +177,7 @@ test_one_repo() {
 
 main() {
     trap cleanup EXIT
-    if [ -z "${CI+y}" ]; then
-        # Skip this on CI; there're no SSH keys to authenticate against GitHub,
-        # etc. there.
-        test_ssh
-    fi
+    test_ssh
     test_https
     test_one_repo
 }

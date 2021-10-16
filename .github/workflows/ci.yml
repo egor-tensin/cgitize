@@ -49,6 +49,10 @@ jobs:
         uses: actions/setup-python@v2
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Set up ssh-agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: '${{ secrets.SSH_KEY }}'
       - name: Integration test (example config)
         run: ./test/integration/example/test.sh
 
@@ -120,6 +124,10 @@ jobs:
         uses: actions/setup-python@v2
       - name: Verify package can be installed
         run: python3 -m pip install .
+      - name: Set up ssh-agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: '${{ secrets.SSH_KEY }}'
       - name: Integration test (example config)
         run: cgitize --config examples/cgitize.toml
       - name: Install package builder
