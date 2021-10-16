@@ -121,3 +121,16 @@ buildx/build:
 .PHONY: buildx/push
 buildx/push:
 	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' --platform '$(call escape,$(PLATFORMS))' --progress plain --push .
+
+venv_dir := .venv
+
+.PHONY: venv
+venv:
+	rm -rf -- '$(call escape,$(venv_dir))'
+	mkdir -p -- '$(call escape,$(venv_dir))'
+	python -m venv -- '$(call escape,$(venv_dir))'
+	. '$(call escape,$(venv_dir))/bin/activate' && pip install -r requirements.txt
+
+.PHONY: test
+test:
+	. '$(call escape,$(venv_dir))/bin/activate' && python -m unittest --verbose --buffer
