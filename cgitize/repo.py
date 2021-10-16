@@ -53,7 +53,8 @@ class Repo:
         https_url = url_remove_auth(https_urls[0]['href'])
 
         ssh_urls = [link for link in src['links']['clone'] if link ['name'] == 'ssh']
-        if len(ssh_urls) != 1: raise RuntimeError(f"no ssh:// clone URL for repository '{name}'?!")
+        if len(ssh_urls) != 1:
+            raise RuntimeError(f"no ssh:// clone URL for repository '{name}'?!")
         ssh_url = ssh_urls[0]['href']
 
         clone_url = ssh_url if config.main.clone_via_ssh else https_url
