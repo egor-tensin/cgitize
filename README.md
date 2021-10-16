@@ -8,7 +8,7 @@ Supports cloning all of your repositories from major hosting providers:
 
 * GitHub,
 * Bitbucket,
-* Gitlab.
+* GitLab.
 
 Example output can be found at https://egort.name/git/.
 

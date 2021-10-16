@@ -63,10 +63,10 @@ dir = "chromiumembedded"
 [bitbucket.repositories.upc-runtime]
 id = "berkeleylab/upc-runtime"
 
-# Gitlab
+# GitLab
 # ======
 
-# Gitlab settings are similar to those for GitHub.
+# GitLab settings are similar to those for GitHub.
 
 [gitlab]
 # The environment variable is CGITIZE_GITLAB_ACCESS_TOKEN.

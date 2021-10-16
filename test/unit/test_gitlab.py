@@ -9,7 +9,7 @@ from gitlab import Gitlab
 from gitlab.exceptions import GitlabGetError
 
 
-class GitlabTests(unittest.TestCase):
+class GitLabTests(unittest.TestCase):
     def setUp(self):
         self.gitlab = Gitlab('https://gitlab.com')
 

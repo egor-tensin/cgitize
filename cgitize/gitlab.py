@@ -5,34 +5,35 @@
 
 import logging
 
-import gitlab
+from gitlab import Gitlab
+from gitlab.exceptions import GitlabGetError
 
 from cgitize.repo import Repo
 
 
-class Gitlab:
+class GitLab:
     def __init__(self, access_token):
-        self._impl = gitlab.Gitlab('https://gitlab.com', private_token=access_token)
+        self._impl = Gitlab('https://gitlab.com', private_token=access_token)
 
     def get_repo(self, repo):
         try:
             return self._impl.projects.get(repo.id)
-        except gitlab.exceptions.GitlabGetError:
+        except GitlabGetError:
             logging.error("Couldn't fetch repository: %s", repo.id)
             raise
 
     def get_user_repos(self, user):
         try:
-            # Strictly speaking, Gitlab supports the /users/:username/projects
+            # Strictly speaking, GitLab supports the /users/:username/projects
             # endpoint, which means you shouldn't need to fetch the user first,
             # but I don't think python-gitlab 2.10.0 supports that?
             users = self._impl.users.list(username=user.name)
             if not users:
-                raise RuntimeError(f"Couldn't find Gitlab user: {user.name}")
+                raise RuntimeError(f"Couldn't find GitLab user: {user.name}")
             assert len(users) == 1
             user = users[0]
             return user.projects.list()
-        except gitlab.exceptions.GitlabGetError:
+        except GitlabGetError:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise
 
