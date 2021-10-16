@@ -36,10 +36,9 @@ id = "bobfang1992/pytomlpp"
 # You can put repositories in a subdirectory:
 dir = "python"
 
+# Bitbucket settings are similar to those for GitHub.
 [bitbucket]
-# If some of the repositories hosted on Bitbucket are private (or if you hit
-# the request rate limit), use "app passwords". Also can be provided using the
-# CGITIZE_BITBUCKET_APP_PASSWORD environment variable.
+# The environment variable is CGITIZE_BITBUCKET_APP_PASSWORD.
 #app_password = "XXX"
 # Contrary to GitHub, Bitbucket doesn't associate app passwords with a
 # username, so you also need that (CGITIZE_BITBUCKET_USERNAME is the
@@ -48,40 +47,29 @@ dir = "python"
 
 [bitbucket.users.me]
 name = "egor-tensin"
-# To avoid directory name clashes with other repositories, you can specify a
-# subdirectory to put that user's repositories to.
 dir = "bitbucket-dir"
-# Repositories to skip:
 #skip = ["repo1", "repo2"]
 
-# Some random repositories hosted on Bitbucket:
 [bitbucket.repositories.cef]
 id = "chromiumembedded/cef"
-# You can put repositories in a subdirectory:
 dir = "chromiumembedded"
 [bitbucket.repositories.upc-runtime]
 id = "berkeleylab/upc-runtime"
 
+# Gitlab settings are similar to those for GitHub.
 [gitlab]
-# If some of the repositories hosted on Gitlab are private (or if you hit the
-# request rate limit), use "access tokens". Also can be provided using the
-# CGITIZE_GITLAB_ACCESS_TOKEN environment variable.
+# The environment variable is CGITIZE_GITLAB_ACCESS_TOKEN.
 #access_token = "XXX"
 
 [gitlab.users.me]
 name = "egor-tensin"
-# To avoid directory name clashes with other repositories, you can specify a
-# subdirectory to put that user's repositories to.
 dir = "gitlab-dir"
-# Repositories to skip:
 #skip = ["repo1", "repo2"]
 
-# Some random repositories hosted on Gitlab:
 [gitlab.repositories.inkscape]
 id = "inkscape/inkscape"
 [gitlab.repositories.gitter]
 id = "gitterHQ/webapp"
-# You can put repositories in a subdirectory:
 dir = "gitterHQ"
 
 [repositories]
