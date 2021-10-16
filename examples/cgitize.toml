@@ -14,6 +14,9 @@ clone_via_ssh = false
 # repository's directory ownership.
 owner = "Your Name"
 
+# GitHub
+# ======
+
 [github]
 # If some of the repositories hosted on GitHub are private (or if you hit the
 # request rate limit), use "access tokens". Also can be provided using the
@@ -36,7 +39,11 @@ id = "bobfang1992/pytomlpp"
 # You can put repositories in a subdirectory:
 dir = "python"
 
+# Bitbucket
+# =========
+
 # Bitbucket settings are similar to those for GitHub.
+
 [bitbucket]
 # The environment variable is CGITIZE_BITBUCKET_APP_PASSWORD.
 #app_password = "XXX"
@@ -56,7 +63,11 @@ dir = "chromiumembedded"
 [bitbucket.repositories.upc-runtime]
 id = "berkeleylab/upc-runtime"
 
+# Gitlab
+# ======
+
 # Gitlab settings are similar to those for GitHub.
+
 [gitlab]
 # The environment variable is CGITIZE_GITLAB_ACCESS_TOKEN.
 #access_token = "XXX"
@@ -71,6 +82,9 @@ id = "inkscape/inkscape"
 [gitlab.repositories.gitter]
 id = "gitterHQ/webapp"
 dir = "gitterHQ"
+
+# Self-hosted repositories
+# ========================
 
 [repositories]
 
