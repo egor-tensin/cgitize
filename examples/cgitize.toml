@@ -71,6 +71,9 @@ id = "berkeleylab/upc-runtime"
 [gitlab]
 # The environment variable is CGITIZE_GITLAB_ACCESS_TOKEN.
 #access_token = "XXX"
+# Similar to Bitbucket, GitLab doesn't associate access tokens with a username,
+# so you also need that (CGITIZE_GITLAB_USERNAME is the environment variable).
+#username = "your-username"
 
 [gitlab.users.me]
 name = "egor-tensin"
