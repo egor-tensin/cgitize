@@ -41,6 +41,7 @@ jobs:
       #CGITIZE_BITBUCKET_USERNAME: egor-tensin
       #CGITIZE_BITBUCKET_APP_PASSWORD: '${{ secrets.CGITIZE_BITBUCKET_APP_PASSWORD }}'
       # Same goes for GitLab.
+      #CGITIZE_GITLAB_USERNAME: egor-tensin
       #CGITIZE_GITLAB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITLAB_ACCESS_TOKEN }}'
     steps:
       - name: Checkout
