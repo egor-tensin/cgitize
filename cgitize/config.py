@@ -70,6 +70,12 @@ class GitHubSection(Section):
         return self.access_token
 
 
+def two_part_url_auth(username, password):
+        if username is None or password is None:
+            return None
+        return f'{username}:{password}'
+
+
 class BitbucketSection(Section):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -86,11 +92,7 @@ class BitbucketSection(Section):
 
     @property
     def url_auth(self):
-        username = self.username
-        password = self.app_password
-        if username is None or password is None:
-            return None
-        return f'{username}:{password}'
+        return two_part_url_auth(self.username, self.app_password)
 
     def enum_repositories(self):
         return map(HostedRepo, self.repositories.enum_repositories())
@@ -107,8 +109,12 @@ class GitLabSection(Section):
         return self._get_config_or_env('access_token', 'CGITIZE_GITLAB_ACCESS_TOKEN')
 
     @property
+    def username(self):
+        return self._get_config_or_env('username', 'CGITIZE_GITLAB_USERNAME')
+
+    @property
     def url_auth(self):
-        return self.access_token
+        return two_part_url_auth(self.username, self.access_token)
 
 
 class UsersSection(Section):
