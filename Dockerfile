@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.14
 
 RUN build_deps='gcc libffi-dev make musl-dev python3-dev py3-pip' && \
     runtime_deps='bash git openssh-client python3 tini' && \
