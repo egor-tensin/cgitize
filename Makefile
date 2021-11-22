@@ -131,6 +131,16 @@ venv:
 	python -m venv -- '$(call escape,$(venv_dir))'
 	. '$(call escape,$(venv_dir))/bin/activate' && pip install -r requirements.txt
 
+.PHONY: py
+py: python
+
+.PHONY: repl
+repl: python
+
+.PHONY: python
+python:
+	. '$(call escape,$(venv_dir))/bin/activate' && python
+
 .PHONY: test
 test:
 	. '$(call escape,$(venv_dir))/bin/activate' && python -m unittest --verbose --buffer
