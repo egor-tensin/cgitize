@@ -67,8 +67,10 @@ class AgeFile:
     @staticmethod
     def get_age(repo_dir):
         # https://git.zx2c4.com/cgit/tree/contrib/hooks/post-receive.agefile
+        # Except I think that the committer date, not author date  better
+        # represents activity.
         with chdir(repo_dir):
-            success, output = Git.capture('for-each-ref', '--sort=-authordate', '--count=1', '--format=%(authordate:iso8601)')
+            success, output = Git.capture('for-each-ref', '--sort=-committerdate', '--count=1', '--format=%(committerdate:iso8601)')
             if not success:
                 logging.error("Couldn't get the timestamp of the newest commit in repository: %s", repo_dir)
                 return None
