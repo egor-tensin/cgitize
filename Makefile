@@ -6,9 +6,6 @@ unexport MAKEFLAGS
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 
-.PHONY: DO
-DO:
-
 escape = $(subst ','\'',$(1))
 
 define noexpand
@@ -36,6 +33,9 @@ DOCKER_USERNAME := egortensin
 ifdef DOCKER_PASSWORD
 $(eval $(call noexpand,DOCKER_PASSWORD))
 endif
+
+.PHONY: DO
+DO:
 
 .PHONY: all
 all: build
