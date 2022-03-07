@@ -1,6 +1,3 @@
-# Various one-liners which I'm too lazy to remember.
-# Basically a collection of really small shell scripts.
-
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables --warn-undefined-variables
 unexport MAKEFLAGS
 .DEFAULT_GOAL := all
