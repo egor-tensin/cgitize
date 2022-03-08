@@ -57,8 +57,8 @@ class MainSection(Section):
 
 
 class ServiceSection(Section, ABC):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, impl):
+        super().__init__(impl)
         self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
         self.users = UsersSection(self.impl.get('users', {}))
 
@@ -80,8 +80,8 @@ class ServiceSection(Section, ABC):
 
 
 class GitHubSection(ServiceSection):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, impl):
+        super().__init__(impl)
         self.orgs = OrgsSection(self.impl.get('organizations', {}))
 
     @property
