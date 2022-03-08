@@ -91,9 +91,6 @@ class BitbucketSection(ServiceSection):
     def url_auth(self):
         return two_part_url_auth(self.username, self.app_password)
 
-    def enum_repositories(self):
-        return map(HostedRepo, self.repositories.enum_repositories())
-
 
 class GitLabSection(ServiceSection):
     @property
