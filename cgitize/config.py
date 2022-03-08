@@ -55,12 +55,14 @@ class MainSection(Section):
         return self._get_config_value('owner', required=False)
 
 
-class GitHubSection(Section):
+class ServiceSection(Section):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.users = UsersSection(self.impl.get('users', {}))
         self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
+        self.users = UsersSection(self.impl.get('users', {}))
 
+
+class GitHubSection(ServiceSection):
     @property
     def access_token(self):
         return self._get_config_or_env('access_token', 'CGITIZE_GITHUB_ACCESS_TOKEN')
@@ -76,12 +78,7 @@ def two_part_url_auth(username, password):
         return f'{username}:{password}'
 
 
-class BitbucketSection(Section):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.users = UsersSection(self.impl.get('users', {}))
-        self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
-
+class BitbucketSection(ServiceSection):
     @property
     def app_password(self):
         return self._get_config_or_env('app_password', 'CGITIZE_BITBUCKET_APP_PASSWORD')
@@ -98,12 +95,7 @@ class BitbucketSection(Section):
         return map(HostedRepo, self.repositories.enum_repositories())
 
 
-class GitLabSection(Section):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.users = UsersSection(self.impl.get('users', {}))
-        self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
-
+class GitLabSection(ServiceSection):
     @property
     def access_token(self):
         return self._get_config_or_env('access_token', 'CGITIZE_GITLAB_ACCESS_TOKEN')
