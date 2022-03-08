@@ -94,9 +94,9 @@ class GitHubSection(ServiceSection):
 
 
 def two_part_url_auth(username, password):
-        if username is None or password is None:
-            return None
-        return f'{username}:{password}'
+    if username is None or password is None:
+        return None
+    return f'{username}:{password}'
 
 
 class BitbucketSection(ServiceSection):
