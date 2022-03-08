@@ -3,6 +3,7 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
+from abc import ABC, abstractmethod
 import os
 
 import tomli
@@ -55,11 +56,28 @@ class MainSection(Section):
         return self._get_config_value('owner', required=False)
 
 
-class ServiceSection(Section):
+class ServiceSection(Section, ABC):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
         self.users = UsersSection(self.impl.get('users', {}))
+
+    def enum_repositories(self, cfg):
+        api = self.connect_to_service()
+        for r in self.repositories.enum_repositories():
+            r = HostedRepo(r)
+            yield api.convert_repo(api.get_repo(r), cfg, r.dir)
+        for u in self.users.enum_users():
+            u = User(u)
+            for r in api.get_user_repos(u):
+                r = api.convert_repo(r, cfg, u.dir)
+                if r.name in u.skip:
+                    continue
+                yield r
+
+    @abstractmethod
+    def connect_to_service(self):
+        pass
 
 
 class GitHubSection(ServiceSection):
@@ -70,6 +88,9 @@ class GitHubSection(ServiceSection):
     @property
     def url_auth(self):
         return self.access_token
+
+    def connect_to_service(self):
+        return GitHub(self.access_token)
 
 
 def two_part_url_auth(username, password):
@@ -91,6 +112,9 @@ class BitbucketSection(ServiceSection):
     def url_auth(self):
         return two_part_url_auth(self.username, self.app_password)
 
+    def connect_to_service(self):
+        return Bitbucket(self.username, self.app_password)
+
 
 class GitLabSection(ServiceSection):
     @property
@@ -104,6 +128,9 @@ class GitLabSection(ServiceSection):
     @property
     def url_auth(self):
         return two_part_url_auth(self.username, self.access_token)
+
+    def connect_to_service(self):
+        return GitLab(self.access_token)
 
 
 class UsersSection(Section):
@@ -171,32 +198,8 @@ class Config:
         for r in self.repositories.enum_repositories():
             yield Repo.from_config(r, self)
 
-    def _parse_hosted_repositories(self, cfg, api):
-        for r in cfg.repositories.enum_repositories():
-            r = HostedRepo(r)
-            yield api.convert_repo(api.get_repo(r), self, r.dir)
-        for u in cfg.users.enum_users():
-            u = User(u)
-            for r in api.get_user_repos(u):
-                r = api.convert_repo(r, self, u.dir)
-                if r.name in u.skip:
-                    continue
-                yield r
-
-    def _parse_github_repositories(self):
-        github = GitHub(self.github.access_token)
-        return self._parse_hosted_repositories(self.github, github)
-
-    def _parse_bitbucket_repositories(self):
-        bitbucket = Bitbucket(self.bitbucket.username, self.bitbucket.app_password)
-        return self._parse_hosted_repositories(self.bitbucket, bitbucket)
-
-    def _parse_gitlab_repositories(self):
-        gitlab = GitLab(self.gitlab.access_token)
-        return self._parse_hosted_repositories(self.gitlab, gitlab)
-
     def parse_repositories(self):
         yield from self._parse_explicit_repositories()
-        yield from self._parse_github_repositories()
-        yield from self._parse_bitbucket_repositories()
-        yield from self._parse_gitlab_repositories()
+        yield from self.github.enum_repositories(self)
+        yield from self.bitbucket.enum_repositories(self)
+        yield from self.gitlab.enum_repositories(self)
