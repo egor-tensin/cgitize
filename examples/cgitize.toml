@@ -29,7 +29,14 @@ name = "egor-tensin"
 # subdirectory to put that user's repositories to.
 dir = "github-dir"
 # Repositories to skip:
-#skip = ["repo1", "repo2"]
+skip = ["chruby", "SafeInt"]
+
+[github.organizations.browserify]
+# For GitHub, you can also specify organizations. The settings are similar to
+# those for users. "browserify" is a random organization.
+name = "browserify"
+dir = "browserify-dir"
+skip = ["awesome-browserify", "discuss"]
 
 # Some random repositories hosted on GitHub:
 [github.repositories.lens]

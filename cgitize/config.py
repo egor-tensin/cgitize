@@ -68,7 +68,6 @@ class ServiceSection(Section, ABC):
             r = HostedRepo(r)
             yield api.convert_repo(api.get_repo(r), cfg, r.dir)
         for u in self.users.enum_users():
-            u = User(u)
             for r in api.get_user_repos(u):
                 r = api.convert_repo(r, cfg, u.dir)
                 if r.name in u.skip:
@@ -81,6 +80,10 @@ class ServiceSection(Section, ABC):
 
 
 class GitHubSection(ServiceSection):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.orgs = OrgsSection(self.impl.get('organizations', {}))
+
     @property
     def access_token(self):
         return self._get_config_or_env('access_token', 'CGITIZE_GITHUB_ACCESS_TOKEN')
@@ -88,6 +91,16 @@ class GitHubSection(ServiceSection):
     @property
     def url_auth(self):
         return self.access_token
+
+    def enum_repositories(self, cfg):
+        yield from super().enum_repositories(cfg)
+        api = self.connect_to_service()
+        for org in self.orgs.enum_orgs():
+            for repo in api.get_org_repos(org):
+                repo = api.convert_repo(repo, cfg, org.dir)
+                if repo.name in org.skip:
+                    continue
+                yield repo
 
     def connect_to_service(self):
         return GitHub(self.access_token)
@@ -135,7 +148,12 @@ class GitLabSection(ServiceSection):
 
 class UsersSection(Section):
     def enum_users(self):
-        return self.impl.values()
+        return map(User, self.impl.values())
+
+
+class OrgsSection(Section):
+    def enum_orgs(self):
+        return map(Org, self.impl.values())
 
 
 class RepositoriesSection(Section):
@@ -146,7 +164,7 @@ class RepositoriesSection(Section):
 class User:
     def __init__(self, impl):
         if 'name' not in impl:
-            raise ValueError("every user must have 'name'")
+            raise ValueError("every user must have a 'name'")
         self._impl = impl
 
     @property
@@ -160,6 +178,13 @@ class User:
     @property
     def skip(self):
         return self._impl.get('skip', [])
+
+
+class Org(User):
+    def __init__(self, impl):
+        if 'name' not in impl:
+            raise ValueError("every organization must have a 'name'")
+        self._impl = impl
 
 
 class HostedRepo:

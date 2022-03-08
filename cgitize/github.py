@@ -28,6 +28,13 @@ class GitHub:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise
 
+    def get_org_repos(self, org):
+        try:
+            return self._impl.get_organization(org.name).get_repos()
+        except GithubException:
+            logging.error("Couldn't fetch organization repositories: %s", org.name)
+            raise
+
     @staticmethod
     def convert_repo(repo, *args, **kwargs):
         return Repo.from_github(repo, *args, **kwargs)
