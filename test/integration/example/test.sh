@@ -9,6 +9,13 @@ readonly script_dir
 readonly cgitize_toml_path="$script_dir/../../../examples/cgitize.toml"
 readonly output_dir='/tmp/cgitize'
 
+success() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo "SUCCESS: ${FUNCNAME[1]}"
+    echo ----------------------------------------------------------------------
+}
+
 clone_via_ssh_true() {
     sed -i -E -e 's/^clone_via_ssh = (true|false)$/clone_via_ssh = true/' -- "$cgitize_toml_path"
 }
@@ -135,6 +142,7 @@ test_ssh() {
     verify_origin bitbucket-dir/cgitize-test-repository 'git@bitbucket.org:egor-tensin/cgitize-test-repository.git'
     verify_origin gitlab-dir/cgitize-test-repository 'git@gitlab.com:egor-tensin/cgitize-test-repository.git'
     cleanup
+    success
 }
 
 test_https() {
@@ -160,6 +168,7 @@ test_https() {
     verify_origin bitbucket-dir/cgitize-test-repository 'https://bitbucket.org/egor-tensin/cgitize-test-repository.git'
     verify_origin gitlab-dir/cgitize-test-repository 'https://gitlab.com/egor-tensin/cgitize-test-repository.git'
     cleanup
+    success
 }
 
 test_one_repo() {
@@ -173,6 +182,7 @@ test_one_repo() {
     verify_repos chromiumembedded/cef
     verify_no_repos lens wireguard/wintun
     cleanup
+    success
 }
 
 main() {

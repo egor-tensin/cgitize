@@ -11,6 +11,13 @@ readonly etc_dir="$script_dir/etc"
 readonly cgitize_toml_path="$etc_dir/cgitize.toml"
 readonly output_dir="$script_dir/output"
 
+success() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo "SUCCESS: ${FUNCNAME[1]}"
+    echo ----------------------------------------------------------------------
+}
+
 cleanup() {
     echo
     echo ----------------------------------------------------------------------
@@ -173,6 +180,7 @@ test_bare() {
     cgitize
     verify_added_commits
     cleanup
+    success
 }
 
 test_workdir() {
@@ -188,6 +196,7 @@ test_workdir() {
     cgitize
     verify_added_commits
     cleanup
+    success
 }
 
 test_failure() {
@@ -217,6 +226,7 @@ test_failure() {
         return 1
     fi
     cleanup
+    success
 }
 
 main() {
