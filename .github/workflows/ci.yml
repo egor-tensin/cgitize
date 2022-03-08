@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '${{ matrix.python-version }}'
+          cache: pip
       - name: Initialize Git
         run: |
           git config --global user.name 'John Doe'
@@ -48,6 +49,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2
+        with:
+          cache: pip
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Set up ssh-agent
