@@ -37,7 +37,10 @@ cleanup() {
 
     remove_ssh_keys
     kill_ssh_agent
+    docker_cleanup
+
     rm -rf -- "$output_dir"
+    popd > /dev/null
 }
 
 generate_ssh_keys() {
@@ -113,6 +116,12 @@ docker_build() {
     docker-compose build
 }
 
+docker_cleanup() {
+    dump 'cleaning up Docker data'
+    docker-compose down --rmi all --volumes
+    # Use `docker system prune` as well?
+}
+
 setup() {
     generate_ssh_keys
     setup_ssh_agent
@@ -159,13 +168,12 @@ verify() {
 }
 
 main() {
-    trap cleanup EXIT
     pushd -- "$script_dir" > /dev/null
+    trap cleanup EXIT
     setup
     run
     verify
     success
-    popd > /dev/null
 }
 
 main
