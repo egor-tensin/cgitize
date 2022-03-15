@@ -19,4 +19,4 @@ COPY ["cgitize/", "/usr/src/cgitize/"]
 WORKDIR /usr/src
 
 ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]
-CMD python3 -m cgitize.main
+CMD ["python3", "-m", "cgitize.main"]

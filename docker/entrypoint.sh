@@ -33,4 +33,4 @@ crontab="$schedule /task.sh
 
 echo "$crontab" | crontab -
 
-crond -f
+exec crond -f
