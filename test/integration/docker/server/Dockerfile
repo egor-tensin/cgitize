@@ -1,6 +1,6 @@
 FROM alpine:3.11
 
-RUN apk --no-cache add bash git openssh-server && \
+RUN apk --no-cache add bash git openssh-server tini && \
     echo 'root:root' | chpasswd && \
     git config --global user.name 'John Doe' && \
     git config --global user.email 'John.Doe@example.com' && \
@@ -19,4 +19,5 @@ RUN chmod 0600 -- /etc/ssh/ssh_host_ed25519_key && \
 COPY ["server/setup_repo.sh", "./"]
 RUN ./setup_repo.sh
 
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["/usr/sbin/sshd", "-D"]
