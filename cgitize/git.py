@@ -145,7 +145,7 @@ class Git:
 
     @staticmethod
     def capture(*args, **kwargs):
-        return utils.try_run_capture(Git.EXE, *args, env=GIT_ENV, **kwargs)
+        return utils.try_capture(Git.EXE, *args, env=GIT_ENV, **kwargs)
 
     @staticmethod
     def get_global_config():

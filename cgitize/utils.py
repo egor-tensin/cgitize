@@ -53,11 +53,11 @@ def try_run(*args, **kwargs):
         return e.returncode == 0
 
 
-def run_capture(*args, **kwargs):
+def capture(*args, **kwargs):
     return run(*args, capture_output=True, **kwargs)
 
 
-def try_run_capture(*args, **kwargs):
+def try_capture(*args, **kwargs):
     try:
         return True, run(*args, capture_output=True, **kwargs)
     except subprocess.CalledProcessError as e:

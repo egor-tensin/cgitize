@@ -115,7 +115,8 @@ class CGitRepositories:
             return self._mirror(repo)
 
         with chdir(repo_dir):
-            if not Git.check('rev-parse', '--is-inside-work-tree'):
+            success, output = Git.capture('rev-parse', '--is-inside-work-tree')
+            if not success:
                 # Overwrite the existing directory if it's not a Git repository.
                 logging.warning('Local directory is not a repository, going to overwrite it: %s', repo_dir)
                 return self._mirror(repo)
