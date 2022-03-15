@@ -11,6 +11,8 @@ RUN python3 -m venv /tmp/venv && \
 
 FROM base
 
+LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
+
 RUN apk add --no-cache bash git openssh-client python3 tini
 
 COPY --from=build ["/tmp/venv", "/tmp/venv/"]
