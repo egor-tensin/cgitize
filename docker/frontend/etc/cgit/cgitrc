@@ -1,3 +1,4 @@
+# Always include this (unless you disagree with my choices, of course).
 include=/etc/cgit/common
 
 root-title=My git repositories

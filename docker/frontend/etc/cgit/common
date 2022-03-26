@@ -23,6 +23,7 @@ max-stats=year
 remove-suffix=1
 snapshots=tar.gz tar.bz2 zip
 
+# Enable Markdown conversion to HTML.
 about-filter=/usr/lib/cgit/filters/about-formatting.sh
 readme=:README.md
 readme=:readme.md
@@ -31,6 +32,8 @@ readme=:readme.txt
 readme=:README
 readme=:readme
 
+# Enable syntax highlighting.
 source-filter=/usr/lib/cgit/filters/syntax-highlighting.py
 
+# Set the directory path to search for repositories.
 scan-path=/mnt/cgitize

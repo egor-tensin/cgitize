@@ -1,5 +1,7 @@
 #!/usr/bin/env dash
 
+# The <style>sheet has been copied from the upstream script.
+
 cat <<EOF
 <style>
 .markdown-body {
@@ -283,6 +285,9 @@ div#cgit .markdown-body h1 a.toclink, div#cgit .markdown-body h2 a.toclink, div#
 }
 </style>   
 EOF
+
+# Use cmark-gfm, in the vain hope that it will bring the README.md files closer
+# to what GitHub uses.
 
 echo "<div class='markdown-body'>"
 cmark-gfm --extension table --extension autolink
