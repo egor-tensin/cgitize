@@ -41,9 +41,9 @@ repositories to /var/tmp/cgitize.
 If SSH is required, map the socket to /var/run/cgitize/ssh-agent.sock.
 
     docker run -it --rm                                     \
-        -v "/path/to/config:/etc/cgitize:ro"                \
+        -v "/path-to/config-dir:/etc/cgitize:ro"            \
         -v "$SSH_AUTH_SOCK:/var/run/cgitize/ssh-agent.sock" \
-        -v "/path/to/output:/var/tmp/cgitize"               \
+        -v "/path-to/output-dir:/var/tmp/cgitize"           \
         egortensin/cgitize:2
 
 The container executes cgitize inside a cron job.
