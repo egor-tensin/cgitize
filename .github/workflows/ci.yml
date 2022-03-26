@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9, 3.x]
-    name: 'Test: ${{ matrix.python-version }}'
+    name: 'Test / ${{ matrix.python-version }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
 
   test_example_config:
     runs-on: ubuntu-latest
-    name: 'Test: example config'
+    name: 'Test / example config'
     env:
       # API request rate limit is easily exceeded otherwise:
       CGITIZE_GITHUB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITHUB_ACCESS_TOKEN }}'
@@ -62,7 +62,7 @@ jobs:
 
   test_docker:
     runs-on: ubuntu-latest
-    name: 'Test: Docker'
+    name: 'Test / Docker'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -72,15 +72,23 @@ jobs:
   publish_docker:
     needs: [test_local, test_example_config, test_docker]
     runs-on: ubuntu-latest
-    name: 'Publish: Docker Hub'
+    strategy:
+      matrix:
+        service: [backend, frontend]
+        include:
+          - {service: backend, context: ., image: cgitize}
+          - {service: frontend, context: docker/frontend, image: cgitize-frontend}
+    name: 'Publish / Docker Hub / ${{ matrix.service }}'
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       # https://github.com/docker/metadata-action#semver
       - id: meta
         name: Docker Hub metadata
         uses: docker/metadata-action@v3
         with:
-          images: '${{ secrets.DOCKERHUB_USERNAME }}/cgitize'
+          images: '${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}'
           flavor: |
             latest=auto
           tags: |
@@ -109,6 +117,7 @@ jobs:
       - name: Build and publish
         uses: docker/build-push-action@v2
         with:
+          context: '${{ matrix.context }}'
           platforms: '${{ steps.platforms.outputs.platforms }}'
           push: true
           tags: '${{ steps.meta.outputs.tags }}'
@@ -117,7 +126,7 @@ jobs:
   publish_pypi:
     needs: [test_local, test_example_config, test_docker, publish_docker]
     runs-on: ubuntu-latest
-    name: 'Publish: PyPI'
+    name: 'Publish / PyPI'
     env:
       # Same rate limit thing:
       CGITIZE_GITHUB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITHUB_ACCESS_TOKEN }}'
