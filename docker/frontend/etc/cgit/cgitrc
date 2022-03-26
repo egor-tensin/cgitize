@@ -1,0 +1,4 @@
+include=/etc/cgit/common
+
+root-title=My git repositories
+root-desc=Synced using https://github.com/egor-tensin/cgitize

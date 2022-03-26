@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: .
+    environment:
+      # Every 3 hours:
+      SCHEDULE: '0 */3 * * *'
+    image: egortensin/cgitize:latest
+    logging:
+      driver: journald
+    restart: unless-stopped
+    volumes:
+      - ./examples/docker:/etc/cgitize:ro
+      - repositories:/var/tmp/cgitize
+  frontend:
+    build:
+      context: ./docker/frontend
+    image: egortensin/cgitize-frontend:latest
+    logging:
+      driver: journald
+    ports:
+      - '127.0.0.1:80:80'
+    restart: unless-stopped
+    volumes:
+      - repositories:/mnt/cgitize:ro
+
+volumes:
+  repositories:

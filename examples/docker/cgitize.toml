@@ -1,0 +1,6 @@
+clone_via_ssh = false
+
+[github]
+
+[github.users.me]
+name = "egor-tensin"
