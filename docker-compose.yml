@@ -13,7 +13,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./examples/docker:/etc/cgitize:ro
-      - repositories:/var/tmp/cgitize
+      - repositories:/mnt/cgitize
   frontend:
     build:
       context: ./docker/frontend

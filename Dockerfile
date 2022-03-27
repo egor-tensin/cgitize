@@ -17,7 +17,7 @@ RUN apk add --no-cache bash git openssh-client python3 tini
 
 COPY --from=build ["/tmp/venv", "/tmp/venv/"]
 
-ARG ssh_sock_dir=/var/run/cgitize
+ARG ssh_sock_dir=/
 ARG ssh_sock_path="$ssh_sock_dir/ssh-agent.sock"
 ENV SSH_AUTH_SOCK "$ssh_sock_path"
 

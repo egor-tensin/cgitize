@@ -12,5 +12,5 @@ services:
     image: client
     volumes:
       - ./client/etc/:/etc/cgitize:ro
-      - "$SSH_AUTH_SOCK:/var/run/cgitize/ssh-agent.sock"
-      - ./client/output:/var/tmp/cgitize
+      - "$SSH_AUTH_SOCK:/ssh-agent.sock"
+      - ./client/output:/mnt/cgitize

@@ -1,6 +1,6 @@
 # All settings are optional.
 
-# /var/tmp/cgitize by default.
+# /mnt/cgitize by default.
 output_dir = "/tmp/cgitize"
 
 # URL to clone from the output directory. {repo} is replaced by the
