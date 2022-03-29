@@ -36,22 +36,43 @@ tokens/application passwords).
 ### Docker
 
 The image is **egortensin/cgitize**.
-The container reads the config from /etc/cgitize/cgitize.toml and writes the
-repositories to /mnt/cgitize.
-If SSH is required, map the socket to /ssh-agent.sock.
 
-    docker run -it --rm                           \
-        -v "/path-to/config-dir:/etc/cgitize:ro"  \
-        -v "$SSH_AUTH_SOCK:/ssh-agent.sock"       \
-        -v "/path-to/output-dir:/mnt/cgitize"     \
-        egortensin/cgitize:master
+| Path                      | Description
+| ------------------------- | -----------
+| /etc/cgitize/cgitize.toml | Configuration file path.
+| /mnt/cgitize              | Default output directory for cloned repositories.
+| /ssh-agent.sock           | If SSH is required, map the socket here.
 
-The container executes cgitize inside a cron job.
-The `SCHEDULE` environment variable controls the period between cgitize runs.
+| Environemnt variable | Description
+| -------------------- | -----------
+| SCHEDULE             | cron job schedule \[1\].
+
+1. cgitize is executed as a cron job inside the container.
+The `SCHEDULE` environment variable controls how often it gets run.
 By default, it's set to `once`, which makes the container exit after the first
 run.
 You can also set it to `15min`, `hourly`, `daily`, `weekly`, `monthly` or a
 custom 5-part cron schedule like `*/5 * * * *`.
+
+#### Frontend
+
+There's a web server image with a working cgit installation:
+**egortensin/cgitize-frontend**.
+
+| Path         | Description
+| ------------ | -----------
+| /mnt/cgitize | Map cgitize's output directory here.
+
+#### Compose
+
+See the root docker-compose.yml file for a possible service definition.
+In this configuration, cgitize pulls my repositories from GitHub every 3 hours.
+You can test it by running
+
+    docker-compose build
+    docker-compose up -d
+
+and visiting http://localhost:80/.
 
 Mirror maintenance
 ------------------
