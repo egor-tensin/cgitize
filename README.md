@@ -61,11 +61,23 @@ There's a web server image with a working cgit installation:
 
 | Path         | Description
 | ------------ | -----------
+| /etc/cgitrc  | If you use a custom cgit configuration, map it here \[1\].
 | /mnt/cgitize | Map cgitize's output directory here.
+
+1. A custom cgitrc might look like this:
+
+       # Include most common useful settings.
+       include=/etc/cgit/common
+
+       # If you serve from a subdirectory.
+       virtual-root=/secret/
+
+       root-title=Custom title
+       root-desc=Custom description
 
 #### Compose
 
-See the root docker-compose.yml file for a possible service definition.
+See the root docker-compose.yml file for a possible services definition.
 In this configuration, cgitize pulls my repositories from GitHub every 3 hours.
 You can test it by running
 
