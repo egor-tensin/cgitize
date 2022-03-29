@@ -1,4 +1,4 @@
 [repositories.test_repo]
 
 name = "test_repo"
-clone_url = "root@server:~/test_repo"
+clone_url = "root@git_server:~/test_repo"

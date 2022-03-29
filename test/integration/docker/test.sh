@@ -128,16 +128,16 @@ setup() {
     docker_build
 }
 
-run_server() {
+run_git_server() {
     echo
     echo ----------------------------------------------------------------------
-    echo Running the server
+    echo Running the Git server
     echo ----------------------------------------------------------------------
 
-    docker-compose up -d server
+    docker-compose up -d git_server
 }
 
-run_client() {
+run_cgitize() {
     echo
     echo ----------------------------------------------------------------------
     echo Running the client
@@ -148,12 +148,12 @@ run_client() {
         return 1
     fi
     dump "SSH_AUTH_SOCK: $SSH_AUTH_SOCK"
-    docker-compose run --rm client
+    docker-compose run --rm backend
 }
 
 run() {
-    run_server
-    run_client
+    run_git_server
+    run_cgitize
 }
 
 verify() {

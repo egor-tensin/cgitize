@@ -1,15 +1,16 @@
 version: '3'
 services:
-  server:
+  git_server:
     build:
       context: .
       dockerfile: server/Dockerfile
-    image: server
-  client:
-    build:
-      context: ../../..
-      dockerfile: Dockerfile
-    image: client
+    image: git_server
+  backend:
+    extends:
+      file: ../../../docker-compose.yml
+      service: backend
+    environment:
+      SCHEDULE: once
     volumes:
       - ./client/etc/:/etc/cgitize:ro
       - "$SSH_AUTH_SOCK:/ssh-agent.sock"
