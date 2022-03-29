@@ -47,17 +47,6 @@ Update the URL of an existing repository mirror:
 Development
 -----------
 
-### Packaging
-
-The [packaging tutorial] (as it was in April 2021) on python.org was used to
-make a PyPI package.
-Basically, it looks to me like the Python ecosystem is currently moving from
-the older setup.py to the newer setup.cfg/pyproject.toml.
-It's still a bit clunky: you have to install the `build` package, placeholder
-setup.py is required for `pip install -e` to work, etc.
-
-[packaging tutorial]: https://packaging.python.org/tutorials/packaging-projects
-
 ### Linting
 
 Requires [Pylint].

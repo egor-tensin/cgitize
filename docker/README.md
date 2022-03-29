@@ -23,7 +23,7 @@ There's a web server image with a working cgit installation.
 * Image: **egortensin/cgitize-frontend**
 * Volumes:
     * `/etc/cgitrc`: if you use a custom cgit configuration, map it here.
-It can look like this:
+It could look like this:
 
            # Include most common useful settings.
            include=/etc/cgit/common
