@@ -10,7 +10,7 @@ readonly script_name
 
 readonly ssh_dir="$script_dir/ssh"
 readonly client_key_password='password'
-readonly output_dir="$script_dir/client/output"
+readonly output_dir="$script_dir/cgitize/output"
 
 dump() {
     local prefix="${FUNCNAME[0]}"
@@ -140,7 +140,7 @@ run_git_server() {
 run_cgitize() {
     echo
     echo ----------------------------------------------------------------------
-    echo Running the client
+    echo Running cgitize
     echo ----------------------------------------------------------------------
 
     if [ -z "${SSH_AUTH_SOCK:+x}" ]; then
@@ -148,7 +148,7 @@ run_cgitize() {
         return 1
     fi
     dump "SSH_AUTH_SOCK: $SSH_AUTH_SOCK"
-    docker-compose run --rm backend
+    docker-compose run --rm cgitize
 }
 
 run() {
@@ -162,7 +162,7 @@ verify() {
     echo Checking the pulled repository
     echo ----------------------------------------------------------------------
 
-    pushd -- "$script_dir/client/output/test_repo" > /dev/null
+    pushd -- "$script_dir/cgitize/output/test_repo" > /dev/null
     git log --oneline
     popd > /dev/null
 }

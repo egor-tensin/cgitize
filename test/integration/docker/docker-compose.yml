@@ -3,15 +3,14 @@ services:
   git_server:
     build:
       context: .
-      dockerfile: server/Dockerfile
-    image: git_server
-  backend:
+      dockerfile: git_server/Dockerfile
+  cgitize:
     extends:
       file: ../../../docker-compose.yml
-      service: backend
+      service: cgitize
     environment:
       SCHEDULE: once
     volumes:
-      - ./client/etc/:/etc/cgitize:ro
+      - ./cgitize/etc:/etc/cgitize:ro
       - "$SSH_AUTH_SOCK:/ssh-agent.sock"
-      - ./client/output:/mnt/cgitize
+      - ./cgitize/output:/mnt/cgitize
