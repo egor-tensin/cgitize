@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-set -o errexit -o nounset -o pipefail
+set -e
 
 # Honestly, I have no idea how this works, I just copy-pasted it from
 # somewhere.
