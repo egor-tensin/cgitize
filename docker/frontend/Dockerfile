@@ -17,7 +17,7 @@ RUN apk add --no-cache cmake g++ make python2 && \
 ARG PYGMENTS_VERSION=~=2.0
 
 RUN apk add --no-cache py3-pip && \
-    pip install --no-cache-dir --target=/pygments "pygments$PYGMENTS_VERSION"
+    pip3 install --no-cache-dir --target=/pygments "pygments$PYGMENTS_VERSION"
 
 FROM base
 
