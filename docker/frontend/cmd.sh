@@ -11,6 +11,6 @@ spawn-fcgi \
     -M 0755 \
     -F 10 \
     -s /run/fcgiwrap.sock \
-    /usr/sbin/fcgiwrap
+    /usr/bin/fcgiwrap
 
 exec nginx -g 'daemon off;'
