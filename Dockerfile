@@ -5,9 +5,7 @@ FROM base AS build
 RUN apk add --no-cache gcc libffi-dev make musl-dev python3-dev py3-pip
 
 COPY ["requirements.txt", "/tmp/"]
-RUN python3 -m venv /tmp/venv && \
-    . /tmp/venv/bin/activate  && \
-    python3 -m pip install -r /tmp/requirements.txt
+RUN pip3 install --no-cache-dir --target=/deps -r /tmp/requirements.txt
 
 FROM base
 
@@ -15,7 +13,8 @@ LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
 
 RUN apk add --no-cache bash git openssh-client python3 tini
 
-COPY --from=build ["/tmp/venv", "/tmp/venv/"]
+COPY --from=build ["/deps", "/deps/"]
+ENV PYTHONPATH="/deps"
 
 ARG ssh_sock_dir=/
 ARG ssh_sock_path="$ssh_sock_dir/ssh-agent.sock"

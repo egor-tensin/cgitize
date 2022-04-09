@@ -11,7 +11,6 @@ schedule="${SCHEDULE:-once}"
 
 case "$schedule" in
     once)
-        . /tmp/venv/bin/activate
         exec "$@"
         ;;
     15min)   schedule='*/15 * * * *' ;;
@@ -23,7 +22,7 @@ case "$schedule" in
 esac
 
 script="#!/bin/bash
-cd /usr/src && . /tmp/venv/bin/activate &&$( printf -- ' %q' "$@" )"
+cd /usr/src &&$( printf -- ' %q' "$@" )"
 
 echo "$script" > /task.sh
 chmod +x /task.sh
