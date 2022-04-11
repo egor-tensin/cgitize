@@ -25,11 +25,11 @@ There's a web server image with a working cgit installation.
     * `/etc/cgitrc`: if you use a custom cgit configuration, map it here.
 It could look like this:
 
-           # Include most common useful settings.
+           # Generally useful and opionated settings, included in the image.
            include=/etc/cgit/common
 
            # If you serve from a subdirectory.
-           virtual-root=/secret/
+           virtual-root=/custom/
 
            root-title=Custom title
            root-desc=Custom description

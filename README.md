@@ -3,7 +3,7 @@ cgitize
 
 [![CI](https://github.com/egor-tensin/cgitize/actions/workflows/ci.yml/badge.svg)](https://github.com/egor-tensin/cgitize/actions/workflows/ci.yml)
 
-Mirror your git repositories and make them cgit-ready.
+Self-host your repositories using cgit.
 Supports cloning all of your repositories from major hosting providers:
 
 * GitHub,
@@ -35,7 +35,10 @@ tokens/application passwords).
 
 ### Docker
 
-Please see [docker/README.md](docker/README.md).
+You can run `cgitize` in a Docker container.
+A separate image includes a web server with a configured cgit installation.
+
+Please see [docker/README.md](docker/README.md) for details.
 
 Mirror maintenance
 ------------------
