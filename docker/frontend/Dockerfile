@@ -21,7 +21,7 @@ RUN apk add --no-cache py3-pip && \
 
 FROM base
 
-RUN apk add --no-cache cgit fcgiwrap python3 spawn-fcgi tini && \
+RUN apk add --no-cache cgit dash fcgiwrap python3 spawn-fcgi tini && \
     # Replace the theme with the one I like better:
     grep -q -F -- "style='pastie'" /usr/lib/cgit/filters/syntax-highlighting.py && \
     sed -i -e "s/style='pastie'/style='vs'/" -- /usr/lib/cgit/filters/syntax-highlighting.py
