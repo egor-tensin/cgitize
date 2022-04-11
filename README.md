@@ -4,6 +4,7 @@ cgitize
 [![CI](https://github.com/egor-tensin/cgitize/actions/workflows/ci.yml/badge.svg)](https://github.com/egor-tensin/cgitize/actions/workflows/ci.yml)
 
 Self-host your repositories using cgit.
+
 Supports cloning all of your repositories from major hosting providers:
 
 * GitHub,
