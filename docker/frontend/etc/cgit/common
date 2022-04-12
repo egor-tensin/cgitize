@@ -21,7 +21,7 @@ max-blob-size=10000
 max-repo-count=100
 max-stats=year
 remove-suffix=1
-snapshots=tar.gz tar.bz2 zip
+snapshots=zip tar.gz
 
 # Enable Markdown conversion to HTML.
 about-filter=/usr/lib/cgit/filters/about-formatting.sh
