@@ -141,7 +141,7 @@ verify_commits() {
     # doesn't work: https://stackoverflow.com/q/4072984/514684
     # TODO: figure this out?
     pushd -- "$output_dir" > /dev/null &&
-        cd -- test_repo &&
+        cd -- test_repo.git &&
         local output &&
         output="$( git log --oneline )" &&
         echo "$output" &&

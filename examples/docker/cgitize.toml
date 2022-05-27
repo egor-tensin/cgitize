@@ -1,4 +1,5 @@
 clone_via_ssh = false
+clone_url = "http://localhost/{repo}"
 
 [github]
 

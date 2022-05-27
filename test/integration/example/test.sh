@@ -67,7 +67,7 @@ verify_origin() {
     echo "Verifying origin: $repo"
     echo ----------------------------------------------------------------------
 
-    local repo_dir="$output_dir/$repo"
+    local repo_dir="$output_dir/$repo.git"
 
     local actual
     actual="$( GIT_DIR="$repo_dir" git config --get remote.origin.url )"
@@ -90,7 +90,7 @@ verify_repos() {
         echo "Verifying repository: $repo"
         echo ----------------------------------------------------------------------
 
-        local repo_dir="$output_dir/$repo"
+        local repo_dir="$output_dir/$repo.git"
         GIT_DIR="$repo_dir" git rev-parse HEAD > /dev/null
         echo 'HEAD is fine.'
 
@@ -111,7 +111,7 @@ verify_no_repos() {
         echo "Verifying repository doesn't exist: $repo"
         echo ----------------------------------------------------------------------
 
-        local repo_dir="$output_dir/$repo"
+        local repo_dir="$output_dir/$repo.git"
         if [ -e "$repo_dir" ]; then
             echo "Exists, but it shouldn't."
             return 1

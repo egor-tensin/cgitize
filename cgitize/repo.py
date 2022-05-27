@@ -93,6 +93,10 @@ class Repo:
         return self._name
 
     @property
+    def namegit(self):
+        return f'{self.name}.git'
+
+    @property
     def desc(self):
         if self._desc is not None and self._desc:
             return self._desc
@@ -124,8 +128,15 @@ class Repo:
             return self.clone_url
         return url_replace_auth(self.clone_url, self.url_auth)
 
+    def _with_dir(self, s):
+        if self._dir is None:
+            return s
+        return os.path.join(self._dir, s)
+
     @property
     def dir(self):
-        if self._dir is None:
-            return self.name
-        return os.path.join(self._dir, self.name)
+        return self._with_dir(self.namegit)
+
+    @property
+    def url_path(self):
+        return self._with_dir(self.name)

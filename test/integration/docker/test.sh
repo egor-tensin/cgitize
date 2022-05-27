@@ -162,7 +162,7 @@ verify() {
     echo Checking the pulled repository
     echo ----------------------------------------------------------------------
 
-    pushd -- "$script_dir/cgitize/output/test_repo" > /dev/null
+    pushd -- "$script_dir/cgitize/output/test_repo.git" > /dev/null
     git log --oneline
     popd > /dev/null
 }
