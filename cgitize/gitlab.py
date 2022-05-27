@@ -12,8 +12,8 @@ from cgitize.repo import Repo
 
 
 class GitLab:
-    def __init__(self, access_token):
-        self._impl = Gitlab('https://gitlab.com', private_token=access_token)
+    def __init__(self, token):
+        self._impl = Gitlab('https://gitlab.com', private_token=token)
 
     def get_repo(self, repo):
         try:

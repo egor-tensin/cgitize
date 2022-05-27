@@ -11,8 +11,8 @@ from cgitize.repo import Repo
 
 
 class GitHub:
-    def __init__(self, access_token):
-        self._impl = Github(access_token)
+    def __init__(self, token):
+        self._impl = Github(token)
 
     def get_repo(self, repo):
         try:

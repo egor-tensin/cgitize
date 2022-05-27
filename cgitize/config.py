@@ -85,12 +85,12 @@ class GitHubSection(ServiceSection):
         self.orgs = OrgsSection(self.impl.get('organizations', {}))
 
     @property
-    def access_token(self):
-        return self._get_config_or_env('access_token', 'CGITIZE_GITHUB_ACCESS_TOKEN')
+    def token(self):
+        return self._get_config_or_env('token', 'CGITIZE_GITHUB_TOKEN')
 
     @property
     def url_auth(self):
-        return self.access_token
+        return self.token
 
     def enum_repositories(self, cfg):
         yield from super().enum_repositories(cfg)
@@ -103,7 +103,7 @@ class GitHubSection(ServiceSection):
                 yield repo
 
     def connect_to_service(self):
-        return GitHub(self.access_token)
+        return GitHub(self.token)
 
 
 def two_part_url_auth(username, password):
@@ -114,8 +114,8 @@ def two_part_url_auth(username, password):
 
 class BitbucketSection(ServiceSection):
     @property
-    def app_password(self):
-        return self._get_config_or_env('app_password', 'CGITIZE_BITBUCKET_APP_PASSWORD')
+    def token(self):
+        return self._get_config_or_env('token', 'CGITIZE_BITBUCKET_TOKEN')
 
     @property
     def username(self):
@@ -123,16 +123,16 @@ class BitbucketSection(ServiceSection):
 
     @property
     def url_auth(self):
-        return two_part_url_auth(self.username, self.app_password)
+        return two_part_url_auth(self.username, self.token)
 
     def connect_to_service(self):
-        return Bitbucket(self.username, self.app_password)
+        return Bitbucket(self.username, self.token)
 
 
 class GitLabSection(ServiceSection):
     @property
-    def access_token(self):
-        return self._get_config_or_env('access_token', 'CGITIZE_GITLAB_ACCESS_TOKEN')
+    def token(self):
+        return self._get_config_or_env('token', 'CGITIZE_GITLAB_TOKEN')
 
     @property
     def username(self):
@@ -140,10 +140,10 @@ class GitLabSection(ServiceSection):
 
     @property
     def url_auth(self):
-        return two_part_url_auth(self.username, self.access_token)
+        return two_part_url_auth(self.username, self.token)
 
     def connect_to_service(self):
-        return GitLab(self.access_token)
+        return GitLab(self.token)
 
 
 class UsersSection(Section):

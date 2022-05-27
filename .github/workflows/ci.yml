@@ -36,14 +36,14 @@ jobs:
     name: 'Test / example config'
     env:
       # API request rate limit is easily exceeded otherwise:
-      CGITIZE_GITHUB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITHUB_ACCESS_TOKEN }}'
+      CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
       # Consider creating a separate user (without my private repositories)
       # for testing Bitbucket).
       #CGITIZE_BITBUCKET_USERNAME: egor-tensin
-      #CGITIZE_BITBUCKET_APP_PASSWORD: '${{ secrets.CGITIZE_BITBUCKET_APP_PASSWORD }}'
+      #CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
       # Same goes for GitLab.
       #CGITIZE_GITLAB_USERNAME: egor-tensin
-      #CGITIZE_GITLAB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITLAB_ACCESS_TOKEN }}'
+      #CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -129,7 +129,7 @@ jobs:
     name: 'Publish / PyPI'
     env:
       # Same rate limit thing:
-      CGITIZE_GITHUB_ACCESS_TOKEN: '${{ secrets.CGITIZE_GITHUB_ACCESS_TOKEN }}'
+      CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
     steps:
       - name: Checkout
         uses: actions/checkout@v2

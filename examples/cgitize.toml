@@ -20,8 +20,8 @@ owner = "Your Name"
 [github]
 # If some of the repositories hosted on GitHub are private (or if you hit the
 # request rate limit), use "access tokens". Also can be provided using the
-# CGITIZE_GITHUB_ACCESS_TOKEN environment variable.
-#access_token = "XXX"
+# CGITIZE_GITHUB_TOKEN environment variable.
+#token = "XXX"
 
 [github.users.me]
 name = "egor-tensin"
@@ -52,8 +52,9 @@ dir = "python"
 # Bitbucket settings are similar to those for GitHub.
 
 [bitbucket]
-# The environment variable is CGITIZE_BITBUCKET_APP_PASSWORD.
-#app_password = "XXX"
+# Access tokens are called "app passwords" on Bitbucket.
+# The environment variable is CGITIZE_BITBUCKET_TOKEN.
+#token = "XXX"
 # Contrary to GitHub, Bitbucket doesn't associate app passwords with a
 # username, so you also need that (CGITIZE_BITBUCKET_USERNAME is the
 # environment variable).
@@ -76,8 +77,8 @@ id = "berkeleylab/upc-runtime"
 # GitLab settings are similar to those for GitHub.
 
 [gitlab]
-# The environment variable is CGITIZE_GITLAB_ACCESS_TOKEN.
-#access_token = "XXX"
+# The environment variable is CGITIZE_GITLAB_TOKEN.
+#token = "XXX"
 # Similar to Bitbucket, GitLab doesn't associate access tokens with a username,
 # so you also need that (CGITIZE_GITLAB_USERNAME is the environment variable).
 #username = "your-username"
