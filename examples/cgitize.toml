@@ -19,7 +19,7 @@ owner = "Your Name"
 
 [github]
 # If some of the repositories hosted on GitHub are private (or if you hit the
-# request rate limit), use "access tokens". Also can be provided using the
+# request rate limit), use "access tokens". Set in the config or using the
 # CGITIZE_GITHUB_TOKEN environment variable.
 #token = "XXX"
 
