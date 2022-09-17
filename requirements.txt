@@ -4,7 +4,7 @@ cffi==1.15.0
 charset-normalizer==2.0.12
 Deprecated==1.2.13
 idna==3.3
-oauthlib==3.2.0
+oauthlib==3.2.1
 pycparser==2.21
 PyGithub==1.55
 PyJWT==2.4.0
