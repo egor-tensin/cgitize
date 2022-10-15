@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, 3.x]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
     name: 'Test / ${{ matrix.python-version }}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -46,10 +46,11 @@ jobs:
       #CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
+          python-version: '3.10'
           cache: pip
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -65,7 +66,7 @@ jobs:
     name: 'Test / Docker'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Integration test (Docker)
         run: sudo ./test/integration/docker/test.sh
 
@@ -82,11 +83,11 @@ jobs:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       # https://github.com/docker/metadata-action#semver
       - id: meta
         name: Docker Hub metadata
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: '${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}'
           flavor: |
@@ -97,11 +98,11 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: '${{ secrets.DOCKERHUB_USERNAME }}'
           password: '${{ secrets.DOCKERHUB_TOKEN }}'
@@ -115,7 +116,7 @@ jobs:
               echo '::set-output name=platforms::linux/amd64,linux/armhf'
           fi
       - name: Build and publish
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: '${{ matrix.context }}'
           file: '${{ matrix.file }}'
@@ -133,21 +134,23 @@ jobs:
       CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Verify package can be installed
-        run: python3 -m pip install .
+        run: pip install .
       - name: Set up ssh-agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: '${{ secrets.SSH_KEY }}'
       - name: Install package builder
-        run: python3 -m pip install --upgrade build
+        run: pip install --upgrade build
       - name: Build package
-        run: python3 -m build
+        run: python -m build
       - name: Publish as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist
