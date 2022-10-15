@@ -4,6 +4,7 @@ services:
   cgitize:
     build:
       context: .
+      dockerfile: docker/Dockerfile
     environment:
       # Every 3 hours:
       SCHEDULE: '0 */3 * * *'
