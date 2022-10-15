@@ -25,7 +25,7 @@ jobs:
           git config --global user.name 'John Doe'
           git config --global user.email 'John.Doe@example.com'
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -e .
       - name: Integration test (local)
         run: ./test/integration/local/test.sh
       - name: Unit tests
