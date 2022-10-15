@@ -3,11 +3,12 @@ FROM nginx:1-alpine AS base
 FROM base AS builder
 
 # Install cmark-gfm:
-ARG CMARK_GFM_VERSION=0.29.0.gfm.3
+ARG CMARK_GFM_VERSION=0.29.0.gfm.6
 ADD ["https://github.com/github/cmark-gfm/archive/refs/tags/$CMARK_GFM_VERSION.zip", "/"]
 
-RUN apk add --no-cache cmake g++ make python2 && \
-    unzip -- "$CMARK_GFM_VERSION.zip" && \
+RUN apk add --no-cache cmake g++ make python3 && \
+    ln -sf /usr/bin/python3 /usr/bin/python
+RUN unzip -- "$CMARK_GFM_VERSION.zip" && \
     cd -- "cmark-gfm-$CMARK_GFM_VERSION" && \
     make INSTALL_PREFIX=/cmark-gfm && \
     make test && \
