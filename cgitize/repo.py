@@ -41,18 +41,18 @@ class Repo:
 
     @staticmethod
     def from_bitbucket(src, config, subdir=None):
-        name = src['name']
-        desc = src['description']
-        homepage = src['links']['html']['href']
-        owner = src['owner']['display_name']
+        name = src.name
+        desc = src.description
+        homepage = src.get_link('html')
+        owner = src.data['owner']['display_name']
 
-        https_urls = [link for link in src['links']['clone'] if link['name'] == 'https']
+        https_urls = [link for link in src.data['links']['clone'] if link['name'] == 'https']
         if len(https_urls) != 1:
             raise RuntimeError(f"no https:// clone URL for repository '{name}'?!")
         # Bitbucket leaves the username in the URL... Sigh.
         https_url = url_remove_auth(https_urls[0]['href'])
 
-        ssh_urls = [link for link in src['links']['clone'] if link ['name'] == 'ssh']
+        ssh_urls = [link for link in src.data['links']['clone'] if link ['name'] == 'ssh']
         if len(ssh_urls) != 1:
             raise RuntimeError(f"no ssh:// clone URL for repository '{name}'?!")
         ssh_url = ssh_urls[0]['href']

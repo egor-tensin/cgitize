@@ -17,21 +17,19 @@ class Bitbucket:
 
     def get_repo(self, repo):
         try:
-            return self._impl.repositories.get(repo.id)
+            parts = repo.id.split('/')
+            if len(parts) != 2:
+                raise ValueError(f'repository ID must be in the USER/NAME format: {repo.id}')
+            user, name = parts
+            return self._impl.repositories.get(user, name)
         except HTTPError:
             logging.error("Couldn't fetch repository: %s", repo.id)
             raise
 
     def get_user_repos(self, user):
         try:
-            page = 1
-            while True:
-                params = {'page': page}
-                response = self._impl.repositories.get(user.name, params=params)
-                yield from iter(response['values'])
-                if 'next' not in response:
-                    break
-                page += 1
+            workspace = self._impl.workspaces.get(user.name)
+            yield from workspace.repositories.each()
         except HTTPError:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise
