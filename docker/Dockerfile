@@ -1,4 +1,4 @@
-FROM alpine:3.15 AS base
+FROM alpine:3.16 AS base
 
 FROM base AS build
 
