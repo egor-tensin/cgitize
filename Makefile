@@ -121,12 +121,23 @@ buildx/push:
 
 venv_dir := .venv
 
-.PHONY: venv
-venv:
+.PHONY: venv-reset
+venv-reset:
 	rm -rf -- '$(call escape,$(venv_dir))'
 	mkdir -p -- '$(call escape,$(venv_dir))'
 	python -m venv -- '$(call escape,$(venv_dir))'
+
+.PHONY: venv
+venv: venv-reset
 	. '$(call escape,$(venv_dir))/bin/activate' && pip install -r requirements.txt
+
+# Is there a better way?
+.PHONY: venv-update
+venv-update: venv-reset
+	. '$(call escape,$(venv_dir))/bin/activate' \
+		&& pip install . \
+		&& pip uninstall --yes "$$( python setup.py --name )" \
+		&& pip freeze > requirements.txt
 
 .PHONY: py
 py: python
