@@ -111,9 +111,9 @@ jobs:
         # Building for ARM for every commit in master is too time-consuming.
         run: |
           if [ '${{ github.ref }}' = 'refs/heads/master' ]; then
-              echo '::set-output name=platforms::linux/amd64'
+              echo 'platforms=linux/amd64' >> "$GITHUB_OUTPUT"
           else
-              echo '::set-output name=platforms::linux/amd64,linux/armhf'
+              echo 'platforms=linux/amd64,linux/armhf' >> "$GITHUB_OUTPUT"
           fi
       - name: Build and publish
         uses: docker/build-push-action@v3
