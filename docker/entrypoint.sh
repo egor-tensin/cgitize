@@ -7,32 +7,55 @@
 
 set -o errexit -o nounset -o pipefail
 
-schedule="${SCHEDULE:-once}"
+readonly base_dir=/usr/src
 
-case "$schedule" in
-    once)
+schedule_to_cron() {
+    local schedule
+    for schedule; do
+        case "$schedule" in
+            15min)   echo '*/15 * * * *' ;;
+            hourly)  echo '0 * * * *'    ;;
+            daily)   echo '0 0 * * *'    ;;
+            weekly)  echo '0 0 * * 1'    ;;
+            monthly) echo '0 0 1 * *'    ;;
+            *)
+                echo "$schedule"
+                ;;
+        esac
+    done
+}
+
+make_task_script() {
+    echo "#!/bin/bash
+cd -- "$base_dir" &&$( printf -- ' %q' "$@" )"
+}
+
+setup_cron_task() {
+    local schedule
+    schedule="${SCHEDULE:-once}"
+
+    if [ "$schedule" = once ]; then
         exec "$@"
-        ;;
-    15min)   schedule='*/15 * * * *' ;;
-    hourly)  schedule='0 * * * *'    ;;
-    daily)   schedule='0 0 * * *'    ;;
-    weekly)  schedule='0 0 * * 1'    ;;
-    monthly) schedule='0 0 1 * *'    ;;
-    *) ;;
-esac
+    fi
 
-script="#!/bin/bash
-cd /usr/src &&$( printf -- ' %q' "$@" )"
+    schedule="$( schedule_to_cron "$schedule" )"
 
-echo "$script" > /task.sh
-chmod +x /task.sh
+    make_task_script "$@" > /task.sh
+    chmod +x /task.sh
 
-# Run the task once when the container is started, regardless of schedule.
-/task.sh
+    # Run the task once when the container is started, regardless of schedule.
+    /task.sh
 
-crontab="$schedule /task.sh
+    local crontab
+    crontab="$schedule /task.sh
 # This is the new crontab."
 
-echo "$crontab" | crontab -
+    echo "$crontab" | crontab -
+    exec crond -f
+}
 
-exec crond -f
+main() {
+    setup_cron_task "$@"
+}
+
+main "$@"
