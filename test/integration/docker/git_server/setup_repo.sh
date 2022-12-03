@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit -o nounset -o pipefail
+shopt -s inherit_errexit lastpipe
 
 readonly local_repo_path="$HOME/test_repo"
 
