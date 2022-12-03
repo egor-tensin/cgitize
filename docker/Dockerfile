@@ -22,6 +22,7 @@ ENV SSH_AUTH_SOCK "$ssh_sock_path"
 
 COPY ["docker/entrypoint.sh", "/"]
 COPY ["docker/get_output_dir.py", "/"]
+COPY ["docker/schedule.sh", "/"]
 COPY ["cgitize/", "/usr/src/cgitize/"]
 WORKDIR /usr/src
 
