@@ -14,6 +14,11 @@ secure_repo_dir() {
     local dir
     dir="$( /get_output_dir.py -- "$cfg_path" )"
     chmod -- o-rwx "$dir"
+
+    # This is required so that nginx can access the directory.
+    # nginx uses a fixed UID:
+    # https://github.com/nginxinc/docker-nginx/blob/4785a604aa40e0b0a69047a61e28781a2b0c2069/mainline/alpine-slim/Dockerfile#L16
+    chown -- :101 "$dir"
 }
 
 schedule_to_cron() {
