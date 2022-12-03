@@ -8,6 +8,13 @@
 set -o errexit -o nounset -o pipefail
 
 readonly base_dir=/usr/src
+readonly cfg_path=/etc/cgitize/cgitize.toml
+
+secure_repo_dir() {
+    local dir
+    dir="$( /get_output_dir.py -- "$cfg_path" )"
+    chmod -- o-rwx "$dir"
+}
 
 schedule_to_cron() {
     local schedule
@@ -55,6 +62,7 @@ setup_cron_task() {
 }
 
 main() {
+    secure_repo_dir
     setup_cron_task "$@"
 }
 

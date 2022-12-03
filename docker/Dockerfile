@@ -14,13 +14,14 @@ LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
 RUN apk add --no-cache bash git openssh-client python3 tini
 
 COPY --from=build ["/deps", "/deps/"]
-ENV PYTHONPATH="/deps"
+ENV PYTHONPATH="/deps:/usr/src"
 
 ARG ssh_sock_dir=/
 ARG ssh_sock_path="$ssh_sock_dir/ssh-agent.sock"
 ENV SSH_AUTH_SOCK "$ssh_sock_path"
 
 COPY ["docker/entrypoint.sh", "/"]
+COPY ["docker/get_output_dir.py", "/"]
 COPY ["cgitize/", "/usr/src/cgitize/"]
 WORKDIR /usr/src
 
