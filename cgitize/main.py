@@ -29,8 +29,8 @@ def parse_args(argv=None):
     return parser.parse_args(argv)
 
 
-def main(args=None):
-    args = parse_args()
+def main(argv=None):
+    args = parse_args(argv)
     with setup_logging(args.verbose):
         config = Config.read(args.config)
         cgit_server = CGitServer(config.main.clone_url)
