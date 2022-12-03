@@ -33,7 +33,17 @@ jobs:
       - name: Unit tests
         run: python -m unittest --buffer
 
+  test_docker:
+    runs-on: ubuntu-latest
+    name: 'Test / Docker'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Integration test (Docker)
+        run: sudo ./test/integration/docker/test.sh
+
   test_example_config:
+    needs: [test_local, test_docker]
     runs-on: ubuntu-latest
     name: 'Test / example config'
     env:
@@ -62,15 +72,6 @@ jobs:
           ssh-private-key: '${{ secrets.SSH_KEY }}'
       - name: Integration test (example config)
         run: ./test/integration/example/test.sh
-
-  test_docker:
-    runs-on: ubuntu-latest
-    name: 'Test / Docker'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Integration test (Docker)
-        run: sudo ./test/integration/docker/test.sh
 
   publish_docker:
     needs: [test_local, test_example_config, test_docker]
