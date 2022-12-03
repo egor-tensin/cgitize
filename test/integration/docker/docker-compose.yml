@@ -14,3 +14,9 @@ services:
       - ./cgitize/etc:/etc/cgitize:ro
       - "$SSH_AUTH_SOCK:/ssh-agent.sock"
       - ./cgitize/output:/mnt/cgitize
+  frontend:
+    extends:
+      file: ../../../docker-compose.yml
+      service: frontend
+    volumes:
+      - ./cgitize/output:/mnt/cgitize:ro

@@ -12,6 +12,7 @@ readonly script_name
 readonly ssh_dir="$script_dir/ssh"
 readonly client_key_password='password'
 readonly output_dir="$script_dir/cgitize/output"
+readonly frontend_host=localhost
 
 dump() {
     local prefix="${FUNCNAME[0]}"
@@ -42,6 +43,43 @@ cleanup() {
 
     rm -rf -- "$output_dir"
     popd > /dev/null
+}
+
+_curl() {
+    local -a opts=(curl -sS --connect-timeout 5)
+    opts+=("$@")
+
+    printf -- '%q ' ${opts[@]+"${opts[@]}"} >&2
+    printf '\n' >&2
+
+    ${opts[@]+"${opts[@]}"}
+}
+
+curl_document() {
+    _curl -L "$@"
+}
+
+curl_status_code() {
+    _curl -o /dev/null -w '%{http_code}\n' "$@"
+}
+
+curl_check_code() {
+    if [ "$#" -lt 1 ]; then
+        echo "usage: ${FUNCNAME[0]} EXPECTED [CURL_ARG...]" >&2
+        return 1
+    fi
+
+    local expected
+    expected="$1"
+    shift
+
+    local actual
+    actual="$( curl_status_code "$@" )"
+
+    if [ "$expected" != "$actual" ]; then
+        echo "Expected code: $expected, actual code: $actual" >&2
+        return 1
+    fi
 }
 
 generate_ssh_keys() {
@@ -152,12 +190,23 @@ run_cgitize() {
     docker-compose run --rm cgitize
 }
 
+run_frontend() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Running the frontend
+    echo ----------------------------------------------------------------------
+
+    docker-compose up -d frontend
+    sleep 2
+}
+
 run() {
     run_git_server
     run_cgitize
+    run_frontend
 }
 
-verify() {
+verify_git() {
     echo
     echo ----------------------------------------------------------------------
     echo Checking the pulled repository
@@ -166,6 +215,26 @@ verify() {
     pushd -- "$script_dir/cgitize/output/test_repo.git" > /dev/null
     git log --oneline
     popd > /dev/null
+}
+
+verify_frontend() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Checking the frontend
+    echo ----------------------------------------------------------------------
+
+    local output
+
+    output="$( curl_document "http://$frontend_host/test_repo/" )"
+    echo "$output" | grep -o -F -- "<meta name='generator' content='cgit "
+
+    curl_check_code 200 "http://$frontend_host/test_repo/"
+    curl_check_code 200 "http://$frontend_host/test_repo/tree/"
+}
+
+verify() {
+    verify_git
+    verify_frontend
 }
 
 main() {
