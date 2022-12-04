@@ -42,8 +42,10 @@ setup_cron_task() {
     make_task_script "$@" > /task.sh
     chmod +x /task.sh
 
-    # Run the task once when the container is started, regardless of schedule.
-    /task.sh
+    if [ -n "$SCHEDULE_ON_START" ]; then
+        # Run the task once when the container is started.
+        /task.sh
+    fi
 
     local crontab
     crontab="$schedule /task.sh

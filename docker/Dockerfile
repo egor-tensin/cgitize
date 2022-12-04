@@ -24,7 +24,9 @@ COPY ["docker/entrypoint.sh", "/"]
 COPY ["docker/get_output_dir.py", "/"]
 COPY ["docker/schedule.sh", "/"]
 COPY ["cgitize/", "/usr/src/cgitize/"]
-WORKDIR /usr/src
 
+ENV SCHEDULE_ON_START=1
 ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]
+
+WORKDIR /usr/src
 CMD ["python3", "-m", "cgitize.main"]
