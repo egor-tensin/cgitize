@@ -1,5 +1,5 @@
 atlassian-python-api==3.28.1
-certifi==2022.9.24
+certifi==2022.12.7
 cffi==1.15.1
 charset-normalizer==2.1.1
 Deprecated==1.2.13
