@@ -3,6 +3,7 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
+import os
 import unittest
 
 from gitlab import Gitlab
@@ -11,7 +12,9 @@ from gitlab.exceptions import GitlabGetError
 
 class GitLabTests(unittest.TestCase):
     def setUp(self):
-        self.gitlab = Gitlab('https://gitlab.com')
+        self.gitlab = Gitlab(
+            'https://gitlab.com',
+            private_token=os.environ.get('CGITIZE_GITLAB_TOKEN'))
 
     def test_nonexistent_repo(self):
         with self.assertRaises(GitlabGetError):

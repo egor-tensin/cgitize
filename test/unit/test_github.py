@@ -3,6 +3,7 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
+import os
 import unittest
 
 from github import Github, GithubException
@@ -10,7 +11,7 @@ from github import Github, GithubException
 
 class GitHubTests(unittest.TestCase):
     def setUp(self):
-        self.github = Github()
+        self.github = Github(os.environ.get('CGITIZE_GITHUB_TOKEN'))
 
     def test_nonexistent_repo(self):
         with self.assertRaises(GithubException):

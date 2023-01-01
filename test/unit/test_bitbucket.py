@@ -3,6 +3,7 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
+import os
 import unittest
 
 from atlassian.bitbucket.cloud import Cloud
@@ -11,7 +12,10 @@ from requests.exceptions import HTTPError
 
 class BitbucketTests(unittest.TestCase):
     def setUp(self):
-        self.bitbucket = Cloud(cloud=True)
+        self.bitbucket = Cloud(
+            username=os.environ.get('CGITIZE_BITBUCKET_USERNAME'),
+            password=os.environ.get('CGITIZE_BITBUCKET_PASSWORD'),
+            cloud=True)
 
     def test_nonexistent_repo(self):
         with self.assertRaises(HTTPError):
