@@ -44,11 +44,11 @@ class CGitRCWriter:
 
     def _build_clone_url(self, repo):
         clone_urls = []
-        if repo.clone_url is not None:
-            clone_urls.append(repo.clone_url)
         cgit_clone_url = self.cgit_server.get_clone_url(repo)
         if cgit_clone_url is not None:
             clone_urls.append(cgit_clone_url)
+        if repo.clone_url is not None:
+            clone_urls.append(repo.clone_url)
         if not clone_urls:
             return None
         clone_urls = ' '.join(clone_urls)
