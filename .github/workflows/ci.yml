@@ -36,29 +36,7 @@ jobs:
       - name: Unit tests
         run: python -m unittest --buffer
 
-  build_docker:
-    runs-on: ubuntu-latest
-    name: 'Build / docker build'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Build w/ docker build
-        run: make docker/build
-
-  build_buildx:
-    runs-on: ubuntu-latest
-    name: 'Build / docker buildx'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Build w/ docker buildx
-        run: |
-          make buildx/create
-          make buildx/build
-          make buildx/rm
-
   test_docker:
-    needs: [test_local, build_docker, build_buildx]
     runs-on: ubuntu-latest
     name: 'Test / Docker'
     steps:
@@ -68,7 +46,7 @@ jobs:
         run: sudo ./test/integration/docker/test.sh
 
   test_example_config:
-    needs: [test_local, build_docker, build_buildx]
+    needs: [test_local, test_docker]
     runs-on: ubuntu-latest
     name: 'Test / example config'
     env:

@@ -45,7 +45,7 @@ endif
 
 .PHONY: build
 # Build natively by default.
-build: docker/build
+build: compose/build
 
 .PHONY: clean
 clean:
@@ -67,19 +67,19 @@ ifndef FORCE
 	$(error Please use `docker buildx build --push` instead)
 endif
 
-.PHONY: docker/build
-# `docker build` has week support for multiarch repos (you need to use multiple
-# Dockerfile's, create a manifest manually, etc.), so it's only here for
-# testing purposes, and native builds.
-docker/build: check-build
-	docker build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' -f docker/Dockerfile .
+.PHONY: compose/build
+# `docker-compose build` has week support for multiarch repos (you need to use
+# multiple Dockerfile's, create a manifest manually, etc.), so it's only here
+# for testing purposes, and native builds.
+compose/build: check-build
+	docker-compose build
 
-.PHONY: docker/push
-# `docker push` would replace the multiarch repo with a single image by default
-# (you'd have to create a manifest and push it instead), so it's only here for
-# testing purposes.
-docker/push: check-push docker/build
-	docker push '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))'
+.PHONY: compose/push
+# `docker-compose push` would replace the multiarch repo with a single image by
+# default (you'd have to create a manifest and push it instead), so it's only
+# here for testing purposes.
+compose/push: check-push compose/build
+	docker-compose push
 
 .PHONY: buildx/create
 buildx/create:
