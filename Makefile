@@ -41,7 +41,8 @@ login:
 ifndef DOCKER_PASSWORD
 	$(error Please define DOCKER_PASSWORD)
 endif
-	@echo '$(call escape,$(DOCKER_PASSWORD))' | docker login --username '$(call escape,$(DOCKER_USERNAME))' --password-stdin
+	@echo '$(call escape,$(DOCKER_PASSWORD))' \
+		| docker login --username '$(call escape,$(DOCKER_USERNAME))' --password-stdin
 
 .PHONY: build
 # Build natively by default.
@@ -91,11 +92,22 @@ buildx/rm:
 
 .PHONY: buildx/build
 buildx/build:
-	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' -f docker/Dockerfile --platform '$(call escape,$(PLATFORMS))' --progress plain .
+	docker buildx build \
+		-t '$(call escape,$(DOCKER_USERNAME)/$(PROJECT))' \
+		-f docker/Dockerfile \
+		--platform '$(call escape,$(PLATFORMS))' \
+		--progress plain \
+		.
 
 .PHONY: buildx/push
 buildx/push:
-	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' -f docker/Dockerfile --platform '$(call escape,$(PLATFORMS))' --progress plain --push .
+	docker buildx build \
+		-t '$(call escape,$(DOCKER_USERNAME)/$(PROJECT))' \
+		-f docker/Dockerfile \
+		--platform '$(call escape,$(PLATFORMS))' \
+		--progress plain \
+		--push \
+		.
 
 venv_dir := .venv
 
