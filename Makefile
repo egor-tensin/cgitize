@@ -72,7 +72,7 @@ endif
 # Dockerfile's, create a manifest manually, etc.), so it's only here for
 # testing purposes, and native builds.
 docker/build: check-build
-	docker build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' .
+	docker build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' -f docker/Dockerfile .
 
 .PHONY: docker/push
 # `docker push` would replace the multiarch repo with a single image by default
@@ -91,11 +91,11 @@ buildx/rm:
 
 .PHONY: buildx/build
 buildx/build:
-	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' --platform '$(call escape,$(PLATFORMS))' --progress plain .
+	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' -f docker/Dockerfile --platform '$(call escape,$(PLATFORMS))' --progress plain .
 
 .PHONY: buildx/push
 buildx/push:
-	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' --platform '$(call escape,$(PLATFORMS))' --progress plain --push .
+	docker buildx build -t '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))' -f docker/Dockerfile --platform '$(call escape,$(PLATFORMS))' --progress plain --push .
 
 venv_dir := .venv
 
