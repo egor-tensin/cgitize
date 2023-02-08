@@ -25,7 +25,7 @@ DO:
 
 PROJECT := cgitize
 # Target platforms (used by buildx):
-PLATFORMS := linux/amd64,linux/armhf
+PLATFORMS := amd64,armhf,arm64
 # Docker Hub credentials:
 DOCKER_USERNAME := egortensin
 
