@@ -51,6 +51,20 @@ Update the URL of an existing repository mirror:
 Development
 -----------
 
+### Virtual environment
+
+Create a virtual environment:
+
+    make venv
+
+Load a REPL:
+
+    make repl
+
+Upgrade virtual environment packages (this will also update requirements.txt):
+
+    make venv/upgrade
+
 ### Linting
 
 Requires [Pylint].
