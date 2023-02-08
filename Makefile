@@ -20,6 +20,9 @@ ifeq ($$(origin $(1)),command line)
 endif
 endef
 
+.PHONY: DO
+DO:
+
 PROJECT := cgitize
 # Enable buildx support:
 export DOCKER_CLI_EXPERIMENTAL := enabled
@@ -33,9 +36,6 @@ DOCKER_USERNAME := egortensin
 ifdef DOCKER_PASSWORD
 $(eval $(call noexpand,DOCKER_PASSWORD))
 endif
-
-.PHONY: DO
-DO:
 
 .PHONY: all
 all: build
