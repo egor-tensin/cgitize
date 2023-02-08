@@ -24,12 +24,8 @@ endef
 DO:
 
 PROJECT := cgitize
-# Enable buildx support:
-export DOCKER_CLI_EXPERIMENTAL := enabled
 # Target platforms (used by buildx):
 PLATFORMS := linux/amd64,linux/armhf
-# In case buildx isn't installed (e.g. on Ubuntu):
-BUILDX_VERSION := v0.4.2
 # Docker Hub credentials:
 DOCKER_USERNAME := egortensin
 
@@ -85,26 +81,8 @@ docker/build: check-build
 docker/push: check-push docker/build
 	docker push '$(call escape,$(DOCKER_USERNAME))/$(call escape,$(PROJECT))'
 
-# The simple way to build multiarch repos is `docker buildx`.
-
-binfmt_image := docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
-
-.PHONY: fix-binfmt
-fix-binfmt:
-	docker run --rm --privileged '$(call escape,$(binfmt_image))'
-
-curl := curl --silent --show-error --location --dump-header - --connect-timeout 20
-
-buildx_url := https://github.com/docker/buildx/releases/download/$(BUILDX_VERSION)/buildx-$(BUILDX_VERSION).linux-amd64
-
-.PHONY: buildx/install
-buildx/install:
-	mkdir -p -- ~/.docker/cli-plugins/
-	$(curl) --output ~/.docker/cli-plugins/docker-buildx -- '$(call escape,$(buildx_url))'
-	chmod +x -- ~/.docker/cli-plugins/docker-buildx
-
 .PHONY: buildx/create
-buildx/create: fix-binfmt
+buildx/create:
 	docker buildx create --use --name '$(call escape,$(PROJECT))_builder'
 
 .PHONY: buildx/rm
