@@ -1,6 +1,6 @@
 FROM alpine:3.17
 
-RUN apk --no-cache add bash git openssh-server tini && \
+RUN apk add -q --no-cache bash git openssh-server tini && \
     echo 'root:root' | chpasswd && \
     git config --global user.name 'John Doe' && \
     git config --global user.email 'John.Doe@example.com' && \

@@ -119,14 +119,14 @@ venv/reset:
 
 .PHONY: venv
 venv: venv/reset
-	. '$(call escape,$(venv_dir))/bin/activate' && pip install -r requirements.txt
+	. '$(call escape,$(venv_dir))/bin/activate' && pip install -q -r requirements.txt
 
 # Is there a better way?
 .PHONY: venv/upgrade
 venv/upgrade: venv/reset
 	. '$(call escape,$(venv_dir))/bin/activate' \
-		&& pip install . \
-		&& pip uninstall --yes "$$( python setup.py --name )" \
+		&& pip install -q . \
+		&& pip uninstall -q --yes "$$( python setup.py --name )" \
 		&& pip freeze > requirements.txt
 
 .PHONY: py
