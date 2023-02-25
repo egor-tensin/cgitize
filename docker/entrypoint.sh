@@ -15,8 +15,10 @@ readonly script_dir
 readonly cfg_path=/etc/cgitize/cgitize.toml
 
 secure_repo_dir() {
+    [ ! -e "$cfg_path" ] && return 0
+
     local dir
-    dir="$( /get_output_dir.py -- "$cfg_path" )"
+    dir="$( "$script_dir/get_output_dir.py" -- "$cfg_path" )"
 
     chmod -- o-rwx "$dir"
 
@@ -26,8 +28,12 @@ secure_repo_dir() {
     chown -- :101 "$dir"
 }
 
-main() {
+setup() {
     secure_repo_dir
+}
+
+main() {
+    setup
     exec "$script_dir/run_cron.sh" "$@"
 }
 
