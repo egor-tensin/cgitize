@@ -29,7 +29,7 @@ secure_repo_dir() {
 
 main() {
     secure_repo_dir
-    exec "$script_dir/schedule.sh" "$@"
+    exec "$script_dir/run_cron.sh" "$@"
 }
 
 main "$@"
