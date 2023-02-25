@@ -8,11 +8,11 @@ ADD ["https://github.com/github/cmark-gfm/archive/refs/tags/$CMARK_GFM_VERSION.z
 
 RUN apk add -q --no-cache cmake g++ make python3 && \
     ln -sf /usr/bin/python3 /usr/bin/python
-RUN unzip -- "$CMARK_GFM_VERSION.zip" && \
+RUN unzip -q -- "$CMARK_GFM_VERSION.zip" && \
     cd -- "cmark-gfm-$CMARK_GFM_VERSION" && \
-    make INSTALL_PREFIX=/cmark-gfm && \
+    make INSTALL_PREFIX=/cmark-gfm > /dev/null && \
     make test && \
-    make install
+    make install > /dev/null
 
 # Install the latest Pygments (so that it would highlight CMakeLists.txt, etc.):
 ARG PYGMENTS_VERSION=~=2.0
