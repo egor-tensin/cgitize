@@ -12,7 +12,6 @@ script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
 script_dir="$( cd -- "$script_dir" && pwd )"
 readonly script_dir
 
-readonly base_dir=/usr/src
 readonly cfg_path=/etc/cgitize/cgitize.toml
 
 secure_repo_dir() {
