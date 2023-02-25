@@ -22,6 +22,7 @@ ENV SSH_AUTH_SOCK "$ssh_sock_path"
 
 COPY ["docker/entrypoint.sh", "/"]
 COPY ["docker/get_output_dir.py", "/"]
+COPY ["docker/run.sh", "/"]
 COPY ["docker/run_cron.sh", "/"]
 COPY ["cgitize/", "/usr/src/cgitize/"]
 
@@ -29,4 +30,4 @@ ENV SCHEDULE_ON_START=1
 ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]
 
 WORKDIR /usr/src
-CMD ["python3", "-m", "cgitize.main"]
+CMD ["/run.sh"]
