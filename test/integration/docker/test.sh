@@ -152,7 +152,7 @@ docker_build() {
     echo Building Docker images
     echo ----------------------------------------------------------------------
 
-    docker-compose build
+    docker-compose build --progress plain
 }
 
 docker_cleanup() {

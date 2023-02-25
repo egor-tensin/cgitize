@@ -73,7 +73,7 @@ endif
 # multiple Dockerfile's, create a manifest manually, etc.), so it's only here
 # for testing purposes, and native builds.
 compose/build: check-build
-	docker-compose build
+	docker-compose build --progress plain
 
 .PHONY: compose/push
 # `docker-compose push` would replace the multiarch repo with a single image by
