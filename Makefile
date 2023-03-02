@@ -142,3 +142,10 @@ python:
 .PHONY: test
 test:
 	. '$(call escape,$(venv_dir))/bin/activate' && python -m unittest --verbose --buffer
+
+.PHONY: tag
+tag:
+	. '$(call escape,$(venv_dir))/bin/activate' \
+		&& pip install -q --upgrade setuptools-scm \
+		&& version="$$( python -m setuptools_scm --strip-dev )" \
+		&& git tag "v$$version"

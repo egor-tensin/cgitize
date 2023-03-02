@@ -65,6 +65,14 @@ Upgrade virtual environment packages (this will also update requirements.txt):
 
     make venv/upgrade
 
+### Releases
+
+Make a git tag with (requires a virtual environment):
+
+    make tag
+
+You can now review that it's OK and push w/ `git push --tags`.
+
 ### Linting
 
 Requires [Pylint].
