@@ -1,18 +1,19 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "cgitize"
 description = "Self-host your repositories using cgit"
 license = {text = "MIT"}
-version = "4.0.9"
+dynamic = ["version"]
 authors = [{name = "Egor Tensin", email = "Egor.Tensin@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.6"
 
 dependencies = [
     "atlassian-python-api ~= 3.28.0",
+    'importlib-metadata ~= 4.0 ; python_version < "3.8"',
     "PyGithub ~= 1.0",
     "python-gitlab ~= 2.0",
     "tomli ~= 1.0",
@@ -34,3 +35,5 @@ cgitize = "cgitize.main:main"
 
 [tool.setuptools.packages]
 find = {}
+
+[tool.setuptools_scm]

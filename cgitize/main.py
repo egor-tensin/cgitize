@@ -10,6 +10,7 @@ import sys
 from cgitize.cgit import CGitRepositories, CGitServer
 from cgitize.config import Config
 from cgitize.utils import setup_logging
+from cgitize.version import __version__
 
 
 def parse_args(argv=None):
@@ -26,6 +27,8 @@ def parse_args(argv=None):
                         help='overwrite existing repositories')
     parser.add_argument('--verbose', '-v', action='store_true',
                         help='verbose log output')
+    parser.add_argument('--version', '-V', action='version',
+                        version=f'%(prog)s {__version__}')
     return parser.parse_args(argv)
 
 

@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -27,8 +29,10 @@ jobs:
         run: |
           git config --global user.name 'John Doe'
           git config --global user.email 'John.Doe@example.com'
-      - name: Install dependencies
+      - name: 'Install package & dependencies'
         run: pip install -q -e .
+      - name: Verify that cgitize can be run
+        run: cgitize --version
       - name: Integration test (local)
         run: ./test/integration/local/test.sh
       - name: Unit tests
@@ -135,6 +139,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v4
       - name: Verify package can be installed
