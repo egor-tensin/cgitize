@@ -33,7 +33,7 @@ classifiers = [
 [project.scripts]
 cgitize = "cgitize.main:main"
 
-[tool.setuptools.packages]
-find = {}
+[tool.setuptools]
+packages = ["cgitize"]
 
 [tool.setuptools_scm]
