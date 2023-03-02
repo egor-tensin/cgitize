@@ -67,11 +67,11 @@ Upgrade virtual environment packages (this will also update requirements.txt):
 
 ### Releases
 
-Make a git tag with (requires a virtual environment):
+Make a git tag (requires a virtual environment):
 
     make tag
 
-You can now review that it's OK and push w/ `git push --tags`.
+You can then review that the tag is fine and push w/ `git push --tags`.
 
 ### Linting
 
