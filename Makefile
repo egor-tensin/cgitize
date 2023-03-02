@@ -126,7 +126,7 @@ venv: venv/reset
 venv/upgrade: venv/reset
 	. '$(call escape,$(venv_dir))/bin/activate' \
 		&& pip install -q . \
-		&& pip uninstall -q --yes "$$( python setup.py --name )" \
+		&& pip uninstall -q --yes '$(call escape,$(PROJECT))' \
 		&& pip freeze > requirements.txt
 
 .PHONY: py
