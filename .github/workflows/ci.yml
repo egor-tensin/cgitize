@@ -31,7 +31,7 @@ jobs:
           git config --global user.email 'John.Doe@example.com'
       - name: 'Install package & dependencies'
         run: pip install -q -e .
-      - name: Verify that cgitize can be run
+      - name: Verify that scripts are runnable
         run: cgitize --version
       - name: Integration test (local)
         run: ./test/integration/local/test.sh
