@@ -16,4 +16,4 @@ requests-toolbelt==0.10.1
 six==1.16.0
 tomli==1.2.3
 urllib3==1.26.14
-wrapt==1.14.1
+wrapt==1.15.0
