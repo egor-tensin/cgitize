@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "cgitize"
 description = "Self-host your repositories using cgit"
 license = {text = "MIT"}
-version = "4.0.8"
+version = "4.0.9"
 authors = [{name = "Egor Tensin", email = "Egor.Tensin@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.6"
