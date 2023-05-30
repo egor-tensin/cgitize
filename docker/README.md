@@ -12,8 +12,8 @@ The `SCHEDULE` environment variable controls how often it gets run (see below).
 * Environment variables:
     * `SCHEDULE`: defaults to "once", which makes the container exit after the
 first run.
-You can also set it to "15min", "hourly", "daily", "weekly", "monthly" or a
-custom 5-part cron schedule like "*/5 * * * *".
+You can also set it to "minutely", "15min", "hourly", "daily", "weekly",
+"monthly" or a custom 5-part cron schedule like "*/5 * * * *".
 
 Frontend
 --------
