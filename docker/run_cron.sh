@@ -12,11 +12,12 @@ schedule_to_cron() {
     local schedule
     for schedule; do
         case "$schedule" in
-            15min)   echo '*/15 * * * *' ;;
-            hourly)  echo '0 * * * *'    ;;
-            daily)   echo '0 0 * * *'    ;;
-            weekly)  echo '0 0 * * 1'    ;;
-            monthly) echo '0 0 1 * *'    ;;
+            minutely) echo '* * * * *'    ;;
+            15min)    echo '*/15 * * * *' ;;
+            hourly)   echo '0 * * * *'    ;;
+            daily)    echo '0 0 * * *'    ;;
+            weekly)   echo '0 0 * * 1'    ;;
+            monthly)  echo '0 0 1 * *'    ;;
             *)
                 echo "$schedule"
                 ;;
