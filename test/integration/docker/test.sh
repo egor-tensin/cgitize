@@ -99,24 +99,28 @@ remove_ssh_keys() {
 }
 
 kill_ssh_agent() {
-    [ -n "${SSH_AGENT_PID:+x}" ] || return 0
-    dump "killing ssh-agent with PID $SSH_AGENT_PID"
-    kill "$SSH_AGENT_PID"
+    [ -n "${this_ssh_agent_pid:+x}" ] || return 0
+    dump "killing ssh-agent with PID $this_ssh_agent_pid"
+    kill "$this_ssh_agent_pid"
 }
 
 spawn_ssh_agent() {
-    [ -n "${SSH_AGENT_PID:+x}" ] && return 0
     if ! command -v ssh-agent > /dev/null 2>&1; then
         dump "could not find ssh-agent" >&2
         return 1
     fi
+
     local output
     output="$( ssh-agent -s )"
+
     eval "$output"
+
     if [ -z "${SSH_AGENT_PID:+x}" ]; then
         dump "could not start ssh-agent" >&2
         return 1
     fi
+
+    this_ssh_agent_pid="$SSH_AGENT_PID"
 }
 
 setup_ssh_agent() {
@@ -143,7 +147,7 @@ setup_ssh_agent() {
     echo_password="$( printf -- 'echo %q' "$client_key_password" )"
     echo "$echo_password" > "$askpass_path"
 
-    SSH_ASKPASS="$askpass_path" SSH_ASKPASS_REQUIRE=force DISPLAY= ssh-add "$key" > /dev/null 2>&1 < /dev/null
+    SSH_ASKPASS="$askpass_path" SSH_ASKPASS_REQUIRE=force DISPLAY= ssh-add "$key" < /dev/null
 }
 
 docker_build() {
