@@ -25,11 +25,6 @@ schedule_to_cron() {
     done
 }
 
-make_task_script() {
-    echo "#!/bin/bash
-cd -- "$( pwd )" && $( printf -- ' %q' "$@" )"
-}
-
 setup_cron_task() {
     local schedule
     schedule="${SCHEDULE:-once}"
@@ -40,17 +35,14 @@ setup_cron_task() {
 
     schedule="$( schedule_to_cron "$schedule" )"
 
-    make_task_script "$@" > /task.sh
-    chmod +x /task.sh
-
-    if [ -n "$SCHEDULE_ON_START" ]; then
+    if [ -n "${SCHEDULE_ON_START:+x}" ]; then
         # Run the task once when the container is started.
-        /task.sh
+        "$@"
     fi
 
     local crontab
-    crontab="$schedule /task.sh
-# This is the new crontab."
+    crontab="$schedule"
+    crontab="$crontab$( printf ' %q' "$@" )"
 
     echo "$crontab" | crontab -
     exec crond -f
