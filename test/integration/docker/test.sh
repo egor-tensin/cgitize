@@ -9,6 +9,9 @@ readonly script_dir
 script_name="$( basename -- "${BASH_SOURCE[0]}" )"
 readonly script_name
 
+# This is still required with older Compose versions to use TARGETARCH:
+export DOCKER_BUILDKIT=1
+
 readonly ssh_dir="$script_dir/ssh"
 readonly client_key_password='password'
 readonly output_dir="$script_dir/cgitize/output"

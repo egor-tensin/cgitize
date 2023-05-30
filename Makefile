@@ -28,6 +28,8 @@ PROJECT := cgitize
 PLATFORMS := amd64,armhf,arm64
 # Docker Hub credentials:
 DOCKER_USERNAME := egortensin
+# This is still required with older Compose versions to use TARGETARCH:
+export DOCKER_BUILDKIT := 1
 
 ifdef DOCKER_PASSWORD
 $(eval $(call noexpand,DOCKER_PASSWORD))

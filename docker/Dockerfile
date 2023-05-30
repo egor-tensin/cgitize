@@ -1,8 +1,27 @@
 FROM python:3.11-alpine AS base
 
-FROM base AS build
+FROM base AS deps
 
 RUN apk add -q --no-cache gcc libffi-dev make musl-dev
+
+FROM deps as deps-amd64
+FROM deps as deps-arm64
+
+FROM deps as deps-arm
+
+# The cryptography package doesn't distribute pre-built binaries for this
+# platform, which is why it's built manually (and requires extra dependencies).
+RUN apk add -q --no-cache cargo git openssl-dev rust
+
+# Unless this is set, cargo build fails with out of memory errors for some
+# reason. Reference:
+#
+#     https://github.com/docker/buildx/issues/359#issuecomment-1331443419
+#
+# This is also the reason to install git as a build dependency.
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+
+FROM deps-$TARGETARCH as build
 
 COPY ["requirements.txt", "/tmp/"]
 RUN pip3 install -q --no-cache-dir --target=/deps -r /tmp/requirements.txt
