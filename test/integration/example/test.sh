@@ -131,7 +131,7 @@ test_ssh() {
     verify_repos \
         lens \
         chromiumembedded/cef \
-        inkscape \
+        graphviz \
         wireguard/wintun \
         browserify-dir/browserify \
         github-dir/cgitize-test-repository \
@@ -139,7 +139,7 @@ test_ssh() {
         gitlab-dir/cgitize-test-repository
     verify_origin lens 'git@github.com:ekmett/lens.git'
     verify_origin chromiumembedded/cef 'git@bitbucket.org:chromiumembedded/cef.git'
-    verify_origin inkscape 'git@gitlab.com:inkscape/inkscape.git'
+    verify_origin graphviz 'git@gitlab.com:graphviz/graphviz.git'
     verify_origin browserify-dir/browserify 'git@github.com:browserify/browserify.git'
     verify_origin github-dir/cgitize-test-repository 'git@github.com:egor-tensin/cgitize-test-repository.git'
     verify_origin bitbucket-dir/cgitize-test-repository 'git@bitbucket.org:egor-tensin/cgitize-test-repository.git'
@@ -159,14 +159,14 @@ test_https() {
     verify_repos \
         lens \
         chromiumembedded/cef \
-        inkscape \
+        graphviz \
         wireguard/wintun \
         github-dir/cgitize-test-repository \
         bitbucket-dir/cgitize-test-repository \
         gitlab-dir/cgitize-test-repository
     verify_origin lens 'https://github.com/ekmett/lens.git'
     verify_origin chromiumembedded/cef 'https://bitbucket.org/chromiumembedded/cef.git'
-    verify_origin inkscape 'https://gitlab.com/inkscape/inkscape.git'
+    verify_origin graphviz 'https://gitlab.com/graphviz/graphviz.git'
     verify_origin browserify-dir/browserify 'https://github.com/browserify/browserify.git'
     verify_origin github-dir/cgitize-test-repository 'https://github.com/egor-tensin/cgitize-test-repository.git'
     verify_origin bitbucket-dir/cgitize-test-repository 'https://bitbucket.org/egor-tensin/cgitize-test-repository.git'

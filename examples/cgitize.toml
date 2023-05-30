@@ -88,11 +88,11 @@ name = "egor-tensin"
 dir = "gitlab-dir"
 #skip = ["repo1", "repo2"]
 
-[gitlab.repositories.inkscape]
-id = "inkscape/inkscape"
 [gitlab.repositories.gitter]
 id = "gitterHQ/webapp"
 dir = "gitterHQ"
+[gitlab.repositories.graphviz]
+id = "graphviz/graphviz"
 
 # Self-hosted repositories
 # ========================
