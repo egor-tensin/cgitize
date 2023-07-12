@@ -32,10 +32,10 @@ jobs:
         run: pip install -q -e .
       - name: Verify that scripts are runnable
         run: cgitize --version
-      - name: Integration test (local)
-        run: ./test/integration/local/test.sh
       - name: Unit tests
-        run: python -m unittest --buffer
+        run: make test/unit
+      - name: Integration test (local)
+        run: make test/local
 
   test_docker:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Integration test (Docker)
-        run: sudo ./test/integration/docker/test.sh
+        run: sudo make test/docker
 
   test_example_config:
     needs: [test_local, test_docker]
@@ -74,7 +74,7 @@ jobs:
         with:
           ssh-private-key: '${{ secrets.SSH_KEY }}'
       - name: Integration test (example config)
-        run: ./test/integration/example/test.sh
+        run: make test/example
 
   publish_docker:
     needs: [test_local, test_example_config, test_docker]
