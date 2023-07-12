@@ -4,6 +4,7 @@ RUN apk add -q --no-cache bash git openssh-server tini && \
     echo 'root:root' | chpasswd && \
     git config --global user.name 'John Doe' && \
     git config --global user.email 'John.Doe@example.com' && \
+    git config --global init.defaultBranch main && \
     sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 WORKDIR /root

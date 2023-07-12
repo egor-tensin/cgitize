@@ -28,10 +28,6 @@ jobs:
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
-      - name: Initialize Git
-        run: |
-          git config --global user.name 'John Doe'
-          git config --global user.email 'John.Doe@example.com'
       - name: 'Install package & dependencies'
         run: pip install -q -e .
       - name: Verify that scripts are runnable

@@ -12,6 +12,17 @@ readonly etc_dir="$script_dir/etc"
 readonly cgitize_toml_path="$etc_dir/cgitize.toml"
 readonly output_dir="$script_dir/output"
 
+readonly git_name='John Doe'
+readonly git_email='John.Doe@example.com'
+readonly git_default_branch=main
+
+_git() {
+    git -c "user.name=$git_name" \
+        -c "user.email=$git_email" \
+        -c "init.defaultBranch=$git_default_branch" \
+        "$@"
+}
+
 success() {
     echo
     echo ----------------------------------------------------------------------
@@ -42,13 +53,13 @@ setup_upstream_repo() {
     upstream_repo_dir="$( mktemp -d )"
     pushd -- "$upstream_repo_dir" > /dev/null
 
-    git init
+    _git init
     echo '1' > 1.txt
-    git add .
-    git commit -m 'first commit'
+    _git add .
+    _git commit -m 'first commit'
     echo '2' > 2.txt
-    git add .
-    git commit -m 'second commit'
+    _git add .
+    _git commit -m 'second commit'
 
     popd > /dev/null
 }
@@ -62,8 +73,8 @@ add_commits() {
     pushd -- "$upstream_repo_dir" > /dev/null
 
     echo '3' > 3.txt
-    git add .
-    git commit -m 'third commit'
+    _git add .
+    _git commit -m 'third commit'
 
     popd > /dev/null
 }
@@ -105,7 +116,7 @@ setup_workdir() {
     echo ----------------------------------------------------------------------
 
     mkdir -p -- "$output_dir"
-    git clone --quiet -- "$upstream_repo_dir" "$output_dir/test_repo"
+    _git clone --quiet -- "$upstream_repo_dir" "$output_dir/test_repo"
 }
 
 cgitize() {
@@ -144,7 +155,7 @@ verify_commits() {
     pushd -- "$output_dir" > /dev/null &&
         cd -- test_repo.git &&
         local output &&
-        output="$( git log --oneline )" &&
+        output="$( _git log --oneline )" &&
         echo "$output" &&
         check_contains "$output" "$@" &&
         popd > /dev/null
