@@ -82,9 +82,9 @@ class Config:
         def format_name(self):
             name = self.name
             # Escape the backslashes:
-            name = name.replace('\\', '\\\\')
+            name = name.replace('\\', r'\\')
             # Escape the quotes:
-            name = name.replace('"', '\\"')
+            name = name.replace('"', r'\"')
             # Put in quotes:
             return f'"{name}"'
 
@@ -121,13 +121,13 @@ class Config:
         def format_value(self):
             value = self.value
             # Escape the backslashes:
-            value = value.replace('\\', '\\\\')
+            value = value.replace('\\', r'\\')
             # Escape the supported escape sequences (\n, \t and \b):
-            value = value.replace('\n', '\\n')
-            value = value.replace('\t', '\\t')
-            value = value.replace('\b', '\\b')
+            value = value.replace('\n', r'\n')
+            value = value.replace('\t', r'\t')
+            value = value.replace('\b', r'\b')
             # Escape the quotes:
-            value = value.replace('"', '\\"')
+            value = value.replace('"', r'\"')
             # Put in quotes:
             value = f'"{value}"'
             return value
