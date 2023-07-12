@@ -51,35 +51,7 @@ Update the URL of an existing repository mirror:
 Development
 -----------
 
-### Virtual environment
-
-Create a virtual environment:
-
-    make venv
-
-Load a REPL:
-
-    make repl
-
-Upgrade virtual environment packages (this will also update requirements.txt):
-
-    make venv/upgrade
-
-### Releases
-
-Make a git tag (requires a virtual environment):
-
-    make tag
-
-You can then review that the tag is fine and push w/ `git push --tags`.
-
-### Linting
-
-Requires [Pylint].
-
-    pylint cgitize
-
-[Pylint]: https://www.pylint.org/
+See [DEVELOPMENT.md](DEVELOPMENT.md).
 
 License
 -------
