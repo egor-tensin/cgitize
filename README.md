@@ -29,8 +29,8 @@ default):
 See an example config file at [examples/cgitize.toml].
 
 cgitize uses the `git` executable, which might use `ssh` internally.
-Make sure the required keys are loaded to a ssh-agent (or use access
-tokens/application passwords).
+Make sure the required keys are loaded to a ssh-agent (or, _preferably_, use
+access tokens/application passwords).
 
 [examples/cgitize.toml]: examples/cgitize.toml
 
