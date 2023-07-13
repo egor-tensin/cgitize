@@ -4,7 +4,7 @@ Workspace setup
 * Create a virtual Python environment: `make venv`
 * Use the virtual environment: `. .venv/bin/activate`
     * Deactivate the environment when you're done: `deactivate`
-* Make sure unit tests work: `make test/unit`
+* Make sure basic tests work: `make test`
 
 Development
 -----------
@@ -21,6 +21,9 @@ Run them using
 limits.
 Set environment variables described in [examples/cgitize.toml] to use "access
 tokens" and get much higher rate limits.
+    * Run both unit tests and the `local` test using
+
+          make test
 
 [examples/cgitize.toml]: examples/cgitize.toml
 

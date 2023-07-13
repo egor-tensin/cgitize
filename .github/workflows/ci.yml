@@ -31,10 +31,8 @@ jobs:
         run: pip install -q -e .
       - name: Verify that scripts are runnable
         run: cgitize --version
-      - name: Unit tests
-        run: make test/unit
-      - name: Integration test (local)
-        run: make test/local
+      - name: Run tests
+        run: make test
 
   test_docker:
     runs-on: ubuntu-latest
