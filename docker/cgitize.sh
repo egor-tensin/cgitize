@@ -14,6 +14,7 @@ readonly script_dir
 
 readonly src_dir=/usr/src
 readonly cfg_path=/etc/cgitize/cgitize.toml
+readonly fail_path=/fail
 
 secure_repo_dir() {
     local dir
@@ -29,11 +30,13 @@ secure_repo_dir() {
 
 setup() {
     secure_repo_dir
+    touch -- "$fail_path"
 }
 
 run() {
     cd -- "$src_dir"
-    exec python3 -m cgitize.main "$@"
+    python3 -m cgitize.main "$@"
+    rm -f -- "$fail_path"
 }
 
 main() {

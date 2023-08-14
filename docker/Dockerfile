@@ -49,3 +49,5 @@ ENTRYPOINT ["/sbin/tini", "--", "/in_cron.sh"]
 
 WORKDIR /usr/src
 CMD ["/cgitize.sh"]
+
+HEALTHCHECK --interval=5m --retries=3 CMD ! test -f /fail
