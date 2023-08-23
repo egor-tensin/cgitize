@@ -134,7 +134,7 @@ test_ssh() {
         chromiumembedded/cef \
         graphviz \
         wireguard/wintun \
-        browserify-dir/browserify \
+        goauthentik-dir/authentik \
         github-dir/public \
         bitbucket-dir/public \
         bitbucket-dir/private \
@@ -144,7 +144,7 @@ test_ssh() {
     verify_origin lens 'git@github.com:ekmett/lens.git'
     verify_origin chromiumembedded/cef 'git@bitbucket.org:chromiumembedded/cef.git'
     verify_origin graphviz 'git@gitlab.com:graphviz/graphviz.git'
-    verify_origin browserify-dir/browserify 'git@github.com:browserify/browserify.git'
+    verify_origin goauthentik-dir/authentik 'git@github.com:goauthentik/authentik.git'
 
     verify_origin github-dir/public 'git@github.com:cgitize-test/public.git'
     verify_origin bitbucket-dir/public  'git@bitbucket.org:cgitize-test-workspace/public.git'
@@ -170,7 +170,7 @@ test_https() {
         chromiumembedded/cef \
         graphviz \
         wireguard/wintun \
-        browserify-dir/browserify \
+        goauthentik-dir/authentik \
         github-dir/public \
         bitbucket-dir/public \
         bitbucket-dir/private \
@@ -180,7 +180,7 @@ test_https() {
     verify_origin lens 'https://github.com/ekmett/lens.git'
     verify_origin chromiumembedded/cef 'https://bitbucket.org/chromiumembedded/cef.git'
     verify_origin graphviz 'https://gitlab.com/graphviz/graphviz.git'
-    verify_origin browserify-dir/browserify 'https://github.com/browserify/browserify.git'
+    verify_origin goauthentik-dir/authentik 'https://github.com/goauthentik/authentik.git'
 
     verify_origin github-dir/public 'https://github.com/cgitize-test/public.git'
     verify_origin bitbucket-dir/public  'https://bitbucket.org/cgitize-test-workspace/public.git'

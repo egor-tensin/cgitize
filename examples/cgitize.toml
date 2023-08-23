@@ -31,12 +31,12 @@ dir = "github-dir"
 # Repositories to skip:
 skip = ["repo1", "repo2"]
 
-[github.organizations.browserify]
+[github.organizations.goauthentik]
 # For GitHub, you can also specify organizations. The settings are similar to
-# those for users. "browserify" is a random organization.
-name = "browserify"
-dir = "browserify-dir"
-skip = ["awesome-browserify", "discuss"]
+# those for users. "goauthentik" is a random organization.
+name = "goauthentik"
+dir = "goauthentik-dir"
+skip = ["version", "testing-setups"]
 
 # Some random repositories hosted on GitHub:
 [github.repositories.lens]
