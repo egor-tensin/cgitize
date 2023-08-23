@@ -15,6 +15,7 @@ jobs:
         python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
     name: 'Test / ${{ matrix.python-version }}'
     env:
+      CGITIZE_GITHUB_USERNAME: cgitize-test
       CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
       CGITIZE_BITBUCKET_USERNAME: cgitize-test
       CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
@@ -51,6 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Test / example config'
     env:
+      CGITIZE_GITHUB_USERNAME: cgitize-test
       CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
       CGITIZE_BITBUCKET_USERNAME: cgitize-test
       CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'

@@ -11,7 +11,8 @@ from cgitize.repo import Repo
 
 
 class GitHub:
-    def __init__(self, token):
+    def __init__(self, username, token):
+        self._username = username
         self._impl = Github(token)
 
     def get_repo(self, repo):
@@ -23,7 +24,12 @@ class GitHub:
 
     def get_user_repos(self, user):
         try:
-            return self._impl.get_user(user.name).get_repos()
+            if user.name == self._username:
+                # To get private repositories, get_user() must be called
+                # without arguments:
+                return self._impl.get_user().get_repos(affiliation='owner')
+            else:
+                return self._impl.get_user(user.name).get_repos()
         except GithubException:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise

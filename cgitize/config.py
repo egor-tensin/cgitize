@@ -89,6 +89,10 @@ class GitHubSection(ServiceSection):
         return self._get_config_or_env('token', 'CGITIZE_GITHUB_TOKEN')
 
     @property
+    def username(self):
+        return self._get_config_or_env('username', 'CGITIZE_GITHUB_USERNAME')
+
+    @property
     def url_auth(self):
         return self.token
 
@@ -103,7 +107,11 @@ class GitHubSection(ServiceSection):
                 yield repo
 
     def connect_to_service(self):
-        return GitHub(self.token)
+        username = self.username
+        token = self.token
+        if (username is None) != (token is None):
+            raise RuntimeError('please set either both the GitHub username & token, or neither')
+        return GitHub(username, token)
 
 
 def two_part_url_auth(username, password):
@@ -126,7 +134,11 @@ class BitbucketSection(ServiceSection):
         return two_part_url_auth(self.username, self.token)
 
     def connect_to_service(self):
-        return Bitbucket(self.username, self.token)
+        username = self.username
+        token = self.token
+        if (username is None) != (token is None):
+            raise RuntimeError('please set either both the Bitbucket username & token, or neither')
+        return Bitbucket(username, token)
 
 
 class GitLabSection(ServiceSection):
@@ -143,7 +155,11 @@ class GitLabSection(ServiceSection):
         return two_part_url_auth(self.username, self.token)
 
     def connect_to_service(self):
-        return GitLab(self.token)
+        username = self.username
+        token = self.token
+        if (username is None) != (token is None):
+            raise RuntimeError('please set either both the GitLab username & token, or neither')
+        return GitLab(token)
 
 
 class UsersSection(Section):

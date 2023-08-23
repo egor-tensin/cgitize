@@ -22,6 +22,9 @@ owner = "Your Name"
 # request rate limit), use "access tokens". Set in the config or using the
 # CGITIZE_GITHUB_TOKEN environment variable.
 #token = "XXX"
+# Set the username that owns the token here or using the environment variable
+# CGITIZE_GITHUB_USERNAME.
+#username = "your-username"
 
 [github.users.me]
 name = "cgitize-test"
@@ -55,9 +58,7 @@ dir = "python"
 # Access tokens are called "app passwords" on Bitbucket.
 # The environment variable is CGITIZE_BITBUCKET_TOKEN.
 #token = "XXX"
-# Contrary to GitHub, Bitbucket doesn't associate app passwords with a
-# username, so you also need that (CGITIZE_BITBUCKET_USERNAME is the
-# environment variable).
+# The environment variable is CGITIZE_BITBUCKET_USERNAME.
 #username = "your-username"
 
 [bitbucket.users.me]
@@ -80,9 +81,7 @@ id = "berkeleylab/upc-runtime"
 [gitlab]
 # The environment variable is CGITIZE_GITLAB_TOKEN.
 #token = "XXX"
-# Similar to Bitbucket, GitLab doesn't associate access tokens with a username
-# (for HTTP clones), so you also need that (CGITIZE_GITLAB_USERNAME is the
-# environment variable).
+# The environment variable is CGITIZE_GITLAB_USERNAME.
 #username = "your-username"
 
 [gitlab.users.me]

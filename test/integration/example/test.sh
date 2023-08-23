@@ -136,6 +136,7 @@ test_ssh() {
         wireguard/wintun \
         goauthentik-dir/authentik \
         github-dir/public \
+        github-dir/private \
         bitbucket-dir/public \
         bitbucket-dir/private \
         gitlab-dir/public \
@@ -146,7 +147,8 @@ test_ssh() {
     verify_origin graphviz 'git@gitlab.com:graphviz/graphviz.git'
     verify_origin goauthentik-dir/authentik 'git@github.com:goauthentik/authentik.git'
 
-    verify_origin github-dir/public 'git@github.com:cgitize-test/public.git'
+    verify_origin github-dir/public  'git@github.com:cgitize-test/public.git'
+    verify_origin github-dir/private 'git@github.com:cgitize-test/private.git'
     verify_origin bitbucket-dir/public  'git@bitbucket.org:cgitize-test-workspace/public.git'
     verify_origin bitbucket-dir/private 'git@bitbucket.org:cgitize-test-workspace/private.git'
     verify_origin gitlab-dir/public  'git@gitlab.com:cgitize-test/public.git'
@@ -172,6 +174,7 @@ test_https() {
         wireguard/wintun \
         goauthentik-dir/authentik \
         github-dir/public \
+        github-dir/private \
         bitbucket-dir/public \
         bitbucket-dir/private \
         gitlab-dir/public \
@@ -182,7 +185,8 @@ test_https() {
     verify_origin graphviz 'https://gitlab.com/graphviz/graphviz.git'
     verify_origin goauthentik-dir/authentik 'https://github.com/goauthentik/authentik.git'
 
-    verify_origin github-dir/public 'https://github.com/cgitize-test/public.git'
+    verify_origin github-dir/public  'https://github.com/cgitize-test/public.git'
+    verify_origin github-dir/private 'https://github.com/cgitize-test/private.git'
     verify_origin bitbucket-dir/public  'https://bitbucket.org/cgitize-test-workspace/public.git'
     verify_origin bitbucket-dir/private 'https://bitbucket.org/cgitize-test-workspace/private.git'
     verify_origin gitlab-dir/public  'https://gitlab.com/cgitize-test/public.git'
