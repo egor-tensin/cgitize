@@ -65,6 +65,7 @@ name = "cgitize-test-workspace"
 dir = "bitbucket-dir"
 #skip = ["repo1", "repo2"]
 
+# Some random repositories hosted on Bitbucket:
 [bitbucket.repositories.cef]
 id = "chromiumembedded/cef"
 dir = "chromiumembedded"
@@ -79,8 +80,9 @@ id = "berkeleylab/upc-runtime"
 [gitlab]
 # The environment variable is CGITIZE_GITLAB_TOKEN.
 #token = "XXX"
-# Similar to Bitbucket, GitLab doesn't associate access tokens with a username,
-# so you also need that (CGITIZE_GITLAB_USERNAME is the environment variable).
+# Similar to Bitbucket, GitLab doesn't associate access tokens with a username
+# (for HTTP clones), so you also need that (CGITIZE_GITLAB_USERNAME is the
+# environment variable).
 #username = "your-username"
 
 [gitlab.users.me]
@@ -88,6 +90,7 @@ name = "cgitize-test"
 dir = "gitlab-dir"
 #skip = ["repo1", "repo2"]
 
+# Some random repositories hosted on Gitlab:
 [gitlab.repositories.gitter]
 id = "gitterHQ/webapp"
 dir = "gitterHQ"
