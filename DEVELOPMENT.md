@@ -43,3 +43,5 @@ Releases
 
 * Make a git tag for a new minor version using `make tag`.
 You can then review it and push using `git push --tags`.
+* For a new major version, update the version in the docker-compose definition
+in docker/README.md.

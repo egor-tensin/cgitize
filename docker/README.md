@@ -39,11 +39,35 @@ It could look like this:
 Compose
 -------
 
-See the root docker-compose.yml file for a possible services definition.
-In this configuration, cgitize pulls my repositories from GitHub every 3 hours.
-You can test it by running
+Here's an example docker-compose.yml file:
 
-    docker-compose build
+    version: '3'
+
+    services:
+      cgitize:
+        environment:
+          # Every 3 hours:
+          SCHEDULE: '0 */3 * * *'
+          # Set CGITIZE_{GITHUB,BITBUCKET,GITLAB}_{USERNAME,TOKEN} variables
+          # here or in the config file.
+        image: egortensin/cgitize:5
+        restart: unless-stopped
+        volumes:
+          - ./example.toml:/etc/cgitize/cgitize.toml:ro
+          - /srv/volumes/cgitize:/mnt/cgitize
+      frontend:
+        image: egortensin/cgitize-frontend:5
+        ports:
+          - '127.0.0.1:80:80'
+        restart: unless-stopped
+        volumes:
+          - /srv/volumes/cgitize:/mnt/cgitize:ro
+
+In this configuration, cgitize pulls repositories defined in example.toml every
+3 hours and puts them to /srv/volumes/cgitize on the host.
+
+To launch containers, run:
+
     docker-compose up -d
 
-and visiting http://localhost:80/.
+To inspect the repositories, visit http://localhost:80/.
