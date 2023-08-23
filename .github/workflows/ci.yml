@@ -15,8 +15,11 @@ jobs:
         python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
     name: 'Test / ${{ matrix.python-version }}'
     env:
-      # API request rate limit is easily exceeded otherwise:
       CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
+      CGITIZE_BITBUCKET_USERNAME: cgitize-test
+      CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
+      CGITIZE_GITLAB_USERNAME: cgitize-test
+      CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -48,15 +51,11 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Test / example config'
     env:
-      # API request rate limit is easily exceeded otherwise:
       CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
-      # Consider creating a separate user (without my private repositories)
-      # for testing Bitbucket).
-      #CGITIZE_BITBUCKET_USERNAME: egor-tensin
-      #CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
-      # Same goes for GitLab.
-      #CGITIZE_GITLAB_USERNAME: egor-tensin
-      #CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
+      CGITIZE_BITBUCKET_USERNAME: cgitize-test
+      CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
+      CGITIZE_GITLAB_USERNAME: cgitize-test
+      CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -67,7 +66,7 @@ jobs:
       - name: Install dependencies
         run: pip install -q -r requirements.txt
       - name: Set up ssh-agent
-        uses: webfactory/ssh-agent@v0.7.0
+        uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: '${{ secrets.SSH_KEY }}'
       - name: Integration test (example config)

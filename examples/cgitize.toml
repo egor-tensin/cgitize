@@ -24,12 +24,12 @@ owner = "Your Name"
 #token = "XXX"
 
 [github.users.me]
-name = "egor-tensin"
+name = "cgitize-test"
 # To avoid directory name clashes with other repositories, you can specify a
 # subdirectory to put that user's repositories to.
 dir = "github-dir"
 # Repositories to skip:
-skip = ["chruby", "SafeInt"]
+skip = ["repo1", "repo2"]
 
 [github.organizations.browserify]
 # For GitHub, you can also specify organizations. The settings are similar to
@@ -61,7 +61,7 @@ dir = "python"
 #username = "your-username"
 
 [bitbucket.users.me]
-name = "egor-tensin"
+name = "cgitize-test-workspace"
 dir = "bitbucket-dir"
 #skip = ["repo1", "repo2"]
 
@@ -84,7 +84,7 @@ id = "berkeleylab/upc-runtime"
 #username = "your-username"
 
 [gitlab.users.me]
-name = "egor-tensin"
+name = "cgitize-test"
 dir = "gitlab-dir"
 #skip = ["repo1", "repo2"]
 

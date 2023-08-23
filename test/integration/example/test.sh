@@ -128,22 +128,30 @@ test_ssh() {
 
     setup_ssh
     cgitize
+
     verify_repos \
         lens \
         chromiumembedded/cef \
         graphviz \
         wireguard/wintun \
         browserify-dir/browserify \
-        github-dir/cgitize-test-repository \
-        bitbucket-dir/cgitize-test-repository \
-        gitlab-dir/cgitize-test-repository
+        github-dir/public \
+        bitbucket-dir/public \
+        bitbucket-dir/private \
+        gitlab-dir/public \
+        gitlab-dir/private
+
     verify_origin lens 'git@github.com:ekmett/lens.git'
     verify_origin chromiumembedded/cef 'git@bitbucket.org:chromiumembedded/cef.git'
     verify_origin graphviz 'git@gitlab.com:graphviz/graphviz.git'
     verify_origin browserify-dir/browserify 'git@github.com:browserify/browserify.git'
-    verify_origin github-dir/cgitize-test-repository 'git@github.com:egor-tensin/cgitize-test-repository.git'
-    verify_origin bitbucket-dir/cgitize-test-repository 'git@bitbucket.org:egor-tensin/cgitize-test-repository.git'
-    verify_origin gitlab-dir/cgitize-test-repository 'git@gitlab.com:egor-tensin/cgitize-test-repository.git'
+
+    verify_origin github-dir/public 'git@github.com:cgitize-test/public.git'
+    verify_origin bitbucket-dir/public  'git@bitbucket.org:cgitize-test-workspace/public.git'
+    verify_origin bitbucket-dir/private 'git@bitbucket.org:cgitize-test-workspace/private.git'
+    verify_origin gitlab-dir/public  'git@gitlab.com:cgitize-test/public.git'
+    verify_origin gitlab-dir/private 'git@gitlab.com:cgitize-test/private.git'
+
     cleanup
     success
 }
@@ -156,21 +164,30 @@ test_https() {
 
     setup_https
     cgitize
+
     verify_repos \
         lens \
         chromiumembedded/cef \
         graphviz \
         wireguard/wintun \
-        github-dir/cgitize-test-repository \
-        bitbucket-dir/cgitize-test-repository \
-        gitlab-dir/cgitize-test-repository
+        browserify-dir/browserify \
+        github-dir/public \
+        bitbucket-dir/public \
+        bitbucket-dir/private \
+        gitlab-dir/public \
+        gitlab-dir/private
+
     verify_origin lens 'https://github.com/ekmett/lens.git'
     verify_origin chromiumembedded/cef 'https://bitbucket.org/chromiumembedded/cef.git'
     verify_origin graphviz 'https://gitlab.com/graphviz/graphviz.git'
     verify_origin browserify-dir/browserify 'https://github.com/browserify/browserify.git'
-    verify_origin github-dir/cgitize-test-repository 'https://github.com/egor-tensin/cgitize-test-repository.git'
-    verify_origin bitbucket-dir/cgitize-test-repository 'https://bitbucket.org/egor-tensin/cgitize-test-repository.git'
-    verify_origin gitlab-dir/cgitize-test-repository 'https://gitlab.com/egor-tensin/cgitize-test-repository.git'
+
+    verify_origin github-dir/public 'https://github.com/cgitize-test/public.git'
+    verify_origin bitbucket-dir/public  'https://bitbucket.org/cgitize-test-workspace/public.git'
+    verify_origin bitbucket-dir/private 'https://bitbucket.org/cgitize-test-workspace/private.git'
+    verify_origin gitlab-dir/public  'https://gitlab.com/cgitize-test/public.git'
+    verify_origin gitlab-dir/private 'https://gitlab.com/cgitize-test/private.git'
+
     cleanup
     success
 }
