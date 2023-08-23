@@ -1,14 +1,7 @@
-version: '3.4'
-
-x-default-settings:
-  &default-settings
-  logging:
-    driver: journald
-  restart: unless-stopped
+version: '3'
 
 services:
   cgitize:
-    << : *default-settings
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -16,16 +9,17 @@ services:
       # Every 3 hours:
       SCHEDULE: '0 */3 * * *'
     image: egortensin/cgitize:latest
+    restart: unless-stopped
     volumes:
       - ./examples/docker:/etc/cgitize:ro
       - repositories:/mnt/cgitize
   frontend:
-    << : *default-settings
     build:
       context: ./docker/frontend
     image: egortensin/cgitize-frontend:latest
     ports:
       - '127.0.0.1:80:80'
+    restart: unless-stopped
     volumes:
       - repositories:/mnt/cgitize:ro
 
