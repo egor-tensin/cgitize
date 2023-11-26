@@ -1,4 +1,4 @@
-# Please see https://egort.name/blog/notes/makefile.html
+# Please see https://tensin.name/blog/notes/makefile.html
 
 MAKEFLAGS += --no-builtin-rules --no-builtin-variables --warn-undefined-variables
 unexport MAKEFLAGS

@@ -11,7 +11,7 @@ Supports cloning all of your repositories from major hosting providers:
 * Bitbucket,
 * GitLab.
 
-Example output can be found at https://git.egort.name/.
+Example output can be found at https://git.tensin.name/.
 
 Installation
 ------------
