@@ -23,11 +23,11 @@ jobs:
       CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -43,7 +43,7 @@ jobs:
     name: 'Test / Docker'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Integration test (Docker)
         run: sudo make test/docker
 
@@ -60,9 +60,9 @@ jobs:
       CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           cache: pip
       - name: Install dependencies
@@ -87,11 +87,11 @@ jobs:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # https://github.com/docker/metadata-action#semver
       - id: meta
         name: Docker Hub metadata
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: '${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}'
           flavor: |
@@ -102,11 +102,11 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: '${{ secrets.DOCKERHUB_USERNAME }}'
           password: '${{ secrets.DOCKERHUB_TOKEN }}'
@@ -120,7 +120,7 @@ jobs:
               echo 'platforms=amd64,armhf,arm64' >> "$GITHUB_OUTPUT"
           fi
       - name: Build and publish
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: '${{ matrix.context }}'
           file: '${{ matrix.file }}'
@@ -135,11 +135,11 @@ jobs:
     name: 'Publish / PyPI'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
       - name: Verify package can be installed
         run: pip install -q .
       - name: Install package builder
@@ -147,7 +147,7 @@ jobs:
       - name: Build package
         run: python -m build
       - name: Publish as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
