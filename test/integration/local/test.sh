@@ -107,18 +107,6 @@ setup_bare() {
     setup_cgitize
 }
 
-setup_workdir() {
-    setup_bare
-
-    echo
-    echo ----------------------------------------------------------------------
-    echo Setting up local repository clone
-    echo ----------------------------------------------------------------------
-
-    mkdir -p -- "$output_dir"
-    _git clone --quiet -- "$upstream_repo_dir" "$output_dir/test_repo"
-}
-
 cgitize() {
     echo
     echo ----------------------------------------------------------------------
@@ -216,23 +204,6 @@ test_bare() {
     success
 }
 
-test_workdir() {
-    echo
-    echo ======================================================================
-    echo "${FUNCNAME[0]}"
-    echo ======================================================================
-
-    setup_workdir
-    cgitize
-    verify_initial_commits
-    add_commits
-    cgitize
-    verify_added_commits
-    verify_error_header_empty
-    cleanup
-    success
-}
-
 test_failure() {
     echo
     echo ======================================================================
@@ -267,7 +238,6 @@ test_failure() {
 main() {
     trap cleanup EXIT
     test_bare
-    test_workdir
     test_failure
 }
 

@@ -166,10 +166,4 @@ class CGitRepositories:
         repo_dir = self.get_repo_dir(repo)
         with chdir(repo_dir):
             with Git.setup_auth(repo):
-                if not Git.check('remote', 'update', '--prune'):
-                    return False
-            # In case the local repository is not a bare repository, but a
-            # full-fledged working copy:
-            if Git.check('rev-parse', '--verify', '--quiet', 'origin/master'):
-                return Git.check('reset', '--soft', 'origin/master')
-            return True
+                return Git.check('remote', 'update', '--prune')
