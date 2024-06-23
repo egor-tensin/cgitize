@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2023 Egor Tensin <Egor.Tensin@gmail.com>
+# Copyright (c) 2023 Egor Tensin <egor@tensin.name>
 # This file is part of the "cgitize" project.
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.

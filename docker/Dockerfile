@@ -28,7 +28,7 @@ RUN pip3 install -q --no-cache-dir --target=/deps -r /tmp/requirements.txt
 
 FROM base
 
-LABEL maintainer="Egor Tensin <Egor.Tensin@gmail.com>"
+LABEL maintainer="Egor Tensin <egor@tensin.name>"
 
 RUN apk add -q --no-cache bash git openssh-client tini
 
