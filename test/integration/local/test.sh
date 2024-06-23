@@ -179,6 +179,26 @@ verify_added_commits() {
     verify_commits 'first commit' 'second commit' 'third commit'
 }
 
+verify_error_header_empty() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Verifying the error header
+    echo ----------------------------------------------------------------------
+
+    test ! -s "$output_dir/error.html"
+}
+
+verify_error_header() {
+    echo
+    echo ----------------------------------------------------------------------
+    echo Verifying the error header
+    echo ----------------------------------------------------------------------
+
+    local contents
+    contents="$( cat -- "$output_dir/error.html" )"
+    check_contains "$contents" "Some repositories couldn't be updated"
+}
+
 test_bare() {
     echo
     echo ======================================================================
@@ -191,6 +211,7 @@ test_bare() {
     add_commits
     cgitize
     verify_added_commits
+    verify_error_header_empty
     cleanup
     success
 }
@@ -207,6 +228,7 @@ test_workdir() {
     add_commits
     cgitize
     verify_added_commits
+    verify_error_header_empty
     cleanup
     success
 }
@@ -237,6 +259,7 @@ test_failure() {
         echo "The added commits should not have been pulled." >&2
         return 1
     fi
+    verify_error_header
     cleanup
     success
 }

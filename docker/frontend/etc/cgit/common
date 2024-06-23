@@ -37,3 +37,5 @@ source-filter=/usr/lib/cgit/filters/syntax-highlighting.py
 
 # Set the directory path to search for repositories.
 scan-path=/mnt/cgitize
+
+header=/mnt/cgitize/error.html

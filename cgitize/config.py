@@ -44,6 +44,10 @@ class MainSection(Section):
         return self._get_config_path('output_dir', default=MainSection.DEFAULT_OUTPUT_DIR)
 
     @property
+    def error_header_path(self):
+        return os.path.join(self.output_dir, 'error.html')
+
+    @property
     def clone_url(self):
         return self._get_config_value('clone_url', required=False)
 

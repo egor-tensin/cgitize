@@ -32,23 +32,42 @@ def parse_args(argv=None):
     return parser.parse_args(argv)
 
 
+def setup_error_header_file(error_header_path, success, error=None):
+    with open(error_header_path, 'w') as file:
+        contents = ''
+        if not success:
+            contents = '''<p style="text-align: center; color: red; font-weight: bold;">'''
+            contents += '''Some repositories couldn't be updated, please check application logs for details.'''
+            if error is not None:
+                contents += f'''<br>{type(error).__name__}: {error}'''
+            contents += '''</p>\n'''
+        file.write(contents)
+
+
 def main(argv=None):
     args = parse_args(argv)
     with setup_logging(args.verbose):
         config = Config.read(args.config)
-        cgit_server = CGitServer(config.main.clone_url)
-        output = CGitRepositories(config.main.output_dir, cgit_server, force=args.force)
         success = True
-        for repo in config.parse_repositories():
-            if args.repos is None or repo.name in args.repos:
-                if not output.update(repo):
-                    success = False
+        error = None
+
+        try:
+            cgit_server = CGitServer(config.main.clone_url)
+            output = CGitRepositories(config.main.output_dir, cgit_server, force=args.force)
+            for repo in config.parse_repositories():
+                if args.repos is None or repo.name in args.repos:
+                    success = success and output.update(repo)
+        except Exception as e:
+            success = False
+            error = e
+
         if success:
             logging.info('All repositories were updated successfully')
-            return 0
         else:
             logging.warning("Some repositories couldn't be updated!")
-            return 1
+
+        setup_error_header_file(config.main.error_header_path, success, error)
+        return int(not success)
 
 
 if __name__ == '__main__':
