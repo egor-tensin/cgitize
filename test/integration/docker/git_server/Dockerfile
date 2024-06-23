@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.20
 
 RUN apk add -q --no-cache bash git openssh-server tini && \
     echo 'root:root' | chpasswd && \
