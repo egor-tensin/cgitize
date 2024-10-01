@@ -17,6 +17,12 @@ readonly client_key_password='password'
 readonly output_dir="$script_dir/cgitize/output"
 readonly frontend_host=localhost
 
+if command -v docker-compose > /dev/null 2>&1; then
+    readonly docker_compose=docker-compose
+else
+    readonly docker_compose='docker compose'
+fi
+
 dump() {
     local prefix="${FUNCNAME[0]}"
     [ "${#FUNCNAME[@]}" -gt 1 ] && prefix="${FUNCNAME[1]}"
@@ -159,12 +165,12 @@ docker_build() {
     echo Building Docker images
     echo ----------------------------------------------------------------------
 
-    docker-compose build --progress plain
+    $docker_compose build --progress plain
 }
 
 docker_cleanup() {
     dump 'cleaning up Docker data'
-    docker-compose down --rmi all --volumes
+    $docker_compose down --rmi all --volumes
     # Use `docker system prune` as well?
 }
 
@@ -180,7 +186,7 @@ run_git_server() {
     echo Running the Git server
     echo ----------------------------------------------------------------------
 
-    docker-compose up -d git_server
+    $docker_compose up -d git_server
 }
 
 run_cgitize() {
@@ -194,7 +200,7 @@ run_cgitize() {
         return 1
     fi
     dump "SSH_AUTH_SOCK: $SSH_AUTH_SOCK"
-    docker-compose run --rm cgitize
+    $docker_compose run --rm cgitize
 }
 
 run_frontend() {
@@ -203,7 +209,7 @@ run_frontend() {
     echo Running the frontend
     echo ----------------------------------------------------------------------
 
-    docker-compose up -d frontend
+    $docker_compose up -d frontend
     sleep 2
 }
 
