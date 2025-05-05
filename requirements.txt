@@ -1,9 +1,9 @@
 atlassian-python-api==3.28.1
-certifi==2024.8.30
+certifi==2025.4.26
 cffi==1.17.1
-charset-normalizer==3.4.0
-cryptography==44.0.0
-Deprecated==1.2.15
+charset-normalizer==3.4.2
+cryptography==44.0.3
+Deprecated==1.2.18
 idna==3.10
 oauthlib==3.2.2
 pycparser==2.22
@@ -14,7 +14,7 @@ python-gitlab==2.10.1
 requests==2.32.3
 requests-oauthlib==2.0.0
 requests-toolbelt==1.0.0
-six==1.16.0
+six==1.17.0
 tomli==1.2.3
-urllib3==2.2.3
-wrapt==1.17.0
+urllib3==2.4.0
+wrapt==1.17.2
