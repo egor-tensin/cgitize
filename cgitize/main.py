@@ -65,6 +65,8 @@ def main(argv=None):
             logging.info('All repositories were updated successfully')
         else:
             logging.warning("Some repositories couldn't be updated!")
+            if error is not None:
+                logging.warning('Error: %s', error)
 
         setup_error_header_file(config.main.error_header_path, success, error)
         return int(not success)
