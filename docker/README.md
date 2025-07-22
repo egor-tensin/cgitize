@@ -50,13 +50,13 @@ Here's an example docker-compose.yml file:
           SCHEDULE: '0 */3 * * *'
           # Set CGITIZE_{GITHUB,BITBUCKET,GITLAB}_{USERNAME,TOKEN} variables
           # here or in the config file.
-        image: egortensin/cgitize:5
+        image: egortensin/cgitize:6
         restart: unless-stopped
         volumes:
           - ./example.toml:/etc/cgitize/cgitize.toml:ro
           - /srv/volumes/cgitize:/mnt/cgitize
       frontend:
-        image: egortensin/cgitize-frontend:5
+        image: egortensin/cgitize-frontend:6
         ports:
           - '127.0.0.1:80:80'
         restart: unless-stopped
