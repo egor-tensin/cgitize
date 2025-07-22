@@ -6,12 +6,12 @@
 import os
 import unittest
 
-from github import Github, GithubException
+from github import Auth, Github, GithubException
 
 
 class GitHubTests(unittest.TestCase):
     def setUp(self):
-        self.github = Github(os.environ.get('CGITIZE_GITHUB_TOKEN'))
+        self.github = Github(auth=Auth.Token(os.environ.get('CGITIZE_GITHUB_TOKEN')))
 
     def test_nonexistent_repo(self):
         with self.assertRaises(GithubException):

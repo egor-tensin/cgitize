@@ -9,13 +9,13 @@ license = {text = "MIT"}
 dynamic = ["version"]
 authors = [{name = "Egor Tensin", email = "egor@tensin.name"}]
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.9"
 
 dependencies = [
-    "atlassian-python-api ~= 3.28.0",
+    "atlassian-python-api ~= 4.0",
     'importlib-metadata ~= 4.0 ; python_version < "3.8"',
-    "PyGithub ~= 1.0",
-    "python-gitlab ~= 2.0",
+    "PyGithub ~= 2.0",
+    "python-gitlab ~= 6.0",
     "tomli ~= 1.0",
 ]
 

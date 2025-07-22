@@ -5,7 +5,7 @@
 
 import logging
 
-from github import Github, GithubException
+from github import Auth, Github, GithubException
 
 from cgitize.repo import Repo
 
@@ -13,7 +13,10 @@ from cgitize.repo import Repo
 class GitHub:
     def __init__(self, username, token):
         self._username = username
-        self._impl = Github(token)
+        auth = None
+        if token is not None:
+            auth = Auth.Token(token)
+        self._impl = Github(auth=auth)
 
     def get_repo(self, repo):
         try:
