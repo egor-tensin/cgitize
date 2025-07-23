@@ -41,8 +41,6 @@ Compose
 
 Here's an example docker-compose.yml file:
 
-    version: '3'
-
     services:
       cgitize:
         environment:

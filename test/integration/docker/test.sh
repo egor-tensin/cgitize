@@ -165,7 +165,7 @@ docker_build() {
     echo Building Docker images
     echo ----------------------------------------------------------------------
 
-    $docker_compose build --progress plain
+    $docker_compose --progress plain build
 }
 
 docker_cleanup() {

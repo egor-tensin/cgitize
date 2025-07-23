@@ -1,4 +1,3 @@
-version: '3'
 services:
   git_server:
     build:
