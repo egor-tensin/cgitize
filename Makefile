@@ -23,6 +23,25 @@ venv/upgrade: venv/reset
 		&& pip uninstall -q --yes '$(call escape,$(PROJECT))' \
 		&& pip freeze > requirements.txt
 
+.PHONY: maintenance
+maintenance:
+	$(MAKE) venv/upgrade
+
+	@git_status="$$( git status --porcelain=v1 )" && \
+	if [ -z "$$git_status" ]; then \
+		true; \
+	elif [ "$$git_status" = ' M requirements.txt' ]; then \
+		git commit -am 'requirements.txt: bump dependencies' && \
+			git push -q; \
+	else \
+		echo; \
+		echo '-----------------------------------------------------------------'; \
+		echo 'Error: unrecognized modifications in the repository:'; \
+		echo "$$git_status"; \
+		echo '-----------------------------------------------------------------'; \
+		exit 1; \
+	fi
+
 .PHONY: python
 python:
 	$(venv_activate) && python

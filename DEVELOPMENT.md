@@ -49,7 +49,8 @@ another user, it could get used instead).
 Upgrading dependencies
 ----------------------
 
-* Upgrade virtual environment packages: `make venv/upgrade`
+* Upgrade virtual environment packages: `make venv/upgrade`.
+`make maintenance` does that and pushes a commit to the upstream.
 * Upgrade base Docker images.
     * Find the current base images using `git grep -P 'FROM \w+:'`
 * Upgrade the [cmark-gfm] version used in the [cgitize-frontend Docker image].
