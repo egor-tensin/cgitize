@@ -8,9 +8,18 @@ ADD ["https://github.com/github/cmark-gfm/archive/refs/tags/$CMARK_GFM_VERSION.z
 
 RUN apk add -q --no-cache cmake g++ make python3 && \
     ln -sf /usr/bin/python3 /usr/bin/python
+
 RUN unzip -q -- "$CMARK_GFM_VERSION.zip" && \
     cd -- "cmark-gfm-$CMARK_GFM_VERSION" && \
-    make INSTALL_PREFIX=/cmark-gfm > /dev/null && \
+    mkdir build && \
+    cd build && \
+    cmake \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        -DCMAKE_INSTALL_PREFIX=/cmark-gfm \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+        .. && \
+    make -j && \
     make test && \
     make install > /dev/null
 
