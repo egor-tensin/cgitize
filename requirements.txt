@@ -19,5 +19,5 @@ requests-toolbelt==1.0.0
 soupsieve==2.8
 tomli==1.2.3
 typing_extensions==4.15.0
-urllib3==2.6.1
+urllib3==2.6.2
 wrapt==2.0.1
