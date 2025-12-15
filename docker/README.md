@@ -66,6 +66,6 @@ In this configuration, cgitize pulls repositories defined in example.toml every
 
 To launch containers, run:
 
-    docker-compose up -d
+    docker compose up -d
 
 To inspect the repositories, visit http://localhost:80/.
