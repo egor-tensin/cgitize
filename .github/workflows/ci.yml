@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
     name: 'Test / ${{ matrix.python-version }}'
     env:
       CGITIZE_GITHUB_USERNAME: cgitize-test
@@ -23,11 +23,11 @@ jobs:
       CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '${{ matrix.python-version }}'
           cache: pip
@@ -43,7 +43,7 @@ jobs:
     name: 'Test / Docker'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Integration test (Docker)
         run: sudo make test/docker
 
@@ -60,15 +60,15 @@ jobs:
       CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN}}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           cache: pip
       - name: Install dependencies
         run: pip install -q -r requirements.txt
       - name: Set up ssh-agent
-        uses: webfactory/ssh-agent@v0.8.0
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: '${{ secrets.SSH_KEY }}'
       - name: Integration test (example config)
@@ -87,7 +87,7 @@ jobs:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       # https://github.com/docker/metadata-action#semver
       - id: meta
         name: Docker Hub metadata
@@ -120,7 +120,7 @@ jobs:
               echo 'platforms=amd64,armhf,arm64' >> "$GITHUB_OUTPUT"
           fi
       - name: Build and publish
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: '${{ matrix.context }}'
           file: '${{ matrix.file }}'
@@ -135,11 +135,11 @@ jobs:
     name: 'Publish / PyPI'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
       - name: Verify package can be installed
         run: pip install -q .
       - name: Install package builder
@@ -147,7 +147,7 @@ jobs:
       - name: Build package
         run: python -m build
       - name: Publish as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dist
           path: dist
