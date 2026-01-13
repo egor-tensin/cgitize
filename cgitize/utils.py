@@ -17,7 +17,7 @@ def setup_logging(verbose=False):
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
         level=level,
-        datefmt='%Y-%m-%d %H:%M:%S',
+        datefmt='%Y-%m-%d %H:%M:%S%z',
         format='%(asctime)s | %(levelname)s | %(message)s',
         # Log to stdout, because that's where subprocess's output goes (so that
         # the don't get interleaved).
