@@ -4,7 +4,6 @@ on:
   push:
     paths-ignore:
       - '*.md'
-  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -84,7 +83,7 @@ jobs:
           - {service: backend, file: docker/Dockerfile, image: cgitize}
           - {service: frontend, context: docker/frontend, image: cgitize-frontend}
     name: 'Publish / Docker Hub / ${{ matrix.service }}'
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -153,7 +152,7 @@ jobs:
           path: dist
           if-no-files-found: error
       - name: Publish to PyPI
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
