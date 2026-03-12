@@ -90,7 +90,7 @@ jobs:
       # https://github.com/docker/metadata-action#semver
       - id: meta
         name: Docker Hub metadata
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: '${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}'
           flavor: |
