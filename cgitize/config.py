@@ -66,17 +66,26 @@ class ServiceSection(Section, ABC):
         self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
         self.users = UsersSection(self.impl.get('users', {}))
 
-    def enum_repositories(self, cfg):
-        api = self.connect_to_service()
+    def _enum_explicit_repositories(self, cfg, api):
         for r in self.repositories.enum_repositories():
             r = HostedRepo(r)
             yield api.convert_repo(api.get_repo(r), cfg, r.dir)
+
+    def _enum_user_repositories(self, cfg, api, user):
+        for r in api.get_user_repos(user):
+            r = api.convert_repo(r, cfg, user.dir)
+            if r.name in user.skip:
+                continue
+            yield r
+
+    def _sort_repos(self, repos):
+        return sorted(repos, key=lambda repo: repo.name)
+
+    def enum_repositories(self, cfg):
+        api = self.connect_to_service()
+        yield from self._sort_repos(self._enum_explicit_repositories(cfg, api))
         for u in self.users.enum_users():
-            for r in api.get_user_repos(u):
-                r = api.convert_repo(r, cfg, u.dir)
-                if r.name in u.skip:
-                    continue
-                yield r
+            yield from self._sort_repos(self._enum_user_repositories(cfg, api, u))
 
     @abstractmethod
     def connect_to_service(self):
@@ -100,15 +109,18 @@ class GitHubSection(ServiceSection):
     def url_auth(self):
         return self.token
 
+    def _enum_org_repositories(self, cfg, api, org):
+        for repo in api.get_org_repos(org):
+            repo = api.convert_repo(repo, cfg, org.dir)
+            if repo.name in org.skip:
+                continue
+            yield repo
+
     def enum_repositories(self, cfg):
         yield from super().enum_repositories(cfg)
         api = self.connect_to_service()
         for org in self.orgs.enum_orgs():
-            for repo in api.get_org_repos(org):
-                repo = api.convert_repo(repo, cfg, org.dir)
-                if repo.name in org.skip:
-                    continue
-                yield repo
+            yield from self._sort_repos(self._enum_org_repositories(cfg, api, org))
 
     def connect_to_service(self):
         username = self.username
