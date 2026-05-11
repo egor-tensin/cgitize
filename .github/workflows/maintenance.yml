@@ -1,0 +1,37 @@
+name: Maintenance
+
+on:
+  schedule:
+    # Weekly, at 02:30 UTC on Friday (somewhat randomly chosen).
+    - cron: '30 02 * * 5'
+  workflow_dispatch:
+
+jobs:
+  maintenance:
+    runs-on: ubuntu-latest
+    name: Maintenance
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # I think that by default, pushes don't trigger other workflows, and
+          # you need a separate token for that: https://github.com/orgs/community/discussions/37103
+          #
+          # Re-using the Jekyll projects token here BTW:
+          token: '${{ secrets.GH_TOKEN }}'
+      - name: Set up ssh-agent
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: '${{ secrets.SSH_KEY }}'
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+      - name: Run maintenance
+        id: maintenance
+        run: |
+          # See https://github.com/actions/checkout#push-a-commit-using-the-built-in-token
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          make maintenance
