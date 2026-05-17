@@ -21,7 +21,8 @@ def setup_logging(verbose=False):
         format='%(asctime)s | %(levelname)s | %(message)s',
         # Log to stdout, because that's where subprocess's output goes (so that
         # the don't get interleaved).
-        stream=sys.stdout)
+        stream=sys.stdout,
+    )
     try:
         yield
     except Exception as e:
@@ -37,8 +38,9 @@ def run(*args, capture_output=False, **kwargs):
         stderr = subprocess.STDOUT
 
     logging.debug('%s', args)
-    result = subprocess.run(args, check=True, stdout=stdout, stderr=stderr,
-                            encoding='utf-8', **kwargs)
+    result = subprocess.run(
+        args, check=True, stdout=stdout, stderr=stderr, encoding='utf-8', **kwargs
+    )
 
     if result.stdout is not None:
         logging.debug('\n%s', result.stdout)

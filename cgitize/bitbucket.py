@@ -19,7 +19,9 @@ class Bitbucket:
         try:
             parts = repo.id.split('/')
             if len(parts) != 2:
-                raise ValueError(f'repository ID must be in the USER/NAME format: {repo.id}')
+                raise ValueError(
+                    f'repository ID must be in the USER/NAME format: {repo.id}'
+                )
             user, name = parts
             return self._impl.repositories.get(user, name)
         except HTTPError:

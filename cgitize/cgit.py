@@ -70,9 +70,17 @@ class AgeFile:
         # Except I think that the committer date, not author date  better
         # represents activity.
         with chdir(repo_dir):
-            success, output = Git.capture('for-each-ref', '--sort=-committerdate', '--count=1', '--format=%(committerdate:iso8601)')
+            success, output = Git.capture(
+                'for-each-ref',
+                '--sort=-committerdate',
+                '--count=1',
+                '--format=%(committerdate:iso8601)',
+            )
             if not success:
-                logging.error("Couldn't get the timestamp of the newest commit in repository: %s", repo_dir)
+                logging.error(
+                    "Couldn't get the timestamp of the newest commit in repository: %s",
+                    repo_dir,
+                )
                 return None
             return output
 
@@ -118,7 +126,10 @@ class CGitRepositories:
             success, output = Git.capture('rev-parse', '--is-inside-work-tree')
             if not success:
                 # Overwrite the existing directory if it's not a Git repository.
-                logging.warning('Local directory is not a repository, going to overwrite it: %s', repo_dir)
+                logging.warning(
+                    'Local directory is not a repository, going to overwrite it: %s',
+                    repo_dir,
+                )
                 return self._mirror(repo)
 
             success, output = Git.capture('config', '--get', 'remote.origin.url')
@@ -126,14 +137,21 @@ class CGitRepositories:
                 # Every repository managed by this script should have the
                 # 'origin' remote. If it doesn't, it's trash. Overwrite the
                 # existing directory, mirroring the repository in it.
-                logging.warning("Local repository doesn't have remote 'origin', going to overwrite it: %s", repo_dir)
+                logging.warning(
+                    "Local repository doesn't have remote 'origin', going to overwrite it: %s",
+                    repo_dir,
+                )
                 return self._mirror(repo)
 
             if f'{repo.clone_url}\n' != output:
                 # Jeez, there's a proper local repository in the target
                 # directory already with a different upstream; something's
                 # wrong, fix it manually.
-                logging.warning("Existing repository '%s' doesn't match the specified clone URL: %s", repo.name, repo.clone_url)
+                logging.warning(
+                    "Existing repository '%s' doesn't match the specified clone URL: %s",
+                    repo.name,
+                    repo.clone_url,
+                )
                 if self.force:
                     # Unless --force was specified, in which case we overwrite
                     # the repository.

@@ -21,8 +21,9 @@ class Repo:
             raise ValueError("every repository must have 'clone_url'")
         clone_url = src['clone_url']
         subdir = src.get('dir')
-        return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
-                    subdir=subdir)
+        return Repo(
+            name, clone_url, owner=owner, desc=desc, homepage=homepage, subdir=subdir
+        )
 
     @staticmethod
     def from_github(src, config, subdir=None):
@@ -36,8 +37,15 @@ class Repo:
         clone_url = ssh_url if config.main.clone_via_ssh else https_url
         url_auth = None if config.main.clone_via_ssh else config.github.url_auth
 
-        return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
-                    url_auth=url_auth, subdir=subdir)
+        return Repo(
+            name,
+            clone_url,
+            owner=owner,
+            desc=desc,
+            homepage=homepage,
+            url_auth=url_auth,
+            subdir=subdir,
+        )
 
     @staticmethod
     def from_bitbucket(src, config, subdir=None):
@@ -46,13 +54,17 @@ class Repo:
         homepage = src.get_link('html')
         owner = src.data['owner']['display_name']
 
-        https_urls = [link for link in src.data['links']['clone'] if link['name'] == 'https']
+        https_urls = [
+            link for link in src.data['links']['clone'] if link['name'] == 'https'
+        ]
         if len(https_urls) != 1:
             raise RuntimeError(f"no https:// clone URL for repository '{name}'?!")
         # Bitbucket leaves the username in the URL... Sigh.
         https_url = url_remove_auth(https_urls[0]['href'])
 
-        ssh_urls = [link for link in src.data['links']['clone'] if link ['name'] == 'ssh']
+        ssh_urls = [
+            link for link in src.data['links']['clone'] if link['name'] == 'ssh'
+        ]
         if len(ssh_urls) != 1:
             raise RuntimeError(f"no ssh:// clone URL for repository '{name}'?!")
         ssh_url = ssh_urls[0]['href']
@@ -60,8 +72,15 @@ class Repo:
         clone_url = ssh_url if config.main.clone_via_ssh else https_url
         url_auth = None if config.main.clone_via_ssh else config.bitbucket.url_auth
 
-        return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
-                    url_auth=url_auth, subdir=subdir)
+        return Repo(
+            name,
+            clone_url,
+            owner=owner,
+            desc=desc,
+            homepage=homepage,
+            url_auth=url_auth,
+            subdir=subdir,
+        )
 
     @staticmethod
     def from_gitlab(src, config, subdir=None):
@@ -75,11 +94,26 @@ class Repo:
         clone_url = ssh_url if config.main.clone_via_ssh else https_url
         url_auth = None if config.main.clone_via_ssh else config.gitlab.url_auth
 
-        return Repo(name, clone_url, owner=owner, desc=desc, homepage=homepage,
-                    url_auth=url_auth, subdir=subdir)
+        return Repo(
+            name,
+            clone_url,
+            owner=owner,
+            desc=desc,
+            homepage=homepage,
+            url_auth=url_auth,
+            subdir=subdir,
+        )
 
-    def __init__(self, name, clone_url, owner=None, desc=None, homepage=None,
-                 url_auth=None, subdir=None):
+    def __init__(
+        self,
+        name,
+        clone_url,
+        owner=None,
+        desc=None,
+        homepage=None,
+        url_auth=None,
+        subdir=None,
+    ):
         self._name = name
         self._desc = desc
         self._homepage = homepage

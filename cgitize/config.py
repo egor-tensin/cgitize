@@ -41,7 +41,9 @@ class MainSection(Section):
 
     @property
     def output_dir(self):
-        return self._get_config_path('output_dir', default=MainSection.DEFAULT_OUTPUT_DIR)
+        return self._get_config_path(
+            'output_dir', default=MainSection.DEFAULT_OUTPUT_DIR
+        )
 
     @property
     def error_header_path(self):
@@ -126,7 +128,9 @@ class GitHubSection(ServiceSection):
         username = self.username
         token = self.token
         if (username is None) != (token is None):
-            raise RuntimeError('please set either both the GitHub username & token, or neither')
+            raise RuntimeError(
+                'please set either both the GitHub username & token, or neither'
+            )
         return GitHub(username, token)
 
 
@@ -153,7 +157,9 @@ class BitbucketSection(ServiceSection):
         username = self.username
         token = self.token
         if (username is None) != (token is None):
-            raise RuntimeError('please set either both the Bitbucket username & token, or neither')
+            raise RuntimeError(
+                'please set either both the Bitbucket username & token, or neither'
+            )
         return Bitbucket(username, token)
 
 
@@ -174,7 +180,9 @@ class GitLabSection(ServiceSection):
         username = self.username
         token = self.token
         if (username is None) != (token is None):
-            raise RuntimeError('please set either both the GitLab username & token, or neither')
+            raise RuntimeError(
+                'please set either both the GitLab username & token, or neither'
+            )
         return GitLab(token)
 
 

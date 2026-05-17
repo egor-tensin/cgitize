@@ -8,9 +8,10 @@ import os
 
 from cgitize import utils
 
-
 GIT_ENV = os.environ.copy()
-GIT_ENV['GIT_SSH_COMMAND'] = 'ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null'
+GIT_ENV['GIT_SSH_COMMAND'] = (
+    'ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null'
+)
 
 
 class Config:
@@ -55,7 +56,9 @@ class Config:
             for c in name:
                 if c.isalnum() or c == '-' or c == '.':
                     continue
-                raise RuntimeError(f'section names must only contain alphanumeric characters, . or -: {name}')
+                raise RuntimeError(
+                    f'section names must only contain alphanumeric characters, . or -: {name}'
+                )
 
         @staticmethod
         def format_name(name):
@@ -89,7 +92,9 @@ class Config:
             return f'"{name}"'
 
         def format(self):
-            result = f'[{Config.Section.format_name(self.section)} {self.format_name()}]\n'
+            result = (
+                f'[{Config.Section.format_name(self.section)} {self.format_name()}]\n'
+            )
             result += ''.join((var.format() for var in self.variables))
             return result
 
@@ -107,9 +112,13 @@ class Config:
             for c in name:
                 if c.isalnum() or c == '-':
                     continue
-                raise RuntimeError(f'variable name can only contain alphanumeric characters or -: {name}')
+                raise RuntimeError(
+                    f'variable name can only contain alphanumeric characters or -: {name}'
+                )
             if not name[0].isalnum():
-                raise RuntimeError(f'variable name must start with an alphanumeric character: {name}')
+                raise RuntimeError(
+                    f'variable name must start with an alphanumeric character: {name}'
+                )
 
         @staticmethod
         def validate_value(value):
@@ -161,7 +170,9 @@ class Git:
         with utils.protected_file(config.path):
             with config.backup() as old_contents:
                 variables = [Config.Variable('insteadOf', repo.clone_url)]
-                subsection = Config.Subsection('url', repo.clone_url_with_auth, variables)
+                subsection = Config.Subsection(
+                    'url', repo.clone_url_with_auth, variables
+                )
                 new_contents = f'{old_contents}\n{subsection.format()}'
                 config.write(new_contents)
                 yield

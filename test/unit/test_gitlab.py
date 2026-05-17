@@ -13,8 +13,8 @@ from gitlab.exceptions import GitlabGetError
 class GitLabTests(unittest.TestCase):
     def setUp(self):
         self.gitlab = Gitlab(
-            'https://gitlab.com',
-            private_token=os.environ.get('CGITIZE_GITLAB_TOKEN'))
+            'https://gitlab.com', private_token=os.environ.get('CGITIZE_GITLAB_TOKEN')
+        )
 
     def test_nonexistent_repo(self):
         with self.assertRaises(GitlabGetError):
@@ -27,7 +27,9 @@ class GitLabTests(unittest.TestCase):
         self.assertEqual(r.namespace['name'], 'Test cgitize user')
         self.assertEqual(r.namespace['path'], 'cgitize-test')
         self.assertEqual(r.web_url, 'https://gitlab.com/cgitize-test/public')
-        self.assertEqual(r.http_url_to_repo, 'https://gitlab.com/cgitize-test/public.git')
+        self.assertEqual(
+            r.http_url_to_repo, 'https://gitlab.com/cgitize-test/public.git'
+        )
         self.assertEqual(r.ssh_url_to_repo, 'git@gitlab.com:cgitize-test/public.git')
 
     def test_private_repo(self):
@@ -37,7 +39,9 @@ class GitLabTests(unittest.TestCase):
         self.assertEqual(r.namespace['name'], 'Test cgitize user')
         self.assertEqual(r.namespace['path'], 'cgitize-test')
         self.assertEqual(r.web_url, 'https://gitlab.com/cgitize-test/private')
-        self.assertEqual(r.http_url_to_repo, 'https://gitlab.com/cgitize-test/private.git')
+        self.assertEqual(
+            r.http_url_to_repo, 'https://gitlab.com/cgitize-test/private.git'
+        )
         self.assertEqual(r.ssh_url_to_repo, 'git@gitlab.com:cgitize-test/private.git')
 
     def test_user(self):

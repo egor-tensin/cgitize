@@ -10,8 +10,7 @@ def parse_args(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     parser = ArgumentParser()
-    parser.add_argument('config', metavar='PATH',
-                        help='config file path')
+    parser.add_argument('config', metavar='PATH', help='config file path')
     return parser.parse_args(argv)
 
 
