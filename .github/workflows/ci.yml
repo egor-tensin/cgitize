@@ -7,7 +7,21 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Linting
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Run black
+        uses: psf/black@stable
+
   test_local:
+    needs: [lint]
     runs-on: ubuntu-latest
     strategy:
       matrix:
