@@ -37,7 +37,7 @@ ENV PYTHONPATH="/deps:/usr/src"
 
 ARG ssh_sock_dir=/
 ARG ssh_sock_path="$ssh_sock_dir/ssh-agent.sock"
-ENV SSH_AUTH_SOCK "$ssh_sock_path"
+ENV SSH_AUTH_SOCK="$ssh_sock_path"
 
 COPY ["docker/cgitize.sh", "/"]
 COPY ["docker/get_output_dir.py", "/"]
