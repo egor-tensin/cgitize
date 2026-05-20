@@ -7,4 +7,8 @@ init-hook=
 
 [MESSAGES CONTROL]
 
-disable=invalid-name,missing-docstring,too-few-public-methods,too-many-arguments
+disable=
+    invalid-name,
+    missing-docstring,
+    too-few-public-methods,
+    too-many-arguments,
