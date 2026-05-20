@@ -9,6 +9,7 @@ import sys
 
 from cgitize.cgit import CGitRepositories, CGitServer
 from cgitize.config import Config
+from cgitize.header import update as update_header
 from cgitize.utils import setup_logging
 from cgitize.version import __version__
 
@@ -39,20 +40,6 @@ def parse_args(argv=None):
     return parser.parse_args(argv)
 
 
-def setup_error_header_file(error_header_path, success, error=None):
-    with open(error_header_path, 'w') as file:
-        contents = ''
-        if not success:
-            contents = (
-                '''<p style="text-align: center; color: red; font-weight: bold;">'''
-            )
-            contents += '''Some repositories couldn't be updated, please check application logs for details.'''
-            if error is not None:
-                contents += f'''<br>{type(error).__name__}: {error}'''
-            contents += '''</p>\n'''
-        file.write(contents)
-
-
 def main(argv=None):
     args = parse_args(argv)
     with setup_logging(args.verbose):
@@ -79,7 +66,7 @@ def main(argv=None):
             if error is not None:
                 logging.warning('Error: %s', error)
 
-        setup_error_header_file(config.main.error_header_path, success, error)
+        update_header(config.main.error_header_path, success, error)
         return int(not success)
 
 
