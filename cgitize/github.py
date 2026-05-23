@@ -27,15 +27,22 @@ class GitHub:
 
     def get_user_repos(self, user, visibility=Visibility.ALL):
         visibility = visibility.to_github_arg()
+
+        # Not actually certain how it works, but just passing None as the
+        # named visibility parameter fails with an internal assert error. I
+        # honestly thought that that passing parameters like that and as a
+        # None makes no difference.
+        kwargs = {}
+        if visibility is not None:
+            kwargs['visibility'] = visibility
+
         try:
             if user.name == self._username:
                 # To get private repositories, get_user() must be called
                 # without arguments:
-                return self._impl.get_user().get_repos(
-                    affiliation='owner', visibility=visibility
-                )
+                return self._impl.get_user().get_repos(affiliation='owner', **kwargs)
             else:
-                return self._impl.get_user(user.name).get_repos(visibility=visibility)
+                return self._impl.get_user(user.name).get_repos(**kwargs)
         except GithubException:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise
