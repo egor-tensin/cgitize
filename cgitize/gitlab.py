@@ -8,7 +8,7 @@ import logging
 from gitlab import Gitlab
 from gitlab.exceptions import GitlabGetError
 
-from cgitize.repo import Repo
+from cgitize.repo import Repo, Visibility
 
 
 class GitLab:
@@ -22,7 +22,8 @@ class GitLab:
             logging.error("Couldn't fetch repository: %s", repo.id)
             raise
 
-    def get_user_repos(self, user):
+    def get_user_repos(self, user, visibility=Visibility.ALL):
+        visibility = visibility.to_gitlab_arg()
         try:
             # Strictly speaking, GitLab supports the /users/:username/projects
             # endpoint, which means you shouldn't need to fetch the user first,
@@ -32,7 +33,7 @@ class GitLab:
                 raise RuntimeError(f"Couldn't find GitLab user: {user.name}")
             assert len(users) == 1
             user = users[0]
-            return user.projects.list()
+            return user.projects.list(visibility=visibility)
         except GitlabGetError:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise

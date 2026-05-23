@@ -11,7 +11,7 @@ import tomli
 from cgitize.bitbucket import Bitbucket
 from cgitize.github import GitHub
 from cgitize.gitlab import GitLab
-from cgitize.repo import Repo
+from cgitize.repo import Repo, Visibility
 
 
 class Section:
@@ -74,7 +74,8 @@ class ServiceSection(Section, ABC):
             yield api.convert_repo(api.get_repo(r), cfg, r.dir)
 
     def _enum_user_repositories(self, cfg, api, user):
-        for r in api.get_user_repos(user):
+        visibility = Visibility.from_config(user.public_repos, user.private_repos)
+        for r in api.get_user_repos(user, visibility=visibility):
             r = api.convert_repo(r, cfg, user.dir)
             if r.name in user.skip:
                 continue
@@ -201,12 +202,7 @@ class RepositoriesSection(Section):
         return self.impl.values()
 
 
-class User:
-    def __init__(self, impl):
-        if 'name' not in impl:
-            raise ValueError("every user must have a 'name'")
-        self._impl = impl
-
+class Entity(ABC):
     @property
     def name(self):
         return self._impl['name']
@@ -220,7 +216,22 @@ class User:
         return self._impl.get('skip', [])
 
 
-class Org(User):
+class User(Entity):
+    def __init__(self, impl):
+        if 'name' not in impl:
+            raise ValueError("every user must have a 'name'")
+        self._impl = impl
+
+    @property
+    def public_repos(self):
+        return self._impl.get('public', True)
+
+    @property
+    def private_repos(self):
+        return self._impl.get('private', False)
+
+
+class Org(Entity):
     def __init__(self, impl):
         if 'name' not in impl:
             raise ValueError("every organization must have a 'name'")

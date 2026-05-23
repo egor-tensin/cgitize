@@ -7,7 +7,7 @@ import logging
 
 from github import Auth, Github, GithubException
 
-from cgitize.repo import Repo
+from cgitize.repo import Repo, Visibility
 
 
 class GitHub:
@@ -25,14 +25,17 @@ class GitHub:
             logging.error("Couldn't fetch repository: %s", repo.id)
             raise
 
-    def get_user_repos(self, user):
+    def get_user_repos(self, user, visibility=Visibility.ALL):
+        visibility = visibility.to_github_arg()
         try:
             if user.name == self._username:
                 # To get private repositories, get_user() must be called
                 # without arguments:
-                return self._impl.get_user().get_repos(affiliation='owner')
+                return self._impl.get_user().get_repos(
+                    affiliation='owner', visibility=visibility
+                )
             else:
-                return self._impl.get_user(user.name).get_repos()
+                return self._impl.get_user(user.name).get_repos(visibility=visibility)
         except GithubException:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise

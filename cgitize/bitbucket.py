@@ -8,7 +8,7 @@ import logging
 from atlassian.bitbucket.cloud import Cloud
 from requests.exceptions import HTTPError
 
-from cgitize.repo import Repo
+from cgitize.repo import Repo, Visibility
 
 
 class Bitbucket:
@@ -28,10 +28,10 @@ class Bitbucket:
             logging.error("Couldn't fetch repository: %s", repo.id)
             raise
 
-    def get_user_repos(self, user):
+    def get_user_repos(self, user, visibility=Visibility.ALL):
         try:
             workspace = self._impl.workspaces.get(user.name)
-            yield from workspace.repositories.each()
+            yield from workspace.repositories.each(q=visibility.to_bitbucket_arg())
         except HTTPError:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise

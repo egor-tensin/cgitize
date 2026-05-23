@@ -3,9 +3,62 @@
 # For details, see https://github.com/egor-tensin/cgitize.
 # Distributed under the MIT License.
 
+from enum import Enum
 import os.path
 
 from cgitize.utils import url_remove_auth, url_replace_auth
+
+
+class Visibility(Enum):
+    ALL = 'all'
+    PUBLIC = 'public'
+    PRIVATE = 'private'
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def from_config(public, private):
+        if public and private:
+            return Visibility.ALL
+        if not public and not private:
+            raise RuntimeError(
+                'you need to fetch either public or private repos, or both'
+            )
+        if public:
+            return Visibility.PUBLIC
+        return Visibility.PRIVATE
+
+    def to_bitbucket_arg(self):
+        # https://developer.atlassian.com/cloud/bitbucket/rest/intro/#filtering
+        # https://developer.atlassian.com/cloud/bitbucket/rest/api-group-repositories/#api-group-repositories
+        if self is Visibility.ALL:
+            return None
+        if self is Visibility.PUBLIC:
+            return 'is_private=False'
+        if self is Visibility.PRIVATE:
+            return 'is_private=True'
+        raise NotImplementedError(f'not implemented visibility level: {self}')
+
+    def to_github_arg(self):
+        # https://docs.github.com/en/rest/repos/repos?apiVersion=2026-03-10#list-repositories-for-the-authenticated-user
+        if self is Visibility.ALL:
+            return None
+        if self is Visibility.PUBLIC:
+            return 'public'
+        if self is Visibility.PRIVATE:
+            return 'private'
+        raise NotImplementedError(f'not implemented visibility level: {self}')
+
+    def to_gitlab_arg(self):
+        # https://python-gitlab.readthedocs.io/en/stable/gl_objects/projects.html#projects
+        if self is Visibility.ALL:
+            return None
+        if self is Visibility.PUBLIC:
+            return 'public'
+        if self is Visibility.PRIVATE:
+            return 'private'
+        raise NotImplementedError(f'not implemented visibility level: {self}')
 
 
 class Repo:
