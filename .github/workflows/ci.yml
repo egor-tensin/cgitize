@@ -21,7 +21,6 @@ jobs:
         uses: psf/black@stable
 
   test_local:
-    needs: [lint]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -88,7 +87,7 @@ jobs:
         run: make test/example
 
   publish_docker:
-    needs: [test_local, test_example_config, test_docker]
+    needs: [lint, test_local, test_example_config, test_docker]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -149,7 +148,7 @@ jobs:
           tags: '${{ steps.meta.outputs.tags }}'
 
   publish_pypi:
-    needs: [test_local, test_example_config, test_docker, publish_docker]
+    needs: [publish_docker]
     runs-on: ubuntu-latest
     name: 'Publish / PyPI'
     steps:
