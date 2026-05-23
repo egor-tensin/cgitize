@@ -26,6 +26,7 @@ class GitLabTests(unittest.TestCase):
         self.assertEqual(r.description, 'Public test cgitize repository')
         self.assertEqual(r.namespace['name'], 'Test cgitize user')
         self.assertEqual(r.namespace['path'], 'cgitize-test')
+        self.assertEqual(r.visibility, 'public')
         self.assertEqual(r.web_url, 'https://gitlab.com/cgitize-test/public')
         self.assertEqual(
             r.http_url_to_repo, 'https://gitlab.com/cgitize-test/public.git'
@@ -38,6 +39,7 @@ class GitLabTests(unittest.TestCase):
         self.assertEqual(r.description, 'Private test cgitize repository')
         self.assertEqual(r.namespace['name'], 'Test cgitize user')
         self.assertEqual(r.namespace['path'], 'cgitize-test')
+        self.assertEqual(r.visibility, 'private')
         self.assertEqual(r.web_url, 'https://gitlab.com/cgitize-test/private')
         self.assertEqual(
             r.http_url_to_repo, 'https://gitlab.com/cgitize-test/private.git'

@@ -30,6 +30,8 @@ class BitbucketTests(unittest.TestCase):
         self.assertEqual(r.data['workspace']['name'], 'Test cgitize workspace')
         self.assertEqual(r.data['workspace']['slug'], 'cgitize-test-workspace')
 
+        self.assertFalse(r.data['is_private'])
+
         self.assertEqual(
             r.get_link('html'), 'https://bitbucket.org/cgitize-test-workspace/public'
         )
@@ -56,6 +58,8 @@ class BitbucketTests(unittest.TestCase):
 
         self.assertEqual(r.data['workspace']['name'], 'Test cgitize workspace')
         self.assertEqual(r.data['workspace']['slug'], 'cgitize-test-workspace')
+
+        self.assertTrue(r.data['is_private'])
 
         self.assertEqual(
             r.get_link('html'), 'https://bitbucket.org/cgitize-test-workspace/private'
