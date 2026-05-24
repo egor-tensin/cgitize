@@ -27,11 +27,10 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version-file: .python-version
-      - name: Run maintenance
-        id: maintenance
+      - name: Configure git
         run: |
           # See https://github.com/actions/checkout#push-a-commit-using-the-built-in-token
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          make maintenance
+      - name: Run maintenance
+        run: make maintenance
