@@ -87,8 +87,12 @@ class Repo:
 
         https_url = src.clone_url
         ssh_url = src.ssh_url
-        clone_url = ssh_url if config.main.clone_via_ssh else https_url
-        url_auth = None if config.main.clone_via_ssh else config.github.url_auth
+
+        clone_url = ssh_url
+        url_auth = None
+        if not config.main.clone_via_ssh:
+            clone_url = https_url
+            url_auth = config.github.url_auth
 
         return Repo(
             name,
@@ -113,7 +117,7 @@ class Repo:
         if len(https_urls) != 1:
             raise RuntimeError(f"no https:// clone URL for repository '{name}'?!")
         # Bitbucket leaves the username in the URL... Sigh.
-        https_url = url_remove_auth(https_urls[0]['href'])
+        api_auth, https_url = url_remove_auth(https_urls[0]['href'])
 
         ssh_urls = [
             link for link in src.data['links']['clone'] if link['name'] == 'ssh'
@@ -122,8 +126,18 @@ class Repo:
             raise RuntimeError(f"no ssh:// clone URL for repository '{name}'?!")
         ssh_url = ssh_urls[0]['href']
 
-        clone_url = ssh_url if config.main.clone_via_ssh else https_url
-        url_auth = None if config.main.clone_via_ssh else config.bitbucket.url_auth
+        clone_url = ssh_url
+        url_auth = None
+        if not config.main.clone_via_ssh:
+            clone_url = https_url
+            url_auth = config.bitbucket.url_auth
+            # Bitbucket, since deprecating app passwords, now requires that
+            # users authenticate with their Atlassian email & API token.
+            # Unfortunately (sigh...), if you want to clone a repo via HTTPS,
+            # you can't use the very same email + token combo in the URL, you
+            # have to use your username (double sigh...).  Luckily, for some
+            # reason, Bitbucket leaves the relevant username in the API response.
+            url_auth = api_auth[0], url_auth[1]
 
         return Repo(
             name,
@@ -144,8 +158,12 @@ class Repo:
 
         https_url = src.http_url_to_repo
         ssh_url = src.ssh_url_to_repo
-        clone_url = ssh_url if config.main.clone_via_ssh else https_url
-        url_auth = None if config.main.clone_via_ssh else config.gitlab.url_auth
+
+        clone_url = ssh_url
+        url_auth = None
+        if not config.main.clone_via_ssh:
+            clone_url = https_url
+            url_auth = config.gitlab.url_auth
 
         return Repo(
             name,

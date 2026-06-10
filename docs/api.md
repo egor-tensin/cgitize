@@ -4,10 +4,9 @@ unfortunately, peculiar in their own way.
 Tokens
 ------
 
-All of the forges support access tokens, of course (although they're called
-"app passwords" on Bitbucket).  They can be used to do `git clone https://`
-with authentication info in the URL.  For GitHub, it's enough to just specify
-the token:
+All of the forges support access tokens, of course.  They can be used to do
+`git clone https://` with authentication info in the URL.  For GitHub, it's
+enough to just specify the token:
 
     git clone https://TOKEN@github.com/USER/REPO.git
 
@@ -15,6 +14,9 @@ For Bitbucket & GitLab, however, you need to specify both the user and the
 token in the URL:
 
     git clone https://USER:TOKEN@bitbucket.org/USER/REPO.git
+
+(For Bitbucket, since they deprecated their "app passwords", you need to
+specify not the username, but rather the Atlassian account email.)
 
 Terminology
 -----------

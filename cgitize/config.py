@@ -5,6 +5,7 @@
 
 from abc import ABC, abstractmethod
 import os
+from urllib.parse import quote
 
 import tomli
 
@@ -110,7 +111,7 @@ class GitHubSection(ServiceSection):
 
     @property
     def url_auth(self):
-        return self.token
+        return (self.token, None)
 
     def _enum_org_repositories(self, cfg, api, org):
         for repo in api.get_org_repos(org):
@@ -135,12 +136,6 @@ class GitHubSection(ServiceSection):
         return GitHub(username, token)
 
 
-def two_part_url_auth(username, password):
-    if username is None or password is None:
-        return None
-    return f'{username}:{password}'
-
-
 class BitbucketSection(ServiceSection):
     @property
     def token(self):
@@ -152,7 +147,7 @@ class BitbucketSection(ServiceSection):
 
     @property
     def url_auth(self):
-        return two_part_url_auth(self.username, self.token)
+        return (self.username, self.token)
 
     def connect_to_service(self):
         username = self.username
@@ -175,7 +170,7 @@ class GitLabSection(ServiceSection):
 
     @property
     def url_auth(self):
-        return two_part_url_auth(self.username, self.token)
+        return (self.username, self.token)
 
     def connect_to_service(self):
         username = self.username

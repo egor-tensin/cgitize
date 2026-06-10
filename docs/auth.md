@@ -22,11 +22,9 @@ When using HTTPS, there're multiple options to access the private repositories.
 
 2. Use OAuth.  I thought this was too complicated to implement quickly.
 
-3. Use per-application passwords.  This option is pretty cool.  Both GitHub (in
-   the form of "personal access tokens") and Bitbucket (calls them "app
-   passwords") support creating one-purpose passwords that are supposed to be
-   used by a single app only.  They allow to bypass the 2FA also.  Let's do
-   this!
+3. Use application access tokens.  This option is pretty cool.  Both GitHub
+   and Bitbucket support creating read-only tokens.   They allow to bypass the
+   2FA also.  Let's do this!
 
 Passing the access tokens to Git is tricky though.  First, simply including
 them in the clone URL would be incredibly stupid, since that URL is going to be

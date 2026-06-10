@@ -12,8 +12,8 @@ from cgitize.repo import Repo, Visibility
 
 
 class Bitbucket:
-    def __init__(self, username=None, password=None):
-        self._impl = Cloud(username=username, password=password, cloud=True)
+    def __init__(self, email=None, token=None):
+        self._impl = Cloud(username=email, password=token, cloud=True)
 
     def get_repo(self, repo):
         try:

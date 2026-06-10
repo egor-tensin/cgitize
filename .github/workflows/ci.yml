@@ -27,11 +27,11 @@ jobs:
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
     name: 'Test / ${{ matrix.python-version }}'
     env:
-      CGITIZE_GITHUB_USERNAME: cgitize-test
+      CGITIZE_GITHUB_USERNAME: '${{ secrets.CGITIZE_GITHUB_USERNAME }}'
       CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
-      CGITIZE_BITBUCKET_USERNAME: cgitize-test
+      CGITIZE_BITBUCKET_USERNAME: '${{ secrets.CGITIZE_BITBUCKET_USERNAME }}'
       CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
-      CGITIZE_GITLAB_USERNAME: cgitize-test
+      CGITIZE_GITLAB_USERNAME: '${{ secrets.CGITIZE_GITLAB_USERNAME }}'
       CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN }}'
     steps:
       - name: Checkout
@@ -64,11 +64,11 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Test / example config'
     env:
-      CGITIZE_GITHUB_USERNAME: cgitize-test
+      CGITIZE_GITHUB_USERNAME: '${{ secrets.CGITIZE_GITHUB_USERNAME }}'
       CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
-      CGITIZE_BITBUCKET_USERNAME: cgitize-test
+      CGITIZE_BITBUCKET_USERNAME: '${{ secrets.CGITIZE_BITBUCKET_USERNAME }}'
       CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
-      CGITIZE_GITLAB_USERNAME: cgitize-test
+      CGITIZE_GITLAB_USERNAME: '${{ secrets.CGITIZE_GITLAB_USERNAME }}'
       CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN }}'
     steps:
       - name: Checkout
