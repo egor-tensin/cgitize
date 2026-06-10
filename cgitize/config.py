@@ -143,7 +143,7 @@ class BitbucketSection(ServiceSection):
 
     @property
     def username(self):
-        return self._get_config_or_env('username', 'CGITIZE_BITBUCKET_EMAIL')
+        return self._get_config_or_env('email', 'CGITIZE_BITBUCKET_EMAIL')
 
     @property
     def url_auth(self):
