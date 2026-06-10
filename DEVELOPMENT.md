@@ -18,11 +18,11 @@ test.
 You need to set the following environment variables for the authenticated
 access tests to work:
 
-* `CGITIZE_BITBUCKET_USERNAME`: `cgitize-test`
+* `CGITIZE_BITBUCKET_EMAIL`
 * `CGITIZE_BITBUCKET_TOKEN`
-* `CGITIZE_GITHUB_USERNAME`: `cgitize-test`
+* `CGITIZE_GITHUB_USERNAME`
 * `CGITIZE_GITHUB_TOKEN`
-* `CGITIZE_GITLAB_USERNAME`: `cgitize-test`
+* `CGITIZE_GITLAB_USERNAME`
 * `CGITIZE_GITLAB_TOKEN`
 
 You can run `. test/set_credentials.sh`; it'll ask you to fill in the secrets.

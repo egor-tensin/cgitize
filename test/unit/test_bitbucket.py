@@ -13,7 +13,7 @@ from requests.exceptions import HTTPError
 class BitbucketTests(unittest.TestCase):
     def setUp(self):
         self.bitbucket = Cloud(
-            username=os.environ.get('CGITIZE_BITBUCKET_USERNAME'),
+            username=os.environ.get('CGITIZE_BITBUCKET_EMAIL'),
             password=os.environ.get('CGITIZE_BITBUCKET_TOKEN'),
             cloud=True,
         )

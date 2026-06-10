@@ -59,11 +59,12 @@ dir = "python"
 # Bitbucket settings are similar to those for GitHub.
 
 [bitbucket]
-# Access tokens are called "app passwords" on Bitbucket.
+# Atlassian API token.
 # The environment variable is CGITIZE_BITBUCKET_TOKEN.
 #token = "XXX"
-# The environment variable is CGITIZE_BITBUCKET_USERNAME.
-#username = "your-username"
+# Atlassian account email address.
+# The environment variable is CGITIZE_BITBUCKET_EMAIL.
+#email = "your-email"
 
 [bitbucket.users.me]
 name = "cgitize-test-workspace"
