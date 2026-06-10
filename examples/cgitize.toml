@@ -7,8 +7,8 @@ output_dir = "/tmp/cgitize"
 # repository's directory path.
 clone_url = "https://yourhost.com/git/{repo}"
 
-# Clones via SSH by default.
-clone_via_ssh = false
+# Clones via SSH by default (instead of Git-over-HTTPS).
+clone_via_ssh = true
 
 # Unless this is specified, cgit is going to derive the owner from the
 # repository's directory ownership.
@@ -19,8 +19,10 @@ owner = "Your Name"
 
 [github]
 # If some of the repositories hosted on GitHub are private (or if you hit the
-# request rate limit), use "access tokens". Set in the config or using the
-# CGITIZE_GITHUB_TOKEN environment variable.
+# request rate limit), use a personal access token. Set in the config or using
+# the CGITIZE_GITHUB_TOKEN environment variable.
+# Required scopes:
+#     * repo
 #token = "XXX"
 # Set the username that owns the token here or using the environment variable
 # CGITIZE_GITHUB_USERNAME.
@@ -56,14 +58,13 @@ dir = "python"
 # Bitbucket
 # =========
 
-# Bitbucket settings are similar to those for GitHub.
-
 [bitbucket]
-# Atlassian API token.
-# The environment variable is CGITIZE_BITBUCKET_TOKEN.
+# Atlassian API token (environment variable CGITIZE_BITBUCKET_TOKEN).
+# Required scopes:
+#     * read:workspace:bitbucket
+#     * read:repository:bitbucket
 #token = "XXX"
-# Atlassian account email address.
-# The environment variable is CGITIZE_BITBUCKET_EMAIL.
+# Atlassian account email address (environment variable CGITIZE_BITBUCKET_EMAIL).
 #email = "your-email"
 
 [bitbucket.users.me]
@@ -71,7 +72,6 @@ name = "cgitize-test-workspace"
 dir = "bitbucket-dir"
 #skip = ["repo1", "repo2"]
 
-# The defaults.
 public = true
 private = false
 
@@ -85,12 +85,12 @@ id = "berkeleylab/upc-runtime"
 # GitLab
 # ======
 
-# GitLab settings are similar to those for GitHub.
-
 [gitlab]
-# The environment variable is CGITIZE_GITLAB_TOKEN.
+# Personal access token (environment variable CGITIZE_GITLAB_TOKEN).
+# Required scopes (for legacy tokens):
+#     * read_api
 #token = "XXX"
-# The environment variable is CGITIZE_GITLAB_USERNAME.
+# Gitlab username (environment variable CGITIZE_GITLAB_USERNAME).
 #username = "your-username"
 
 [gitlab.users.me]
@@ -98,7 +98,6 @@ name = "cgitize-test"
 dir = "gitlab-dir"
 #skip = ["repo1", "repo2"]
 
-# The defaults.
 public = true
 private = false
 
