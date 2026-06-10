@@ -151,7 +151,48 @@ test_ssh() {
         goauthentik-dir/authentik \
         github-dir/public \
         bitbucket-dir/public \
+        gitlab-dir/public
+
+    verify_no_repos \
+        github-dir/private \
+        bitbucket-dir/private \
+        gitlab-dir/private
+
+    verify_origin lens 'git@github.com:ekmett/lens.git'
+    verify_origin chromiumembedded/cef 'git@bitbucket.org:chromiumembedded/cef.git'
+    verify_origin graphviz 'git@gitlab.com:graphviz/graphviz.git'
+    verify_origin goauthentik-dir/authentik 'git@github.com:goauthentik/authentik.git'
+
+    verify_origin github-dir/public 'git@github.com:cgitize-test/public.git'
+    verify_origin bitbucket-dir/public 'git@bitbucket.org:cgitize-test-workspace/public.git'
+    verify_origin gitlab-dir/public 'git@gitlab.com:cgitize-test/public.git'
+
+    cleanup
+    success
+}
+
+test_ssh_private() {
+    echo
+    echo ======================================================================
+    echo "${FUNCNAME[0]}"
+    echo ======================================================================
+
+    setup_ssh
+    setup_private_repos
+    cgitize
+
+    verify_repos \
+        lens \
+        chromiumembedded/cef \
+        graphviz \
+        wireguard/wintun \
+        goauthentik-dir/authentik \
+        github-dir/public \
+        github-dir/private \
+        bitbucket-dir/public \
+        bitbucket-dir/private \
         gitlab-dir/public \
+        gitlab-dir/private
 
     verify_origin lens 'git@github.com:ekmett/lens.git'
     verify_origin chromiumembedded/cef 'git@bitbucket.org:chromiumembedded/cef.git'
@@ -159,8 +200,11 @@ test_ssh() {
     verify_origin goauthentik-dir/authentik 'git@github.com:goauthentik/authentik.git'
 
     verify_origin github-dir/public  'git@github.com:cgitize-test/public.git'
+    verify_origin github-dir/private 'git@github.com:cgitize-test/private.git'
     verify_origin bitbucket-dir/public  'git@bitbucket.org:cgitize-test-workspace/public.git'
+    verify_origin bitbucket-dir/private 'git@bitbucket.org:cgitize-test-workspace/private.git'
     verify_origin gitlab-dir/public  'git@gitlab.com:cgitize-test/public.git'
+    verify_origin gitlab-dir/private 'git@gitlab.com:cgitize-test/private.git'
 
     cleanup
     success
@@ -195,9 +239,9 @@ test_https() {
     verify_origin graphviz 'https://gitlab.com/graphviz/graphviz.git'
     verify_origin goauthentik-dir/authentik 'https://github.com/goauthentik/authentik.git'
 
-    verify_origin github-dir/public  'https://github.com/cgitize-test/public.git'
-    verify_origin bitbucket-dir/public  'https://bitbucket.org/cgitize-test-workspace/public.git'
-    verify_origin gitlab-dir/public  'https://gitlab.com/cgitize-test/public.git'
+    verify_origin github-dir/public 'https://github.com/cgitize-test/public.git'
+    verify_origin bitbucket-dir/public 'https://bitbucket.org/cgitize-test-workspace/public.git'
+    verify_origin gitlab-dir/public 'https://gitlab.com/cgitize-test/public.git'
 
     cleanup
     success
@@ -259,6 +303,7 @@ test_one_repo() {
 main() {
     trap cleanup EXIT
     test_ssh
+    test_ssh_private
     test_https
     test_https_private
     test_one_repo
