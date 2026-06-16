@@ -14,7 +14,4 @@ updates:
     directory: /
     schedule:
       interval: weekly
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: weekly
+  # No pip, because it's automated in the maintenance workflow anyway.
