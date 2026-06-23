@@ -13,7 +13,7 @@ jobs:
     continue-on-error: "${{ github.ref != 'refs/heads/master' }}"
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -36,7 +36,7 @@ jobs:
       CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN }}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Set up Python
@@ -56,7 +56,7 @@ jobs:
     name: 'Test / Docker'
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Integration test (Docker)
         run: sudo make test/docker
 
@@ -73,7 +73,7 @@ jobs:
       CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN }}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -99,7 +99,7 @@ jobs:
     name: 'Publish / Docker Hub / ${{ matrix.service }}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       # https://github.com/docker/metadata-action#semver
       - id: meta
         name: Docker Hub metadata
@@ -154,7 +154,7 @@ jobs:
     name: 'Publish / PyPI'
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Set up Python
