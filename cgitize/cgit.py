@@ -27,20 +27,20 @@ class CGitRCWriter:
 
     @staticmethod
     def get_path(repo_dir):
-        return os.path.join(repo_dir, 'cgitrc')
+        return os.path.join(repo_dir, "cgitrc")
 
     def write(self, repo_dir, repo):
-        with open(self.get_path(repo_dir), 'w') as fd:
-            self._write_field(fd, 'clone-url', self._build_clone_url(repo))
-            self._write_field(fd, 'owner', repo.owner)
-            self._write_field(fd, 'desc', repo.desc)
-            self._write_field(fd, 'homepage', repo.homepage)
+        with open(self.get_path(repo_dir), "w") as fd:
+            self._write_field(fd, "clone-url", self._build_clone_url(repo))
+            self._write_field(fd, "owner", repo.owner)
+            self._write_field(fd, "desc", repo.desc)
+            self._write_field(fd, "homepage", repo.homepage)
 
     @staticmethod
     def _write_field(fd, field, value):
         if value is None:
             return
-        fd.write(f'{field}={value}\n')
+        fd.write(f"{field}={value}\n")
 
     def _build_clone_url(self, repo):
         clone_urls = []
@@ -51,7 +51,7 @@ class CGitRCWriter:
             clone_urls.append(repo.clone_url)
         if not clone_urls:
             return None
-        clone_urls = ' '.join(clone_urls)
+        clone_urls = " ".join(clone_urls)
         return clone_urls
 
 
@@ -61,8 +61,8 @@ class AgeFile:
         timestamp = AgeFile.get_age(repo_dir)
         if timestamp:
             os.makedirs(AgeFile.get_dir(repo_dir), exist_ok=True)
-            with open(AgeFile.get_path(repo_dir), mode='w') as fd:
-                fd.write(f'{timestamp}')
+            with open(AgeFile.get_path(repo_dir), mode="w") as fd:
+                fd.write(f"{timestamp}")
 
     @staticmethod
     def get_age(repo_dir):
@@ -71,10 +71,10 @@ class AgeFile:
         # represents activity.
         with chdir(repo_dir):
             success, output = Git.capture(
-                'for-each-ref',
-                '--sort=-committerdate',
-                '--count=1',
-                '--format=%(committerdate:iso8601)',
+                "for-each-ref",
+                "--sort=-committerdate",
+                "--count=1",
+                "--format=%(committerdate:iso8601)",
             )
             if not success:
                 logging.error(
@@ -86,11 +86,11 @@ class AgeFile:
 
     @staticmethod
     def get_dir(repo_dir):
-        return os.path.join(repo_dir, 'info', 'web')
+        return os.path.join(repo_dir, "info", "web")
 
     @staticmethod
     def get_path(repo_dir):
-        return os.path.join(AgeFile.get_dir(repo_dir), 'last-modified')
+        return os.path.join(AgeFile.get_dir(repo_dir), "last-modified")
 
 
 class CGitRepositories:
@@ -123,16 +123,16 @@ class CGitRepositories:
             return self._mirror(repo)
 
         with chdir(repo_dir):
-            success, output = Git.capture('rev-parse', '--is-inside-work-tree')
+            success, output = Git.capture("rev-parse", "--is-inside-work-tree")
             if not success:
                 # Overwrite the existing directory if it's not a Git repository.
                 logging.warning(
-                    'Local directory is not a repository, going to overwrite it: %s',
+                    "Local directory is not a repository, going to overwrite it: %s",
                     repo_dir,
                 )
                 return self._mirror(repo)
 
-            success, output = Git.capture('config', '--get', 'remote.origin.url')
+            success, output = Git.capture("config", "--get", "remote.origin.url")
             if not success:
                 # Every repository managed by this script should have the
                 # 'origin' remote. If it doesn't, it's trash. Overwrite the
@@ -143,7 +143,7 @@ class CGitRepositories:
                 )
                 return self._mirror(repo)
 
-            if f'{repo.clone_url}\n' != output:
+            if f"{repo.clone_url}\n" != output:
                 # Jeez, there's a proper local repository in the target
                 # directory already with a different upstream; something's
                 # wrong, fix it manually.
@@ -172,16 +172,16 @@ class CGitRepositories:
                 logging.exception(e)
                 return False
         with Git.setup_auth(repo):
-            return Git.check('clone', '--mirror', '--quiet', repo.clone_url, repo_dir)
+            return Git.check("clone", "--mirror", "--quiet", repo.clone_url, repo_dir)
 
     def _fix_upstream_url(self, repo):
         repo_dir = self.get_repo_dir(repo)
         with chdir(repo_dir):
-            return Git.check('remote', 'set-url', 'origin', repo.clone_url)
+            return Git.check("remote", "set-url", "origin", repo.clone_url)
 
     def _update_existing(self, repo):
         logging.info("Updating repository '%s'", repo.name)
         repo_dir = self.get_repo_dir(repo)
         with chdir(repo_dir):
             with Git.setup_auth(repo):
-                return Git.check('remote', 'update', '--prune')
+                return Git.check("remote", "update", "--prune")

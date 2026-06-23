@@ -10,7 +10,7 @@ def parse_args(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     parser = ArgumentParser()
-    parser.add_argument('config', metavar='PATH', help='config file path')
+    parser.add_argument("config", metavar="PATH", help="config file path")
     return parser.parse_args(argv)
 
 
@@ -20,5 +20,5 @@ def main(argv=None):
     print(cfg.main.output_dir)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

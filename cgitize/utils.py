@@ -15,11 +15,11 @@ from urllib.parse import quote, urlsplit, urlunsplit
 @contextmanager
 def setup_logging(verbose=False):
     level_names = {
-        logging.DEBUG: 'DBG',
-        logging.INFO: 'INFO',
-        logging.WARNING: 'WARN',
-        logging.ERROR: 'ERR',
-        logging.CRITICAL: 'CRIT',
+        logging.DEBUG: "DBG",
+        logging.INFO: "INFO",
+        logging.WARNING: "WARN",
+        logging.ERROR: "ERR",
+        logging.CRITICAL: "CRIT",
     }
     for lvl, name in level_names.items():
         logging.addLevelName(lvl, name)
@@ -27,8 +27,8 @@ def setup_logging(verbose=False):
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
         level=level,
-        datefmt='%Y-%m-%d %H:%M:%S%z',
-        format='%(asctime)s | %(levelname)4s | %(message)s',
+        datefmt="%Y-%m-%d %H:%M:%S%z",
+        format="%(asctime)s | %(levelname)4s | %(message)s",
         # Log to stdout, because that's where subprocess's output goes (so that
         # they don't get interleaved).
         stream=sys.stdout,
@@ -47,13 +47,13 @@ def run(*args, capture_output=False, **kwargs):
         stdout = subprocess.PIPE
         stderr = subprocess.STDOUT
 
-    logging.debug('%s', args)
+    logging.debug("%s", args)
     result = subprocess.run(
-        args, check=True, stdout=stdout, stderr=stderr, encoding='utf-8', **kwargs
+        args, check=True, stdout=stdout, stderr=stderr, encoding="utf-8", **kwargs
     )
 
     if result.stdout is not None:
-        logging.debug('\n%s', result.stdout)
+        logging.debug("\n%s", result.stdout)
     return result.stdout
 
 
@@ -98,7 +98,7 @@ def protected_file(path):
         finally:
             os.chmod(path, old_permissions)
     else:
-        with open(path, mode='w'):
+        with open(path, mode="w"):
             pass
         os.chmod(path, new_permissions)
         try:
@@ -112,10 +112,10 @@ def url_replace_auth(url, auth):
     parts = urlsplit(url)
     netloc = quote(username)
     if password is not None:
-        netloc += f':{quote(password)}'
-    netloc += f'@{parts.hostname}'
+        netloc += f":{quote(password)}"
+    netloc += f"@{parts.hostname}"
     if parts.port is not None:
-        netloc += f':{parts.port}'
+        netloc += f":{parts.port}"
     parts = parts._replace(netloc=netloc)
     return urlunsplit(parts)
 
@@ -125,6 +125,6 @@ def url_remove_auth(url):
     auth = parts.username, parts.password
     netloc = parts.hostname
     if parts.port is not None:
-        netloc += f':{parts.port}'
+        netloc += f":{parts.port}"
     parts = parts._replace(netloc=netloc)
     return auth, urlunsplit(parts)

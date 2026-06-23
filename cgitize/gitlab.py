@@ -13,7 +13,7 @@ from cgitize.repo import Repo, Visibility
 
 class GitLab:
     def __init__(self, token):
-        self._impl = Gitlab('https://gitlab.com', private_token=token)
+        self._impl = Gitlab("https://gitlab.com", private_token=token)
 
     def get_repo(self, repo):
         try:

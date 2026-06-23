@@ -5,6 +5,6 @@ except ImportError:
 
 
 try:
-    __version__ = metadata.version('cgitize')
+    __version__ = metadata.version("cgitize")
 except Exception:
-    __version__ = 'unknown'
+    __version__ = "unknown"

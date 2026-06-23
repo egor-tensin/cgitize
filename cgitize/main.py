@@ -19,23 +19,23 @@ def parse_args(argv=None):
         argv = sys.argv[1:]
     parser = ArgumentParser()
     parser.add_argument(
-        '--config',
-        '-c',
-        metavar='PATH',
+        "--config",
+        "-c",
+        metavar="PATH",
         default=Config.DEFAULT_PATH,
-        help='config file path',
+        help="config file path",
     )
     parser.add_argument(
-        '--repo', metavar='REPO_ID', nargs='*', dest='repos', help='repos to pull'
+        "--repo", metavar="REPO_ID", nargs="*", dest="repos", help="repos to pull"
     )
     parser.add_argument(
-        '--force', '-f', action='store_true', help='overwrite existing repositories'
+        "--force", "-f", action="store_true", help="overwrite existing repositories"
     )
     parser.add_argument(
-        '--verbose', '-v', action='store_true', help='verbose log output'
+        "--verbose", "-v", action="store_true", help="verbose log output"
     )
     parser.add_argument(
-        '--version', '-V', action='version', version=f'%(prog)s {__version__}'
+        "--version", "-V", action="version", version=f"%(prog)s {__version__}"
     )
     return parser.parse_args(argv)
 
@@ -60,15 +60,15 @@ def main(argv=None):
             error = e
 
         if success:
-            logging.info('All repositories were updated successfully')
+            logging.info("All repositories were updated successfully")
         else:
             logging.warning("Some repositories couldn't be updated!")
             if error is not None:
-                logging.warning('Error: %s', error)
+                logging.warning("Error: %s", error)
 
         update_header(config.main.error_header_path, success, error)
         return int(not success)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

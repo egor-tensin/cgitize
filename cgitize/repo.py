@@ -10,9 +10,9 @@ from cgitize.utils import url_remove_auth, url_replace_auth
 
 
 class Visibility(Enum):
-    ALL = 'all'
-    PUBLIC = 'public'
-    PRIVATE = 'private'
+    ALL = "all"
+    PUBLIC = "public"
+    PRIVATE = "private"
 
     def __str__(self):
         return self.name
@@ -23,7 +23,7 @@ class Visibility(Enum):
             return Visibility.ALL
         if not public and not private:
             raise RuntimeError(
-                'you need to fetch either public or private repos, or both'
+                "you need to fetch either public or private repos, or both"
             )
         if public:
             return Visibility.PUBLIC
@@ -35,45 +35,45 @@ class Visibility(Enum):
         if self is Visibility.ALL:
             return None
         if self is Visibility.PUBLIC:
-            return 'is_private=False'
+            return "is_private=False"
         if self is Visibility.PRIVATE:
-            return 'is_private=True'
-        raise NotImplementedError(f'not implemented visibility level: {self}')
+            return "is_private=True"
+        raise NotImplementedError(f"not implemented visibility level: {self}")
 
     def to_github_arg(self):
         # https://docs.github.com/en/rest/repos/repos?apiVersion=2026-03-10#list-repositories-for-the-authenticated-user
         if self is Visibility.ALL:
             return None
         if self is Visibility.PUBLIC:
-            return 'public'
+            return "public"
         if self is Visibility.PRIVATE:
-            return 'private'
-        raise NotImplementedError(f'not implemented visibility level: {self}')
+            return "private"
+        raise NotImplementedError(f"not implemented visibility level: {self}")
 
     def to_gitlab_arg(self):
         # https://python-gitlab.readthedocs.io/en/stable/gl_objects/projects.html#projects
         if self is Visibility.ALL:
             return None
         if self is Visibility.PUBLIC:
-            return 'public'
+            return "public"
         if self is Visibility.PRIVATE:
-            return 'private'
-        raise NotImplementedError(f'not implemented visibility level: {self}')
+            return "private"
+        raise NotImplementedError(f"not implemented visibility level: {self}")
 
 
 class Repo:
     @staticmethod
     def from_config(src, config):
-        if 'name' not in src:
+        if "name" not in src:
             raise ValueError("every repository must have 'name'")
-        name = src['name']
-        desc = src.get('desc')
-        homepage = src.get('homepage')
-        owner = src.get('owner', config.main.default_owner)
-        if 'clone_url' not in src:
+        name = src["name"]
+        desc = src.get("desc")
+        homepage = src.get("homepage")
+        owner = src.get("owner", config.main.default_owner)
+        if "clone_url" not in src:
             raise ValueError("every repository must have 'clone_url'")
-        clone_url = src['clone_url']
-        subdir = src.get('dir')
+        clone_url = src["clone_url"]
+        subdir = src.get("dir")
         return Repo(
             name, clone_url, owner=owner, desc=desc, homepage=homepage, subdir=subdir
         )
@@ -108,23 +108,23 @@ class Repo:
     def from_bitbucket(src, config, subdir=None):
         name = src.name
         desc = src.description
-        homepage = src.get_link('html')
-        owner = src.data['owner']['display_name']
+        homepage = src.get_link("html")
+        owner = src.data["owner"]["display_name"]
 
         https_urls = [
-            link for link in src.data['links']['clone'] if link['name'] == 'https'
+            link for link in src.data["links"]["clone"] if link["name"] == "https"
         ]
         if len(https_urls) != 1:
             raise RuntimeError(f"no https:// clone URL for repository '{name}'?!")
         # Bitbucket leaves the username in the URL... Sigh.
-        api_auth, https_url = url_remove_auth(https_urls[0]['href'])
+        api_auth, https_url = url_remove_auth(https_urls[0]["href"])
 
         ssh_urls = [
-            link for link in src.data['links']['clone'] if link['name'] == 'ssh'
+            link for link in src.data["links"]["clone"] if link["name"] == "ssh"
         ]
         if len(ssh_urls) != 1:
             raise RuntimeError(f"no ssh:// clone URL for repository '{name}'?!")
-        ssh_url = ssh_urls[0]['href']
+        ssh_url = ssh_urls[0]["href"]
 
         clone_url = ssh_url
         url_auth = None
@@ -154,7 +154,7 @@ class Repo:
         name = src.name
         desc = src.description
         homepage = src.web_url
-        owner = src.namespace['name']
+        owner = src.namespace["name"]
 
         https_url = src.http_url_to_repo
         ssh_url = src.ssh_url_to_repo
@@ -199,7 +199,7 @@ class Repo:
 
     @property
     def namegit(self):
-        return f'{self.name}.git'
+        return f"{self.name}.git"
 
     @property
     def desc(self):

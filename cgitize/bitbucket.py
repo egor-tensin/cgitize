@@ -17,10 +17,10 @@ class Bitbucket:
 
     def get_repo(self, repo):
         try:
-            parts = repo.id.split('/')
+            parts = repo.id.split("/")
             if len(parts) != 2:
                 raise ValueError(
-                    f'repository ID must be in the USER/NAME format: {repo.id}'
+                    f"repository ID must be in the USER/NAME format: {repo.id}"
                 )
             user, name = parts
             return self._impl.repositories.get(user, name)

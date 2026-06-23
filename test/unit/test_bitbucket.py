@@ -13,80 +13,80 @@ from requests.exceptions import HTTPError
 class BitbucketTests(unittest.TestCase):
     def setUp(self):
         self.bitbucket = Cloud(
-            username=os.environ.get('CGITIZE_BITBUCKET_EMAIL'),
-            password=os.environ.get('CGITIZE_BITBUCKET_TOKEN'),
+            username=os.environ.get("CGITIZE_BITBUCKET_EMAIL"),
+            password=os.environ.get("CGITIZE_BITBUCKET_TOKEN"),
             cloud=True,
         )
 
     def test_nonexistent_repo(self):
         with self.assertRaises(HTTPError):
-            self.bitbucket.repositories.get('doesnot', 'exist')
+            self.bitbucket.repositories.get("doesnot", "exist")
 
     def test_public_repo(self):
-        r = self.bitbucket.repositories.get('cgitize-test-workspace', 'public')
-        self.assertEqual(r.name, 'public')
-        self.assertEqual(r.description, 'Public test cgitize repository')
+        r = self.bitbucket.repositories.get("cgitize-test-workspace", "public")
+        self.assertEqual(r.name, "public")
+        self.assertEqual(r.description, "Public test cgitize repository")
 
-        self.assertEqual(r.data['workspace']['name'], 'Test cgitize workspace')
-        self.assertEqual(r.data['workspace']['slug'], 'cgitize-test-workspace')
+        self.assertEqual(r.data["workspace"]["name"], "Test cgitize workspace")
+        self.assertEqual(r.data["workspace"]["slug"], "cgitize-test-workspace")
 
-        self.assertFalse(r.data['is_private'])
+        self.assertFalse(r.data["is_private"])
 
         self.assertEqual(
-            r.get_link('html'), 'https://bitbucket.org/cgitize-test-workspace/public'
+            r.get_link("html"), "https://bitbucket.org/cgitize-test-workspace/public"
         )
 
         clone_urls = [
-            link for link in r.data['links']['clone'] if link['name'] == 'https'
+            link for link in r.data["links"]["clone"] if link["name"] == "https"
         ]
         self.assertEqual(len(clone_urls), 1)
         self.assertEqual(
-            clone_urls[0]['href'],
-            'https://cgitize-test@bitbucket.org/cgitize-test-workspace/public.git',
+            clone_urls[0]["href"],
+            "https://cgitize-test@bitbucket.org/cgitize-test-workspace/public.git",
         )
 
-        ssh_urls = [link for link in r.data['links']['clone'] if link['name'] == 'ssh']
+        ssh_urls = [link for link in r.data["links"]["clone"] if link["name"] == "ssh"]
         self.assertEqual(len(ssh_urls), 1)
         self.assertEqual(
-            ssh_urls[0]['href'], 'git@bitbucket.org:cgitize-test-workspace/public.git'
+            ssh_urls[0]["href"], "git@bitbucket.org:cgitize-test-workspace/public.git"
         )
 
     def test_private_repo(self):
-        r = self.bitbucket.repositories.get('cgitize-test-workspace', 'private')
-        self.assertEqual(r.name, 'private')
-        self.assertEqual(r.description, 'Private test cgitize repository')
+        r = self.bitbucket.repositories.get("cgitize-test-workspace", "private")
+        self.assertEqual(r.name, "private")
+        self.assertEqual(r.description, "Private test cgitize repository")
 
-        self.assertEqual(r.data['workspace']['name'], 'Test cgitize workspace')
-        self.assertEqual(r.data['workspace']['slug'], 'cgitize-test-workspace')
+        self.assertEqual(r.data["workspace"]["name"], "Test cgitize workspace")
+        self.assertEqual(r.data["workspace"]["slug"], "cgitize-test-workspace")
 
-        self.assertTrue(r.data['is_private'])
+        self.assertTrue(r.data["is_private"])
 
         self.assertEqual(
-            r.get_link('html'), 'https://bitbucket.org/cgitize-test-workspace/private'
+            r.get_link("html"), "https://bitbucket.org/cgitize-test-workspace/private"
         )
 
         clone_urls = [
-            link for link in r.data['links']['clone'] if link['name'] == 'https'
+            link for link in r.data["links"]["clone"] if link["name"] == "https"
         ]
         self.assertEqual(len(clone_urls), 1)
         self.assertEqual(
-            clone_urls[0]['href'],
-            'https://cgitize-test@bitbucket.org/cgitize-test-workspace/private.git',
+            clone_urls[0]["href"],
+            "https://cgitize-test@bitbucket.org/cgitize-test-workspace/private.git",
         )
 
-        ssh_urls = [link for link in r.data['links']['clone'] if link['name'] == 'ssh']
+        ssh_urls = [link for link in r.data["links"]["clone"] if link["name"] == "ssh"]
         self.assertEqual(len(ssh_urls), 1)
         self.assertEqual(
-            ssh_urls[0]['href'], 'git@bitbucket.org:cgitize-test-workspace/private.git'
+            ssh_urls[0]["href"], "git@bitbucket.org:cgitize-test-workspace/private.git"
         )
 
     def test_user(self):
-        w = self.bitbucket.workspaces.get('cgitize-test-workspace')
+        w = self.bitbucket.workspaces.get("cgitize-test-workspace")
         self.assertEqual(
-            len([r for r in w.repositories.each() if r.name == 'public']), 1
+            len([r for r in w.repositories.each() if r.name == "public"]), 1
         )
         self.assertEqual(
-            len([r for r in w.repositories.each() if r.name == 'private']), 1
+            len([r for r in w.repositories.each() if r.name == "private"]), 1
         )
 
 
@@ -96,4 +96,4 @@ class BitbucketTestPrivateRepo(unittest.TestCase):
 
     def test_private_repo(self):
         with self.assertRaises(HTTPError):
-            self.bitbucket.repositories.get('cgitize-test-workspace', 'private')
+            self.bitbucket.repositories.get("cgitize-test-workspace", "private")

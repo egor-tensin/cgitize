@@ -34,13 +34,13 @@ class GitHub:
         # None makes no difference.
         kwargs = {}
         if visibility is not None:
-            kwargs['visibility'] = visibility
+            kwargs["visibility"] = visibility
 
         try:
             if user.name == self._username:
                 # To get private repositories, get_user() must be called
                 # without arguments:
-                return self._impl.get_user().get_repos(affiliation='owner', **kwargs)
+                return self._impl.get_user().get_repos(affiliation="owner", **kwargs)
             else:
                 return self._impl.get_user(user.name).get_repos(**kwargs)
         except GithubException:

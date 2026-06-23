@@ -22,7 +22,7 @@ class Section:
     def _get_config_value(self, key, required=True, default=None):
         if required and default is None:
             if not key in self.impl:
-                raise RuntimeError(f'configuration value is missing: {key}')
+                raise RuntimeError(f"configuration value is missing: {key}")
         return self.impl.get(key, default)
 
     def _get_config_path(self, *args, **kwargs):
@@ -38,36 +38,36 @@ class Section:
 
 
 class MainSection(Section):
-    DEFAULT_OUTPUT_DIR = '/mnt/cgitize'
+    DEFAULT_OUTPUT_DIR = "/mnt/cgitize"
 
     @property
     def output_dir(self):
         return self._get_config_path(
-            'output_dir', default=MainSection.DEFAULT_OUTPUT_DIR
+            "output_dir", default=MainSection.DEFAULT_OUTPUT_DIR
         )
 
     @property
     def error_header_path(self):
-        return os.path.join(self.output_dir, 'error.html')
+        return os.path.join(self.output_dir, "error.html")
 
     @property
     def clone_url(self):
-        return self._get_config_value('clone_url', required=False)
+        return self._get_config_value("clone_url", required=False)
 
     @property
     def clone_via_ssh(self):
-        return self._get_config_value('clone_via_ssh', default=True)
+        return self._get_config_value("clone_via_ssh", default=True)
 
     @property
     def default_owner(self):
-        return self._get_config_value('owner', required=False)
+        return self._get_config_value("owner", required=False)
 
 
 class ServiceSection(Section, ABC):
     def __init__(self, impl):
         super().__init__(impl)
-        self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
-        self.users = UsersSection(self.impl.get('users', {}))
+        self.repositories = RepositoriesSection(self.impl.get("repositories", {}))
+        self.users = UsersSection(self.impl.get("users", {}))
 
     def _enum_explicit_repositories(self, cfg, api):
         for r in self.repositories.enum_repositories():
@@ -99,15 +99,15 @@ class ServiceSection(Section, ABC):
 class GitHubSection(ServiceSection):
     def __init__(self, impl):
         super().__init__(impl)
-        self.orgs = OrgsSection(self.impl.get('organizations', {}))
+        self.orgs = OrgsSection(self.impl.get("organizations", {}))
 
     @property
     def token(self):
-        return self._get_config_or_env('token', 'CGITIZE_GITHUB_TOKEN')
+        return self._get_config_or_env("token", "CGITIZE_GITHUB_TOKEN")
 
     @property
     def username(self):
-        return self._get_config_or_env('username', 'CGITIZE_GITHUB_USERNAME')
+        return self._get_config_or_env("username", "CGITIZE_GITHUB_USERNAME")
 
     @property
     def url_auth(self):
@@ -131,7 +131,7 @@ class GitHubSection(ServiceSection):
         token = self.token
         if (username is None) != (token is None):
             raise RuntimeError(
-                'please set either both the GitHub username & token, or neither'
+                "please set either both the GitHub username & token, or neither"
             )
         return GitHub(username, token)
 
@@ -139,11 +139,11 @@ class GitHubSection(ServiceSection):
 class BitbucketSection(ServiceSection):
     @property
     def token(self):
-        return self._get_config_or_env('token', 'CGITIZE_BITBUCKET_TOKEN')
+        return self._get_config_or_env("token", "CGITIZE_BITBUCKET_TOKEN")
 
     @property
     def username(self):
-        return self._get_config_or_env('email', 'CGITIZE_BITBUCKET_EMAIL')
+        return self._get_config_or_env("email", "CGITIZE_BITBUCKET_EMAIL")
 
     @property
     def url_auth(self):
@@ -154,7 +154,7 @@ class BitbucketSection(ServiceSection):
         token = self.token
         if (username is None) != (token is None):
             raise RuntimeError(
-                'please set either both the Bitbucket username & token, or neither'
+                "please set either both the Bitbucket username & token, or neither"
             )
         return Bitbucket(username, token)
 
@@ -162,11 +162,11 @@ class BitbucketSection(ServiceSection):
 class GitLabSection(ServiceSection):
     @property
     def token(self):
-        return self._get_config_or_env('token', 'CGITIZE_GITLAB_TOKEN')
+        return self._get_config_or_env("token", "CGITIZE_GITLAB_TOKEN")
 
     @property
     def username(self):
-        return self._get_config_or_env('username', 'CGITIZE_GITLAB_USERNAME')
+        return self._get_config_or_env("username", "CGITIZE_GITLAB_USERNAME")
 
     @property
     def url_auth(self):
@@ -177,7 +177,7 @@ class GitLabSection(ServiceSection):
         token = self.token
         if (username is None) != (token is None):
             raise RuntimeError(
-                'please set either both the GitLab username & token, or neither'
+                "please set either both the GitLab username & token, or neither"
             )
         return GitLab(token)
 
@@ -200,56 +200,56 @@ class RepositoriesSection(Section):
 class Entity(ABC):
     @property
     def name(self):
-        return self._impl['name']
+        return self._impl["name"]
 
     @property
     def dir(self):
-        return self._impl.get('dir')
+        return self._impl.get("dir")
 
     @property
     def skip(self):
-        return self._impl.get('skip', [])
+        return self._impl.get("skip", [])
 
 
 class User(Entity):
     def __init__(self, impl):
-        if 'name' not in impl:
+        if "name" not in impl:
             raise ValueError("every user must have a 'name'")
         self._impl = impl
 
     @property
     def public_repos(self):
-        return self._impl.get('public', True)
+        return self._impl.get("public", True)
 
     @property
     def private_repos(self):
-        return self._impl.get('private', False)
+        return self._impl.get("private", False)
 
 
 class Org(Entity):
     def __init__(self, impl):
-        if 'name' not in impl:
+        if "name" not in impl:
             raise ValueError("every organization must have a 'name'")
         self._impl = impl
 
 
 class HostedRepo:
     def __init__(self, impl):
-        if 'id' not in impl:
+        if "id" not in impl:
             raise ValueError("every hosted repository must have 'id'")
         self._impl = impl
 
     @property
     def id(self):
-        return self._impl['id']
+        return self._impl["id"]
 
     @property
     def dir(self):
-        return self._impl.get('dir')
+        return self._impl.get("dir")
 
 
 class Config:
-    DEFAULT_PATH = '/etc/cgitize/cgitize.toml'
+    DEFAULT_PATH = "/etc/cgitize/cgitize.toml"
 
     @staticmethod
     def read(path):
@@ -257,13 +257,13 @@ class Config:
 
     def __init__(self, path):
         self.path = os.path.abspath(path)
-        with open(self.path, 'rb') as f:
+        with open(self.path, "rb") as f:
             self.impl = tomli.load(f)
         self.main = MainSection(self.impl)
-        self.repositories = RepositoriesSection(self.impl.get('repositories', {}))
-        self.github = GitHubSection(self.impl.get('github', {}))
-        self.bitbucket = BitbucketSection(self.impl.get('bitbucket', {}))
-        self.gitlab = GitLabSection(self.impl.get('gitlab', {}))
+        self.repositories = RepositoriesSection(self.impl.get("repositories", {}))
+        self.github = GitHubSection(self.impl.get("github", {}))
+        self.bitbucket = BitbucketSection(self.impl.get("bitbucket", {}))
+        self.gitlab = GitLabSection(self.impl.get("gitlab", {}))
 
     def _parse_explicit_repositories(self):
         for r in self.repositories.enum_repositories():

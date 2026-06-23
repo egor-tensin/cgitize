@@ -9,8 +9,8 @@ import os
 from cgitize import utils
 
 GIT_ENV = os.environ.copy()
-GIT_ENV['GIT_SSH_COMMAND'] = (
-    'ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null'
+GIT_ENV["GIT_SSH_COMMAND"] = (
+    "ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null"
 )
 
 
@@ -21,15 +21,15 @@ class Config:
     def exists(self):
         return os.path.exists(self.path)
 
-    def open(self, mode='r'):
-        return open(self.path, mode=mode, encoding='utf-8')
+    def open(self, mode="r"):
+        return open(self.path, mode=mode, encoding="utf-8")
 
     def read(self):
-        with self.open(mode='r') as fd:
+        with self.open(mode="r") as fd:
             return fd.read()
 
     def write(self, contents):
-        with self.open(mode='w') as fd:
+        with self.open(mode="w") as fd:
             fd.write(contents)
 
     @contextmanager
@@ -52,12 +52,12 @@ class Config:
         @staticmethod
         def validate_name(name):
             if not name:
-                raise RuntimeError('section names cannot be empty')
+                raise RuntimeError("section names cannot be empty")
             for c in name:
-                if c.isalnum() or c == '-' or c == '.':
+                if c.isalnum() or c == "-" or c == ".":
                     continue
                 raise RuntimeError(
-                    f'section names must only contain alphanumeric characters, . or -: {name}'
+                    f"section names must only contain alphanumeric characters, . or -: {name}"
                 )
 
         @staticmethod
@@ -65,8 +65,8 @@ class Config:
             return name
 
         def format(self):
-            result = f'[{self.format_name(self.name)}]\n'
-            result += ''.join((var.format() for var in self.variables))
+            result = f"[{self.format_name(self.name)}]\n"
+            result += "".join((var.format() for var in self.variables))
             return result
 
     class Subsection:
@@ -79,23 +79,23 @@ class Config:
 
         @staticmethod
         def validate_name(name):
-            if '\n' in name:
-                raise RuntimeError(f'subsection names cannot contain newlines: {name}')
+            if "\n" in name:
+                raise RuntimeError(f"subsection names cannot contain newlines: {name}")
 
         def format_name(self):
             name = self.name
             # Escape the backslashes:
-            name = name.replace('\\', r'\\')
+            name = name.replace("\\", r"\\")
             # Escape the quotes:
-            name = name.replace('"', r'\"')
+            name = name.replace('"', r"\"")
             # Put in quotes:
             return f'"{name}"'
 
         def format(self):
             result = (
-                f'[{Config.Section.format_name(self.section)} {self.format_name()}]\n'
+                f"[{Config.Section.format_name(self.section)} {self.format_name()}]\n"
             )
-            result += ''.join((var.format() for var in self.variables))
+            result += "".join((var.format() for var in self.variables))
             return result
 
     class Variable:
@@ -108,16 +108,16 @@ class Config:
         @staticmethod
         def validate_name(name):
             if not name:
-                raise RuntimeError('variable names cannot be empty')
+                raise RuntimeError("variable names cannot be empty")
             for c in name:
-                if c.isalnum() or c == '-':
+                if c.isalnum() or c == "-":
                     continue
                 raise RuntimeError(
-                    f'variable name can only contain alphanumeric characters or -: {name}'
+                    f"variable name can only contain alphanumeric characters or -: {name}"
                 )
             if not name[0].isalnum():
                 raise RuntimeError(
-                    f'variable name must start with an alphanumeric character: {name}'
+                    f"variable name must start with an alphanumeric character: {name}"
                 )
 
         @staticmethod
@@ -130,23 +130,23 @@ class Config:
         def format_value(self):
             value = self.value
             # Escape the backslashes:
-            value = value.replace('\\', r'\\')
+            value = value.replace("\\", r"\\")
             # Escape the supported escape sequences (\n, \t and \b):
-            value = value.replace('\n', r'\n')
-            value = value.replace('\t', r'\t')
-            value = value.replace('\b', r'\b')
+            value = value.replace("\n", r"\n")
+            value = value.replace("\t", r"\t")
+            value = value.replace("\b", r"\b")
             # Escape the quotes:
-            value = value.replace('"', r'\"')
+            value = value.replace('"', r"\"")
             # Put in quotes:
             value = f'"{value}"'
             return value
 
         def format(self):
-            return f'    {self.format_name()} = {self.format_value()}\n'
+            return f"    {self.format_name()} = {self.format_value()}\n"
 
 
 class Git:
-    EXE = 'git'
+    EXE = "git"
 
     @staticmethod
     def check(*args, **kwargs):
@@ -158,7 +158,7 @@ class Git:
 
     @staticmethod
     def get_global_config():
-        return Config(os.path.expanduser('~/.gitconfig'))
+        return Config(os.path.expanduser("~/.gitconfig"))
 
     @staticmethod
     @contextmanager
@@ -169,10 +169,10 @@ class Git:
         config = Git.get_global_config()
         with utils.protected_file(config.path):
             with config.backup() as old_contents:
-                variables = [Config.Variable('insteadOf', repo.clone_url)]
+                variables = [Config.Variable("insteadOf", repo.clone_url)]
                 subsection = Config.Subsection(
-                    'url', repo.clone_url_with_auth, variables
+                    "url", repo.clone_url_with_auth, variables
                 )
-                new_contents = f'{old_contents}\n{subsection.format()}'
+                new_contents = f"{old_contents}\n{subsection.format()}"
                 config.write(new_contents)
                 yield
