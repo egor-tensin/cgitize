@@ -12,7 +12,7 @@ jobs:
     name: Maintenance
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           # I think that by default, pushes don't trigger other workflows, and
           # you need a separate token for that:
