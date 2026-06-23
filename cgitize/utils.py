@@ -18,16 +18,17 @@ def setup_logging(verbose=False):
     logging.basicConfig(
         level=level,
         datefmt='%Y-%m-%d %H:%M:%S%z',
-        format='%(asctime)s | %(levelname)s | %(message)s',
+        # The 8 below is for "CRITICAL"
+        format='%(asctime)s | %(levelname)8s | %(message)s',
         # Log to stdout, because that's where subprocess's output goes (so that
-        # the don't get interleaved).
+        # they don't get interleaved).
         stream=sys.stdout,
     )
     try:
         yield
     except Exception as e:
         logging.exception(e)
-        raise
+        sys.exit(1)
 
 
 def run(*args, capture_output=False, **kwargs):
