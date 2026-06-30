@@ -47,7 +47,7 @@ def run(*args, capture_output=False, **kwargs):
         stdout = subprocess.PIPE
         stderr = subprocess.STDOUT
 
-    logging.debug("%s", args)
+    logging.debug("Running: %s", subprocess.list2cmdline(args).rstrip())
     result = subprocess.run(
         args, check=True, stdout=stdout, stderr=stderr, encoding="utf-8", **kwargs
     )
