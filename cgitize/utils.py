@@ -47,13 +47,15 @@ def run(*args, capture_output=False, **kwargs):
         stdout = subprocess.PIPE
         stderr = subprocess.STDOUT
 
-    logging.debug("Running: %s", subprocess.list2cmdline(args).rstrip())
+    logging.debug("Running: %s", subprocess.list2cmdline(args))
     result = subprocess.run(
         args, check=True, stdout=stdout, stderr=stderr, encoding="utf-8", **kwargs
     )
 
     if result.stdout is not None:
-        logging.debug("\n%s", result.stdout)
+        if result.stdout[-1] == "\n":
+            result.stdout = result.stdout[:-1]
+        logging.debug("%s", result.stdout)
     return result.stdout
 
 

@@ -143,7 +143,7 @@ class CGitRepositories:
                 )
                 return self._mirror(repo)
 
-            if f"{repo.clone_url}\n" != output:
+            if f"{repo.clone_url}" != output:
                 # Jeez, there's a proper local repository in the target
                 # directory already with a different upstream; something's
                 # wrong, fix it manually.
