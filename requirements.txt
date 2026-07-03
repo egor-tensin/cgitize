@@ -18,6 +18,6 @@ requests-oauthlib==2.0.0
 requests-toolbelt==1.0.0
 soupsieve==2.8.4
 tomli==2.4.1
-typing_extensions==4.15.0
+typing_extensions==4.16.0
 urllib3==2.7.0
 wrapt==2.2.2
