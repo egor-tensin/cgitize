@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021 Egor Tensin <egor@tensin.name>
 # This file is part of the "cgitize" project.
-# For details, see https://github.com/egor-tensin/cgitize.
+# For details, see https://github.com/egor-tensin/cgitize
 # Distributed under the MIT License.
 
 set -o errexit -o nounset -o pipefail

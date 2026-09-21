@@ -1,6 +1,6 @@
 # Copyright (c) 2018 Egor Tensin <egor@tensin.name>
 # This file is part of the "cgitize" project.
-# For details, see https://github.com/egor-tensin/cgitize.
+# For details, see https://github.com/egor-tensin/cgitize
 # Distributed under the MIT License.
 
 import logging
