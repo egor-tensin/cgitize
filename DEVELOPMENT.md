@@ -61,7 +61,9 @@ Upgrading dependencies
 Releases
 --------
 
-* Make a git tag for a new minor version using `make tag`.
-You can then review it and push using `git push --tags`.
+* Make a new tag using the semantic versioning policy (you can use [tagger] to
+do that), review and push it.
 * For a new major version, update the version in the docker-compose definition
 in docker/README.md.
+
+[tagger]: https://github.com/egor-tensin/tagger

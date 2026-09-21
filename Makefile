@@ -79,10 +79,3 @@ test/example:
 	@echo Integration test: example
 	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	./test/integration/example/test.sh
-
-.PHONY: tag
-tag:
-	$(venv_activate) \
-		&& pip install -q --upgrade setuptools-scm \
-		&& version="$$( python -m setuptools_scm --strip-dev )" \
-		&& git tag "v$$version"
