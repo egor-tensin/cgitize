@@ -61,9 +61,9 @@ Upgrading dependencies
 Releases
 --------
 
-* Make a new tag using the semantic versioning policy (you can use [tagger] to
-do that), review and push it.
+* Make a new tag using the semantic versioning policy (you can use [tag-release]
+to do that), review and push it.
 * For a new major version, update the version in the docker-compose definition
 in docker/README.md.
 
-[tagger]: https://github.com/egor-tensin/tagger
+[tag-release]: https://github.com/egor-tensin/tag-release
