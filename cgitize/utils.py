@@ -99,7 +99,7 @@ def protected_file(path):
         finally:
             os.chmod(path, old_permissions)
     else:
-        with open(path, mode="w"):
+        with open(path, mode="w", encoding="utf-8"):
             pass
         os.chmod(path, new_permissions)
         try:

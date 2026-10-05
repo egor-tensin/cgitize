@@ -5,7 +5,7 @@
 
 
 def update(path, success, error=None):
-    with open(path, "w") as file:
+    with open(path, "w", encoding="utf-8") as file:
         contents = ""
         if not success:
             contents = (

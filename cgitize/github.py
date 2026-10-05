@@ -41,8 +41,7 @@ class GitHub:
                 # To get private repositories, get_user() must be called
                 # without arguments:
                 return self._impl.get_user().get_repos(affiliation="owner", **kwargs)
-            else:
-                return self._impl.get_user(user.name).get_repos(**kwargs)
+            return self._impl.get_user(user.name).get_repos(**kwargs)
         except GithubException:
             logging.error("Couldn't fetch user repositories: %s", user.name)
             raise

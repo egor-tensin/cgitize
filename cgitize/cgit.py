@@ -30,7 +30,7 @@ class CGitRCWriter:
         return os.path.join(repo_dir, "cgitrc")
 
     def write(self, repo_dir, repo):
-        with open(self.get_path(repo_dir), "w") as fd:
+        with open(self.get_path(repo_dir), "w", encoding="utf-8") as fd:
             self._write_field(fd, "clone-url", self._build_clone_url(repo))
             self._write_field(fd, "owner", repo.owner)
             self._write_field(fd, "desc", repo.desc)
@@ -61,7 +61,7 @@ class AgeFile:
         timestamp = AgeFile.get_age(repo_dir)
         if timestamp:
             os.makedirs(AgeFile.get_dir(repo_dir), exist_ok=True)
-            with open(AgeFile.get_path(repo_dir), mode="w") as fd:
+            with open(AgeFile.get_path(repo_dir), mode="w", encoding="utf-8") as fd:
                 fd.write(f"{timestamp}")
 
     @staticmethod
