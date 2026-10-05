@@ -26,16 +26,29 @@ def parse_args(argv=None):
         help="config file path",
     )
     parser.add_argument(
-        "--repo", metavar="REPO_ID", nargs="*", dest="repos", help="repos to pull"
+        "--repo",
+        metavar="REPO_ID",
+        nargs="*",
+        dest="repos",
+        help="repos to pull",
     )
     parser.add_argument(
-        "--force", "-f", action="store_true", help="overwrite existing repositories"
+        "--force",
+        "-f",
+        action="store_true",
+        help="overwrite existing repositories",
     )
     parser.add_argument(
-        "--verbose", "-v", action="store_true", help="verbose log output"
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="verbose log output",
     )
     parser.add_argument(
-        "--version", "-V", action="version", version=f"%(prog)s {__version__}"
+        "--version",
+        "-V",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
     return parser.parse_args(argv)
 
