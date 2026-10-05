@@ -5,7 +5,6 @@
 
 from abc import ABC, abstractmethod
 import os
-from urllib.parse import quote
 
 import tomli
 

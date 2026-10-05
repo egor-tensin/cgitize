@@ -6,7 +6,7 @@
 from enum import Enum
 import os.path
 
-from cgitize.utils import url_remove_auth, url_replace_auth
+from cgitize import url
 
 
 class Visibility(Enum):
@@ -117,7 +117,7 @@ class Repo:
         if len(https_urls) != 1:
             raise RuntimeError(f"no https:// clone URL for repository '{name}'?!")
         # Bitbucket leaves the username in the URL... Sigh.
-        api_auth, https_url = url_remove_auth(https_urls[0]["href"])
+        api_auth, https_url = url.remove_auth(https_urls[0]["href"])
 
         ssh_urls = [
             link for link in src.data["links"]["clone"] if link["name"] == "ssh"
@@ -231,7 +231,7 @@ class Repo:
     def clone_url_with_auth(self):
         if not self.url_auth:
             return self.clone_url
-        return url_replace_auth(self.clone_url, self.url_auth)
+        return url.replace_auth(self.clone_url, self.url_auth)
 
     def _with_dir(self, s):
         if self._dir is None:
