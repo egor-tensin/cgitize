@@ -39,3 +39,16 @@ cgitize = "cgitize.main:main"
 packages = ["cgitize"]
 
 [tool.setuptools_scm]
+
+[tool.pylint.main]
+# Enable Pylint to be run in the venv:
+init-hook = """
+try: import pylint_venv
+except ImportError: pass
+else: pylint_venv.inithook()
+"""
+
+[tool.pylint."messages control"]
+disable = [
+    "missing-docstring",
+]
