@@ -41,25 +41,27 @@ Compose
 
 Here's an example docker-compose.yml file:
 
-    services:
-      cgitize:
-        environment:
-          # Every 3 hours:
-          SCHEDULE: '0 */3 * * *'
-          # Set CGITIZE_{GITHUB,BITBUCKET,GITLAB}_{USERNAME,TOKEN} variables
-          # here or in the config file.
-        image: egortensin/cgitize:8
-        restart: unless-stopped
-        volumes:
-          - ./example.toml:/etc/cgitize/cgitize.toml:ro
-          - /srv/volumes/cgitize:/mnt/cgitize
-      frontend:
-        image: egortensin/cgitize-frontend:8
-        ports:
-          - '127.0.0.1:80:80'
-        restart: unless-stopped
-        volumes:
-          - /srv/volumes/cgitize:/mnt/cgitize:ro
+```yaml
+services:
+  cgitize:
+    environment:
+      # Every 3 hours:
+      SCHEDULE: '0 */3 * * *'
+      # Set CGITIZE_{GITHUB,BITBUCKET,GITLAB}_{USERNAME,TOKEN} variables
+      # here or in the config file.
+    image: egortensin/cgitize:8
+    restart: unless-stopped
+    volumes:
+      - ./example.toml:/etc/cgitize/cgitize.toml:ro
+      - /srv/volumes/cgitize:/mnt/cgitize
+  frontend:
+    image: egortensin/cgitize-frontend:8
+    ports:
+      - '127.0.0.1:80:80'
+    restart: unless-stopped
+    volumes:
+      - /srv/volumes/cgitize:/mnt/cgitize:ro
+```
 
 In this configuration, cgitize pulls repositories defined in example.toml every
 3 hours and puts them to /srv/volumes/cgitize on the host.
