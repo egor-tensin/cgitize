@@ -16,7 +16,8 @@ Example output can be found at https://git.tensin.name/.
 Installation
 ------------
 
-    pip install cgitize
+* Python: [PyPI](https://pypi.org/project/cgitize/)
+* Docker: see [docker/README.md](docker/README.md).
 
 Usage
 -----
@@ -33,13 +34,6 @@ Make sure the required keys are loaded to a ssh-agent (or, _preferably_, use
 access tokens/application passwords).
 
 [examples/cgitize.toml]: examples/cgitize.toml
-
-### Docker
-
-You can run `cgitize` in a Docker container.
-A separate image includes a web server with a configured cgit installation.
-
-Please see [docker/README.md](docker/README.md) for details.
 
 Mirror maintenance
 ------------------
