@@ -25,7 +25,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.11', '3.12', '3.13', '3.14']
+        python-version:
+          - '3.11'
+          - '3.12'
+          - '3.13'
+          - '3.14'
     name: 'Test / ${{ matrix.python-version }}'
     env:
       CGITIZE_GITHUB_USERNAME: '${{ secrets.CGITIZE_GITHUB_USERNAME }}'
@@ -61,7 +65,9 @@ jobs:
         run: sudo make test/docker
 
   test_example_config:
-    needs: [test_local, test_docker]
+    needs:
+      - test_local
+      - test_docker
     runs-on: ubuntu-latest
     name: 'Test / example config'
     env:
@@ -88,7 +94,11 @@ jobs:
         run: make test/example
 
   publish_docker:
-    needs: [lint, test_local, test_example_config, test_docker]
+    needs:
+      - lint
+      - test_local
+      - test_example_config
+      - test_docker
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -149,7 +159,8 @@ jobs:
           tags: '${{ steps.meta.outputs.tags }}'
 
   publish_pypi:
-    needs: [publish_docker]
+    needs:
+      - publish_docker
     runs-on: ubuntu-latest
     name: 'Publish / PyPI'
     steps:
