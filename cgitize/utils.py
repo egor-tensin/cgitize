@@ -78,16 +78,6 @@ def try_capture(*args, **kwargs):
 
 
 @contextmanager
-def chdir(new_cwd):
-    old_cwd = os.getcwd()
-    os.chdir(new_cwd)
-    try:
-        yield
-    finally:
-        os.chdir(old_cwd)
-
-
-@contextmanager
 def protected_file(path):
     # 0600:
     new_permissions = stat.S_IRUSR | stat.S_IWUSR

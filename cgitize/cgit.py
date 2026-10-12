@@ -3,12 +3,12 @@
 # For details, see https://github.com/egor-tensin/cgitize
 # Distributed under the MIT License.
 
+from contextlib import chdir
 import logging
 import os
 import shutil
 
 from cgitize.git import Git
-from cgitize.utils import chdir
 
 
 class CGitServer:

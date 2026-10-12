@@ -3,19 +3,16 @@
 # For details, see https://github.com/egor-tensin/cgitize
 # Distributed under the MIT License.
 
-from enum import Enum
+from enum import auto, StrEnum
 import os.path
 
 from cgitize import url
 
 
-class Visibility(Enum):
-    ALL = "all"
-    PUBLIC = "public"
-    PRIVATE = "private"
-
-    def __str__(self):
-        return self.name
+class Visibility(StrEnum):
+    ALL = auto()
+    PUBLIC = auto()
+    PRIVATE = auto()
 
     @staticmethod
     def from_config(public, private):
@@ -32,33 +29,39 @@ class Visibility(Enum):
     def to_bitbucket_arg(self):
         # https://developer.atlassian.com/cloud/bitbucket/rest/intro/#filtering
         # https://developer.atlassian.com/cloud/bitbucket/rest/api-group-repositories/#api-group-repositories
-        if self is Visibility.ALL:
-            return None
-        if self is Visibility.PUBLIC:
-            return "is_private=False"
-        if self is Visibility.PRIVATE:
-            return "is_private=True"
-        raise NotImplementedError(f"not implemented visibility level: {self}")
+        match self:
+            case Visibility.ALL:
+                return None
+            case Visibility.PUBLIC:
+                return "is_private=False"
+            case Visibility.PRIVATE:
+                return "is_private=True"
+            case _:
+                raise NotImplementedError(f"not implemented visibility level: {self}")
 
     def to_github_arg(self):
         # https://docs.github.com/en/rest/repos/repos?apiVersion=2026-03-10#list-repositories-for-the-authenticated-user
-        if self is Visibility.ALL:
-            return None
-        if self is Visibility.PUBLIC:
-            return "public"
-        if self is Visibility.PRIVATE:
-            return "private"
-        raise NotImplementedError(f"not implemented visibility level: {self}")
+        match self:
+            case Visibility.ALL:
+                return None
+            case Visibility.PUBLIC:
+                return "public"
+            case Visibility.PRIVATE:
+                return "private"
+            case _:
+                raise NotImplementedError(f"not implemented visibility level: {self}")
 
     def to_gitlab_arg(self):
         # https://python-gitlab.readthedocs.io/en/stable/gl_objects/projects.html#projects
-        if self is Visibility.ALL:
-            return None
-        if self is Visibility.PUBLIC:
-            return "public"
-        if self is Visibility.PRIVATE:
-            return "private"
-        raise NotImplementedError(f"not implemented visibility level: {self}")
+        match self:
+            case Visibility.ALL:
+                return None
+            case Visibility.PUBLIC:
+                return "public"
+            case Visibility.PRIVATE:
+                return "private"
+            case _:
+                raise NotImplementedError(f"not implemented visibility level: {self}")
 
 
 class Repo:
