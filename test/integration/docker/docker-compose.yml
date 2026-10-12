@@ -1,21 +1,22 @@
 services:
+  cgitize:
+    build:
+      context: ../../..
+      dockerfile: docker/Dockerfile
+    environment:
+      SCHEDULE: once
+    volumes:
+      - ./etc:/etc/cgitize:ro
+      - "$SSH_AUTH_SOCK:/ssh-agent.sock"
+      - ./output:/mnt/cgitize
+  frontend:
+    build:
+      context: ../../../docker/frontend
+    ports:
+      - '127.0.0.1:80:80'
+    volumes:
+      - ./output:/mnt/cgitize:ro
   git_server:
     build:
       context: .
       dockerfile: git_server/Dockerfile
-  cgitize:
-    extends:
-      file: ../../../docker-compose.yml
-      service: cgitize
-    environment:
-      SCHEDULE: once
-    volumes:
-      - ./cgitize/etc:/etc/cgitize:ro
-      - "$SSH_AUTH_SOCK:/ssh-agent.sock"
-      - ./cgitize/output:/mnt/cgitize
-  frontend:
-    extends:
-      file: ../../../docker-compose.yml
-      service: frontend
-    volumes:
-      - ./cgitize/output:/mnt/cgitize:ro

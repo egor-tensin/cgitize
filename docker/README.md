@@ -53,14 +53,17 @@ services:
     restart: unless-stopped
     volumes:
       - ./example.toml:/etc/cgitize/cgitize.toml:ro
-      - /srv/volumes/cgitize:/mnt/cgitize
+      - repositories:/mnt/cgitize
   frontend:
     image: egortensin/cgitize-frontend:8
     ports:
       - '127.0.0.1:80:80'
     restart: unless-stopped
     volumes:
-      - /srv/volumes/cgitize:/mnt/cgitize:ro
+      - repositories:/mnt/cgitize:ro
+
+volumes:
+  repositories:
 ```
 
 In this configuration, cgitize pulls repositories defined in example.toml every

@@ -9,9 +9,9 @@ RUN apk add -q --no-cache bash git openssh-server tini && \
 
 WORKDIR /root
 
-COPY ["ssh/server_key", "/etc/ssh/ssh_host_ed25519_key"]
-COPY ["ssh/server_key.pub", "/etc/ssh/ssh_host_ed25519_key.pub"]
-COPY ["ssh/client_key.pub", "./.ssh/authorized_keys"]
+COPY ["ssh_keys/server_key", "/etc/ssh/ssh_host_ed25519_key"]
+COPY ["ssh_keys/server_key.pub", "/etc/ssh/ssh_host_ed25519_key.pub"]
+COPY ["ssh_keys/client_key.pub", "./.ssh/authorized_keys"]
 
 RUN chmod 0600 -- /etc/ssh/ssh_host_ed25519_key && \
     chmod 0700 -- ./.ssh/ && \

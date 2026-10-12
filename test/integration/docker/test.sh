@@ -12,10 +12,10 @@ readonly script_name
 # This is still required with older Compose versions to use TARGETARCH:
 export DOCKER_BUILDKIT=1
 
-readonly ssh_dir="$script_dir/ssh"
+readonly ssh_dir="$script_dir/ssh_keys"
 readonly client_key_password='password'
-readonly output_dir="$script_dir/cgitize/output"
-readonly frontend_host=localhost
+readonly output_dir="$script_dir/output"
+readonly frontend_host=127.0.0.1
 
 dump() {
     local prefix="${FUNCNAME[0]}"
@@ -219,7 +219,7 @@ verify_git() {
     echo Checking the pulled repository
     echo ----------------------------------------------------------------------
 
-    pushd -- "$script_dir/cgitize/output/test_repo.git" > /dev/null
+    pushd -- "$script_dir/output/test_repo.git" > /dev/null
     git log --oneline
     popd > /dev/null
 }
