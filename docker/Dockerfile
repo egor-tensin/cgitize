@@ -37,7 +37,7 @@ ENV PYTHONPATH="/deps:/usr/src"
 
 ENV SSH_AUTH_SOCK="/ssh/agent.sock"
 
-COPY ["docker/cgitize.sh", "/"]
+COPY ["docker/run.sh", "/"]
 COPY ["docker/get_output_dir.py", "/"]
 COPY ["docker/in_cron.sh", "/"]
 COPY ["cgitize/", "/usr/src/cgitize/"]
@@ -46,6 +46,6 @@ ENV SCHEDULE_ON_START=1
 ENTRYPOINT ["/sbin/tini", "--", "/in_cron.sh"]
 
 WORKDIR /usr/src
-CMD ["/cgitize.sh"]
+CMD ["/run.sh"]
 
 HEALTHCHECK --interval=5m --retries=3 CMD ! test -f /fail
