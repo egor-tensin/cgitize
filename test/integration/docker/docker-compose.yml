@@ -1,14 +1,22 @@
 services:
+  git_server:
+    build:
+      context: .
+      dockerfile: git_server/Dockerfile
+    volumes:
+      - ssh:/ssh
   cgitize:
     build:
       context: ../../..
       dockerfile: docker/Dockerfile
+    depends_on:
+      - git_server
     environment:
       SCHEDULE: once
     volumes:
       - ./etc:/etc/cgitize:ro
-      - "$SSH_AUTH_SOCK:/ssh-agent.sock"
       - ./output:/mnt/cgitize
+      - ssh:/ssh:ro
   frontend:
     build:
       context: ../../../docker/frontend
@@ -16,7 +24,6 @@ services:
       - '127.0.0.1:80:80'
     volumes:
       - ./output:/mnt/cgitize:ro
-  git_server:
-    build:
-      context: .
-      dockerfile: git_server/Dockerfile
+
+volumes:
+  ssh:

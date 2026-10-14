@@ -8,7 +8,7 @@ The `SCHEDULE` environment variable controls how often it gets run (see below).
 * Volumes:
     * `/etc/cgitize/cgitize.toml`: configuration file path.
     * `/mnt/cgitize`: by default, cloned repositories will be written here.
-    * `/ssh-agent.sock`: if you use SSH, map the agent socket here.
+    * `/ssh/agent.sock`: if you use SSH, map the agent socket here.
 * Environment variables:
     * `SCHEDULE`: defaults to "once", which makes the container exit after the
 first run.

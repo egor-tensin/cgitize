@@ -35,9 +35,7 @@ RUN apk add -q --no-cache bash git openssh-client tini
 COPY --from=build ["/deps", "/deps/"]
 ENV PYTHONPATH="/deps:/usr/src"
 
-ARG ssh_sock_dir=/
-ARG ssh_sock_path="$ssh_sock_dir/ssh-agent.sock"
-ENV SSH_AUTH_SOCK="$ssh_sock_path"
+ENV SSH_AUTH_SOCK="/ssh/agent.sock"
 
 COPY ["docker/cgitize.sh", "/"]
 COPY ["docker/get_output_dir.py", "/"]
