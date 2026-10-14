@@ -8,8 +8,8 @@ Workspace setup
 Testing
 -------
 
-N.B.: `make test` is a shortcut for unit tests and the `local` integration
-test.
+N.B.: `make test` is a shortcut for unit tests and the "basic" integration
+tests.
 
 ### Unit tests
 
@@ -29,22 +29,24 @@ You can run `. test/set_credentials.sh`; it'll ask you to fill in the secrets.
 
 ### Integration
 
-* There're three integration tests: `local`, `docker` and `example`.
-Run them using
+    make test/integration
 
-      make test/local
-      sudo make test/docker
-      make test/example
-
-    * The `example` test uses the forges' APIs and might easily hit their rate
+* The "example" tests use the forges' APIs and might easily hit their rate
 limits.
 Use the tokens used for unit tests.
-    * Additionally, it tests cloning via SSH (the `clone_via_ssh` setting) too,
-so you need to add the secret project-specific SSH key to your agent as well
-(make sure it's the only one in the agent; if there's a key associated with
-another user, it could get used instead).
+* Additionally, it tests cloning via SSH (the `clone_via_ssh` setting) too, so
+you need to add the secret project-specific SSH key to your agent as well (make
+sure it's the only one in the agent; if there's a key associated with another
+user, it could get used instead).
+* Run only basic integration tests:
 
-[examples/cgitize.toml]: examples/cgitize.toml
+      make test/integration/basic
+
+### Docker setup
+
+    sudo make test/docker
+
+It's a separate test to check Docker container building & setup.
 
 Upgrading dependencies
 ----------------------

@@ -50,7 +50,7 @@ python:
 repl: python
 
 .PHONY: test
-test: test/unit test/local
+test: test/unit test/integration/basic
 
 .PHONY: test/unit
 test/unit:
@@ -59,12 +59,19 @@ test/unit:
 	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	python -m unittest --verbose --buffer
 
-.PHONY: test/local
-test/local:
+.PHONY: test/integration
+test/integration:
 	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	@echo Integration test: local
+	@echo Integration tests
 	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	./test/integration/local/test.sh
+	./test/integration/runner/harness
+
+.PHONY: test/integration/basic
+test/integration/basic:
+	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	@echo Basic integration tests
+	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	./test/integration/runner/harness -f '*basic*'
 
 .PHONY: test/docker
 test/docker:
@@ -72,10 +79,3 @@ test/docker:
 	@echo Integration test: docker
 	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	./test/integration/docker/test.sh
-
-.PHONY: test/example
-test/example:
-	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	@echo Integration test: example
-	@echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	./test/integration/example/test.sh

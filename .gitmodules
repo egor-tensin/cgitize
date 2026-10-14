@@ -1,0 +1,3 @@
+[submodule "test/integration/local/runner"]
+	path = test/integration/runner
+	url = https://github.com/egor-tensin/test-harness.git
