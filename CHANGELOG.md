@@ -1,3 +1,11 @@
+v9.0
+====
+
+### Breaking changes
+
+* Docker images: SSH agent should now be mapped to /ssh/agent.sock (instead of
+/ssh-agent.sock).
+
 v8.0
 ====
 

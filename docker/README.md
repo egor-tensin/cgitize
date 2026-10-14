@@ -49,13 +49,13 @@ services:
       SCHEDULE: '0 */3 * * *'
       # Set CGITIZE_{GITHUB,BITBUCKET,GITLAB}_{USERNAME,TOKEN} variables
       # here or in the config file.
-    image: egortensin/cgitize:8
+    image: egortensin/cgitize:9
     restart: unless-stopped
     volumes:
       - ./example.toml:/etc/cgitize/cgitize.toml:ro
       - repositories:/mnt/cgitize
   frontend:
-    image: egortensin/cgitize-frontend:8
+    image: egortensin/cgitize-frontend:9
     ports:
       - '127.0.0.1:80:80'
     restart: unless-stopped
