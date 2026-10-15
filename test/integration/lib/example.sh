@@ -23,7 +23,25 @@ _test_example_setup_config() {
     test_example_private_skip
 }
 
+_check_var() {
+    local var
+    for var; do
+        if [ -z "${!var:+x}" ]; then
+            fail "Variable not set: $var"
+            return 1
+        fi
+    done
+}
+
 test_example_setup() {
+    _check_var \
+        CGITIZE_GITHUB_USERNAME \
+        CGITIZE_GITHUB_TOKEN \
+        CGITIZE_BITBUCKET_EMAIL \
+        CGITIZE_BITBUCKET_TOKEN \
+        CGITIZE_GITLAB_USERNAME \
+        CGITIZE_GITLAB_TOKEN
+
     test_output_dir="$test_root_dir/output"
     log "Output directory: $test_output_dir"
 
