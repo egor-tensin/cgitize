@@ -11,13 +11,14 @@ from cgitize.cgit import CGitRepositories, CGitServer
 from cgitize.config import Config
 from cgitize.header import update as update_header
 from cgitize.utils import setup_logging
-from cgitize.version import __version__
+from cgitize import version
 
 
 def parse_args(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     parser = ArgumentParser()
+    version.add_to_arg_parser(parser)
     parser.add_argument(
         "--config",
         "-c",
@@ -43,12 +44,6 @@ def parse_args(argv=None):
         "-v",
         action="store_true",
         help="verbose log output",
-    )
-    parser.add_argument(
-        "--version",
-        "-V",
-        action="version",
-        version=f"%(prog)s {__version__}",
     )
     return parser.parse_args(argv)
 
