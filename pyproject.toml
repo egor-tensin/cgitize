@@ -16,7 +16,7 @@ requires-python = ">=3.11"
 # ^^^ For enum.StrEnum/contextlib.chdir, at least?
 
 dependencies = [
-    "atlassian-python-api ~= 4.0",
+    "atlassian-python-api >= 4,< 6",
     'importlib-metadata ~= 4.0 ; python_version < "3.8"',
     "PyGithub ~= 2.0",
     "python-gitlab ~= 6.0",
