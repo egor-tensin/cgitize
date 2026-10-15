@@ -4,7 +4,7 @@
 # Distributed under the MIT License.
 
 export GIT_CONFIG_NOSYSTEM=true
-#export GIT_CONFIG_GLOBAL=/dev/null
+export GIT_CONFIG_GLOBAL=/dev/null
 
 test_run_cgitize() {
     local cmd=(python3 -m cgitize.main --config "$test_config_path" "$@")

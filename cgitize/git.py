@@ -5,6 +5,7 @@
 
 from contextlib import contextmanager
 import os
+import tempfile
 
 from cgitize import utils
 
@@ -12,36 +13,20 @@ GIT_ENV = os.environ.copy()
 GIT_ENV["GIT_SSH_COMMAND"] = (
     "ssh -oBatchMode=yes -oLogLevel=QUIET -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null"
 )
+GIT_ENV["GIT_CONFIG_NOSYSTEM"] = "true"
+GIT_ENV["GIT_CONFIG_GLOBAL"] = "/dev/null"
 
 
 class Config:
-    def __init__(self, path):
-        self.path = path
-
-    def exists(self):
-        return os.path.exists(self.path)
-
-    def open(self, mode="r"):
-        return open(self.path, mode=mode, encoding="utf-8")
-
-    def read(self):
-        with self.open(mode="r") as fd:
-            return fd.read()
-
-    def write(self, contents):
-        with self.open(mode="w") as fd:
-            fd.write(contents)
-
-    @contextmanager
-    def backup(self):
-        old_contents = self.read()
-        try:
-            yield old_contents
-        finally:
-            self.write(old_contents)
-
     # What follows is an exteremely loose interpretation of what the .gitconfig
     # syntax is. The source was git-config(1).
+
+    @staticmethod
+    @contextmanager
+    def make_tmp():
+        tmp = tempfile.NamedTemporaryFile(mode="w", encoding="utf-8")
+        with tmp as result, utils.protected_file(result.name):
+            yield result
 
     class Section:
         def __init__(self, name, variables):
@@ -148,31 +133,26 @@ class Config:
 class Git:
     EXE = "git"
 
-    @staticmethod
-    def check(*args, **kwargs):
-        return utils.try_run(Git.EXE, *args, env=GIT_ENV, **kwargs)
+    def __init__(self, config=None):
+        self._env = GIT_ENV.copy()
+        if config is not None:
+            self._env["GIT_CONFIG_GLOBAL"] = config
 
-    @staticmethod
-    def capture(*args, **kwargs):
-        return utils.try_capture(Git.EXE, *args, env=GIT_ENV, **kwargs)
+    def check(self, *args, **kwargs):
+        return utils.try_run(Git.EXE, *args, env=self._env, **kwargs)
 
-    @staticmethod
-    def get_global_config():
-        return Config(os.path.expanduser("~/.gitconfig"))
+    def capture(self, *args, **kwargs):
+        return utils.try_capture(Git.EXE, *args, env=self._env, **kwargs)
 
     @staticmethod
     @contextmanager
     def setup_auth(repo):
         if not repo.url_auth:
-            yield
+            yield Git()
             return
-        config = Git.get_global_config()
-        with utils.protected_file(config.path):
-            with config.backup() as old_contents:
-                variables = [Config.Variable("insteadOf", repo.clone_url)]
-                subsection = Config.Subsection(
-                    "url", repo.clone_url_with_auth, variables
-                )
-                new_contents = f"{old_contents}\n{subsection.format()}"
-                config.write(new_contents)
-                yield
+        with Config.make_tmp() as config:
+            variables = [Config.Variable("insteadOf", repo.clone_url)]
+            subsection = Config.Subsection("url", repo.clone_url_with_auth, variables)
+            config.write(subsection.format())
+            config.flush()
+            yield Git(config.name)

@@ -70,7 +70,7 @@ class AgeFile:
         # Except I think that the committer date, not author date  better
         # represents activity.
         with chdir(repo_dir):
-            success, output = Git.capture(
+            success, output = Git().capture(
                 "for-each-ref",
                 "--sort=-committerdate",
                 "--count=1",
@@ -123,7 +123,7 @@ class CGitRepositories:
             return self._mirror(repo)
 
         with chdir(repo_dir):
-            success, output = Git.capture("rev-parse", "--is-inside-work-tree")
+            success, output = Git().capture("rev-parse", "--is-inside-work-tree")
             if not success:
                 # Overwrite the existing directory if it's not a Git repository.
                 logging.warning(
@@ -132,7 +132,7 @@ class CGitRepositories:
                 )
                 return self._mirror(repo)
 
-            success, output = Git.capture("config", "--get", "remote.origin.url")
+            success, output = Git().capture("config", "--get", "remote.origin.url")
             if not success:
                 # Every repository managed by this script should have the
                 # 'origin' remote. If it doesn't, it's trash. Overwrite the
@@ -171,17 +171,16 @@ class CGitRepositories:
             except Exception as e:
                 logging.exception(e)
                 return False
-        with Git.setup_auth(repo):
-            return Git.check("clone", "--mirror", "--quiet", repo.clone_url, repo_dir)
+        with Git.setup_auth(repo) as git:
+            return git.check("clone", "--mirror", "--quiet", repo.clone_url, repo_dir)
 
     def _fix_upstream_url(self, repo):
         repo_dir = self.get_repo_dir(repo)
         with chdir(repo_dir):
-            return Git.check("remote", "set-url", "origin", repo.clone_url)
+            return Git().check("remote", "set-url", "origin", repo.clone_url)
 
     def _update_existing(self, repo):
         logging.info("Updating repository '%s'", repo.name)
         repo_dir = self.get_repo_dir(repo)
-        with chdir(repo_dir):
-            with Git.setup_auth(repo):
-                return Git.check("remote", "update", "--prune")
+        with chdir(repo_dir), Git.setup_auth(repo) as git:
+            return git.check("remote", "update", "--prune")
