@@ -1,10 +1,6 @@
-try:
-    from importlib import metadata
-except ImportError:
-    import importlib_metadata as metadata
-
+from importlib import metadata
 
 try:
     __version__ = metadata.version("cgitize")
-except Exception:
+except:
     __version__ = "unknown"
