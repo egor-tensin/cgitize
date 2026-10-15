@@ -22,4 +22,8 @@ updates:
   - package-ecosystem: pip
     directory: /
     schedule:
-      interval: weekly
+      interval: cron
+      # Slightly later than the scheduled maintenance job (keep those in sync!).
+      # The idea is that hopefully, it'll minimize the number of PRs I get for
+      # minor dependencies in requirements.txt.
+      cronjob: '30 04 * * 5'

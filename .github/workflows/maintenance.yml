@@ -3,6 +3,7 @@ name: Maintenance
 on:
   schedule:
     # Weekly, at 02:30 UTC on Friday (somewhat randomly chosen).
+    # Keep in sync with the Dependabot job in dependabot.yml!
     - cron: '30 02 * * 5'
   workflow_dispatch:
 
