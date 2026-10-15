@@ -52,4 +52,7 @@ else: pylint_venv.inithook()
 [tool.pylint."messages control"]
 disable = [
     "missing-docstring",
+    "too-few-public-methods",
+    "too-many-arguments",
+    "too-many-positional-arguments",
 ]
