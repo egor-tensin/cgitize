@@ -11,6 +11,7 @@ test_run() {
         graphviz \
         wireguard/wintun \
         goauthentik-dir/authentik \
+        goauthentik-dir/client-python \
         github-dir/public \
         bitbucket-dir/public \
         gitlab-dir/public
@@ -24,6 +25,7 @@ test_run() {
     test_verify_origin chromiumembedded/cef 'https://bitbucket.org/chromiumembedded/cef.git'
     test_verify_origin graphviz 'https://gitlab.com/graphviz/graphviz.git'
     test_verify_origin goauthentik-dir/authentik 'https://github.com/goauthentik/authentik.git'
+    test_verify_origin goauthentik-dir/client-python 'https://github.com/goauthentik/client-python.git'
 
     test_verify_origin github-dir/public 'https://github.com/cgitize-test/public.git'
     test_verify_origin bitbucket-dir/public 'https://bitbucket.org/cgitize-test-workspace/public.git'
