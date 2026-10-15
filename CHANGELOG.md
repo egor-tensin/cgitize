@@ -6,6 +6,15 @@ v9.0
 * Docker images: SSH agent should now be mapped to /ssh/agent.sock (instead of
 /ssh-agent.sock).
 
+v9.1
+----
+
+* The global ~/.gitconfig is no longer used for HTTPS authentication.
+Instead, a temporary file is used.
+* Internally, `git` is now executed with the `GIT_CONFIG_NOSYSTEM` and
+`GIT_CONFIG_GLOBAL` environment variables set.
+This might break existing setups in some way.
+
 v8.0
 ====
 
