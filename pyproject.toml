@@ -18,7 +18,7 @@ requires-python = ">=3.11"
 dependencies = [
     "atlassian-python-api >= 4,< 6",
     'importlib-metadata ~= 4.0 ; python_version < "3.8"',
-    "PyGithub ~= 2.0",
+    "PyGithub >= 2,< 3",
     "python-gitlab >= 6,< 9",
     "tomli >= 1,< 3",
 ]
