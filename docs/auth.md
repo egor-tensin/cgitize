@@ -42,7 +42,7 @@ URL to include the access token.
 
 Eventually, the option I settled on is to
 
-1. `chmod 0600 ~/.gitconfig`.
-2. Append the section to ~/.gitconfig from Python (_not_ by using `git
-   config`).
-3. Undo everything once we're done.
+1. Create a temporary file only readable by the current user.
+2. Write the required settings to it from Python (_not_ by using `git config`).
+3. Use it w/ `git` by setting `GIT_CONFIG_GLOBAL`.
+3. Delete it when we're done.
