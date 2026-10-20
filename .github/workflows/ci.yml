@@ -39,13 +39,6 @@ jobs:
           - '3.13'
           - '3.14'
     name: Test / ${{ matrix.python-version }}
-    env:
-      CGITIZE_GITHUB_USERNAME: cgitize-test
-      CGITIZE_GITHUB_TOKEN: ${{ secrets.CGITIZE_GITHUB_TOKEN }}
-      CGITIZE_BITBUCKET_EMAIL: ${{ secrets.CGITIZE_BITBUCKET_EMAIL }}
-      CGITIZE_BITBUCKET_TOKEN: ${{ secrets.CGITIZE_BITBUCKET_TOKEN }}
-      CGITIZE_GITLAB_USERNAME: cgitize-test
-      CGITIZE_GITLAB_TOKEN: ${{ secrets.CGITIZE_GITLAB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -63,6 +56,13 @@ jobs:
       - name: Verify that scripts are runnable
         run: cgitize --version
       - name: Run tests
+        env:
+          CGITIZE_GITHUB_USERNAME: cgitize-test
+          CGITIZE_GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_TOKEN }}
+          CGITIZE_BITBUCKET_EMAIL: ${{ secrets.TEST_BITBUCKET_EMAIL }}
+          CGITIZE_BITBUCKET_TOKEN: ${{ secrets.TEST_BITBUCKET_TOKEN }}
+          CGITIZE_GITLAB_USERNAME: cgitize-test
+          CGITIZE_GITLAB_TOKEN: ${{ secrets.TEST_GITLAB_TOKEN }}
         run: make test
 
   test_docker:
@@ -83,13 +83,6 @@ jobs:
       - test_docker
     runs-on: ubuntu-latest
     name: Test / example config
-    env:
-      CGITIZE_GITHUB_USERNAME: cgitize-test
-      CGITIZE_GITHUB_TOKEN: ${{ secrets.CGITIZE_GITHUB_TOKEN }}
-      CGITIZE_BITBUCKET_EMAIL: ${{ secrets.CGITIZE_BITBUCKET_EMAIL }}
-      CGITIZE_BITBUCKET_TOKEN: ${{ secrets.CGITIZE_BITBUCKET_TOKEN }}
-      CGITIZE_GITLAB_USERNAME: cgitize-test
-      CGITIZE_GITLAB_TOKEN: ${{ secrets.CGITIZE_GITLAB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -105,8 +98,15 @@ jobs:
       - name: Set up ssh-agent
         uses: webfactory/ssh-agent@v0.10.0
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
+          ssh-private-key: ${{ secrets.TEST_SSH_KEY }}
       - name: Integration tests
+        env:
+          CGITIZE_GITHUB_USERNAME: cgitize-test
+          CGITIZE_GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_TOKEN }}
+          CGITIZE_BITBUCKET_EMAIL: ${{ secrets.TEST_BITBUCKET_EMAIL }}
+          CGITIZE_BITBUCKET_TOKEN: ${{ secrets.TEST_BITBUCKET_TOKEN }}
+          CGITIZE_GITLAB_USERNAME: cgitize-test
+          CGITIZE_GITLAB_TOKEN: ${{ secrets.TEST_GITLAB_TOKEN }}
         run: make test/integration
 
   publish_docker:
@@ -208,4 +208,4 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          password: ${{ secrets.PYPI_TOKEN }}

@@ -22,10 +22,6 @@ jobs:
           # you need a separate token for that:
           # https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#triggering-a-workflow-from-a-workflow
           token: ${{ secrets.GH_TOKEN }}
-      - name: Set up ssh-agent
-        uses: webfactory/ssh-agent@v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
