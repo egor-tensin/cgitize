@@ -5,20 +5,28 @@ updates:
       - '**/*'
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
   - package-ecosystem: docker-compose
     directories:
       - '**/*'
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
   - package-ecosystem: gitsubmodule
     directories:
       - '**/*'
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
   - package-ecosystem: pip
     directory: /
     schedule:
@@ -27,3 +35,5 @@ updates:
       # The idea is that hopefully, it'll minimize the number of PRs I get for
       # minor dependencies in requirements.txt.
       cronjob: '30 04 * * 5'
+    cooldown:
+      default-days: 7
