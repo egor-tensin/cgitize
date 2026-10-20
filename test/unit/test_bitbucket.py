@@ -48,7 +48,8 @@ class BitbucketTests(unittest.TestCase):
         ssh_urls = [link for link in r.data["links"]["clone"] if link["name"] == "ssh"]
         self.assertEqual(len(ssh_urls), 1)
         self.assertEqual(
-            ssh_urls[0]["href"], "git@bitbucket.org:cgitize-test-workspace/public.git"
+            ssh_urls[0]["href"],
+            "git@ssh.bitbucket.org:cgitize-test-workspace/public.git",
         )
 
     def test_private_repo(self):
@@ -77,7 +78,8 @@ class BitbucketTests(unittest.TestCase):
         ssh_urls = [link for link in r.data["links"]["clone"] if link["name"] == "ssh"]
         self.assertEqual(len(ssh_urls), 1)
         self.assertEqual(
-            ssh_urls[0]["href"], "git@bitbucket.org:cgitize-test-workspace/private.git"
+            ssh_urls[0]["href"],
+            "git@ssh.bitbucket.org:cgitize-test-workspace/private.git",
         )
 
     def test_user(self):
