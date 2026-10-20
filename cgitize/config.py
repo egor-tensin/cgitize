@@ -110,7 +110,7 @@ class GitHubSection(ServiceSection):
 
     @property
     def url_auth(self):
-        return (self.token, None)
+        return (self.username, self.token)
 
     def _enum_org_repositories(self, cfg, api, org):
         for repo in api.get_org_repos(org):
