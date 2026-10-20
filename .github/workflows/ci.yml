@@ -30,14 +30,14 @@ jobs:
           - '3.12'
           - '3.13'
           - '3.14'
-    name: 'Test / ${{ matrix.python-version }}'
+    name: Test / ${{ matrix.python-version }}
     env:
       CGITIZE_GITHUB_USERNAME: cgitize-test
-      CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
-      CGITIZE_BITBUCKET_EMAIL: '${{ secrets.CGITIZE_BITBUCKET_EMAIL }}'
-      CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
+      CGITIZE_GITHUB_TOKEN: ${{ secrets.CGITIZE_GITHUB_TOKEN }}
+      CGITIZE_BITBUCKET_EMAIL: ${{ secrets.CGITIZE_BITBUCKET_EMAIL }}
+      CGITIZE_BITBUCKET_TOKEN: ${{ secrets.CGITIZE_BITBUCKET_TOKEN }}
       CGITIZE_GITLAB_USERNAME: cgitize-test
-      CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN }}'
+      CGITIZE_GITLAB_TOKEN: ${{ secrets.CGITIZE_GITLAB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -47,7 +47,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: '${{ matrix.python-version }}'
+          python-version: ${{ matrix.python-version }}
           cache: pip
       - name: 'Install package & dependencies'
         run: pip install -q -e .
@@ -58,7 +58,7 @@ jobs:
 
   test_docker:
     runs-on: ubuntu-latest
-    name: 'Test / Docker'
+    name: Test / Docker
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -72,14 +72,14 @@ jobs:
       - test_local
       - test_docker
     runs-on: ubuntu-latest
-    name: 'Test / example config'
+    name: Test / example config
     env:
       CGITIZE_GITHUB_USERNAME: cgitize-test
-      CGITIZE_GITHUB_TOKEN: '${{ secrets.CGITIZE_GITHUB_TOKEN }}'
-      CGITIZE_BITBUCKET_EMAIL: '${{ secrets.CGITIZE_BITBUCKET_EMAIL }}'
-      CGITIZE_BITBUCKET_TOKEN: '${{ secrets.CGITIZE_BITBUCKET_TOKEN }}'
+      CGITIZE_GITHUB_TOKEN: ${{ secrets.CGITIZE_GITHUB_TOKEN }}
+      CGITIZE_BITBUCKET_EMAIL: ${{ secrets.CGITIZE_BITBUCKET_EMAIL }}
+      CGITIZE_BITBUCKET_TOKEN: ${{ secrets.CGITIZE_BITBUCKET_TOKEN }}
       CGITIZE_GITLAB_USERNAME: cgitize-test
-      CGITIZE_GITLAB_TOKEN: '${{ secrets.CGITIZE_GITLAB_TOKEN }}'
+      CGITIZE_GITLAB_TOKEN: ${{ secrets.CGITIZE_GITLAB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -94,7 +94,7 @@ jobs:
       - name: Set up ssh-agent
         uses: webfactory/ssh-agent@v0.10.0
         with:
-          ssh-private-key: '${{ secrets.SSH_KEY }}'
+          ssh-private-key: ${{ secrets.SSH_KEY }}
       - name: Integration tests
         run: make test/integration
 
@@ -111,18 +111,19 @@ jobs:
         include:
           - {service: backend, file: docker/Dockerfile, image: cgitize}
           - {service: frontend, context: docker/frontend, image: cgitize-frontend}
-    name: 'Publish / Docker Hub / ${{ matrix.service }}'
+    name: Publish / Docker Hub / ${{ matrix.service }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           submodules: recursive
       # https://github.com/docker/metadata-action#semver
       - id: meta
         name: Docker Hub metadata
         uses: docker/metadata-action@v6
         with:
-          images: 'egortensin/${{ matrix.image }}'
+          images: egortensin/${{ matrix.image }}
           flavor: |
             latest=auto
           tags: |
@@ -154,22 +155,22 @@ jobs:
         uses: docker/login-action@v4
         with:
           username: egortensin
-          password: '${{ secrets.DOCKERHUB_TOKEN }}'
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and publish
         uses: docker/build-push-action@v7
         with:
-          context: '${{ matrix.context }}'
-          file: '${{ matrix.file }}'
-          labels: '${{ steps.meta.outputs.labels }}'
-          platforms: '${{ steps.params.outputs.platforms }}'
-          push: '${{ steps.params.outputs.push }}'
-          tags: '${{ steps.meta.outputs.tags }}'
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: ${{ steps.params.outputs.platforms }}
+          push: ${{ steps.params.outputs.push }}
+          tags: ${{ steps.meta.outputs.tags }}
 
   publish_pypi:
     needs:
       - publish_docker
     runs-on: ubuntu-latest
-    name: 'Publish / PyPI'
+    name: Publish / PyPI
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -195,4 +196,4 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
-          password: '${{ secrets.PYPI_API_TOKEN }}'
+          password: ${{ secrets.PYPI_API_TOKEN }}
