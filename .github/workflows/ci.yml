@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Linting
     continue-on-error: "${{ github.ref != 'refs/heads/master' }}"
+    permissions:
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -24,6 +26,8 @@ jobs:
           python-version: '3.x'
       - name: Run black
         uses: psf/black@stable
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@v0.7.1
 
   test_local:
     runs-on: ubuntu-latest
