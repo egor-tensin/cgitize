@@ -18,6 +18,22 @@ class BitbucketTests(unittest.TestCase):
             cloud=True,
         )
 
+    def test_username_auth(self):
+        # Bitbucket, at one point, switched from authenticating with a username
+        # to using the Atlassian email address.
+        bb = Cloud(
+            username="cgitize-test",
+            password=os.environ.get("CGITIZE_BITBUCKET_TOKEN"),
+            cloud=True,
+        )
+        # So, authenticating with the username should fail:
+        with self.assertRaises(HTTPError) as ctx:
+            bb.repositories.get("cgitize-test-workspace", "private")
+
+        expected = "API token must be used with an atlassian registered email"
+        actual = str(ctx.exception)
+        self.assertEqual(expected, actual)
+
     def test_nonexistent_repo(self):
         with self.assertRaises(HTTPError):
             self.bitbucket.repositories.get("doesnot", "exist")
