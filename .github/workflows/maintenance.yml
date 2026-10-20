@@ -17,7 +17,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          persist-credentials: false
+          # Needed for `git push` below.
+          persist-credentials: true
           # I think that by default, pushes don't trigger other workflows, and
           # you need a separate token for that:
           # https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow#triggering-a-workflow-from-a-workflow
