@@ -1,6 +1,6 @@
 atlassian-python-api==5.0.5
 beautifulsoup4==4.15.0
-certifi==2026.10.19
+certifi==2026.10.23
 cffi==2.1.1
 charset-normalizer==3.5.2
 cryptography==50.0.2
@@ -20,4 +20,4 @@ soupsieve==3.0.4
 tomli==2.5.0
 typing_extensions==4.16.0
 urllib3==2.8.0
-wrapt==2.5.1
+wrapt==2.5.2
