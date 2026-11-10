@@ -27,7 +27,7 @@ jobs:
       - name: Run black
         uses: psf/black@stable
       - name: Run zizmor
-        uses: zizmorcore/zizmor-action@v0.8.0
+        uses: zizmorcore/zizmor-action@v0.8.1
 
   test_local:
     runs-on: ubuntu-latest
